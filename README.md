@@ -1,1 +1,1 @@
-# optimization-python
+# Optimization - Theory and Applications
