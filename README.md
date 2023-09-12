@@ -1,3 +1,3 @@
-# Optimization - Theory and Applications
+# Métodos de Otimização em Python
 
-The main goal of this repository is show some basic and advanced function optimization methods and algorithms.
+Este material apresenta um conjunto de métodos de otimização (com e sem restrições) utilziando a linguagem de programação Python.
