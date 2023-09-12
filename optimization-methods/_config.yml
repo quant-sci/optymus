@@ -3,6 +3,7 @@
 
 title: Métodos de Otimização em Python
 author: Kleyton da Costa
+copyright: "2023"
 logo: logo.png
 
 # Force re-execution of notebooks on each build.

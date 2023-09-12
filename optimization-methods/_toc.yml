@@ -3,6 +3,8 @@
 
 format: jb-book
 root: intro
+options:
+  numbered: true
 parts:
   - caption: Métodos de otimização sem restrições
     chapters:
