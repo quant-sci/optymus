@@ -93,9 +93,6 @@ def golden_section(function, l_bound, u_bound, delta_alpha=0.01, max_iter=1000, 
     f_d = function(alpha_d)
     func_calls = 2
 
-    #results = np.array([])
-    #results = np.append(results, [alpha_e, alpha_d], axis=0)
-    
     for k in range(max_iter):
         if f_e < f_d:
             u_bound = alpha_d
@@ -104,7 +101,6 @@ def golden_section(function, l_bound, u_bound, delta_alpha=0.01, max_iter=1000, 
             alpha_e = u_bound - beta / phi
             f_d = f_e
             f_e = function(alpha_e)
-            #results = np.append(results, [alpha_e, alpha_d], axis=0)
         else:
             l_bound = alpha_e
             alpha_e = alpha_d
@@ -112,16 +108,12 @@ def golden_section(function, l_bound, u_bound, delta_alpha=0.01, max_iter=1000, 
             alpha_d = l_bound + beta / phi
             f_e = f_d
             f_d = function(alpha_d)
-            #results = np.append(results, [alpha_e, alpha_d], axis=0)
         func_calls += 1
         if np.linalg.norm(np.array(u_bound) - np.array(l_bound)) < tol:
             break
     xopt = (l_bound + u_bound) / 2
     yopt = function(xopt)
     num_iter = k + 1
-    import pandas as pd
-    #results = pd.DataFrame(results.reshape(-1,2))
-    #results.columns = ['alpha_e', 'alpha_d']
     _,_, func_calls_const = constant_step(function=function, initial_point=xopt, delta_alpha=delta_alpha, max_iter=max_iter, tol=tol)
     func_calls += func_calls_const
     return xopt, yopt, func_calls, num_iter
