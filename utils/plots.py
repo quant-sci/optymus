@@ -6,7 +6,7 @@ sns.set_context('notebook')
 plt.rc('text', usetex=True)
 plt.rcParams['text.usetex'] = True
 
-def plot_golden_section(x, y, z, golden_sec):
+def plot_golden_section(x, y, z, golden_sec, path=None):
     fig, ax = plt.subplots(ncols=2, nrows=1, figsize=(10, 5))
 
     fig.delaxes(ax[0])
@@ -26,4 +26,6 @@ def plot_golden_section(x, y, z, golden_sec):
     ax[1].legend(loc = 'upper right')
 
     #plt.tight_layout()
+    if path is not None:
+        plt.savefig(path, dpi=300)
     plt.show()
