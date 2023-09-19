@@ -6,22 +6,27 @@ sns.set_context('notebook')
 plt.rc('text', usetex=True)
 plt.rcParams['text.usetex'] = True
 
-def plot_golden_section(x, y, z, golden_sec, path=None):
+
+def plot_optimization(x, y, z, method, path=None):
     fig, ax = plt.subplots(ncols=2, nrows=1, figsize=(10, 5))
 
     fig.delaxes(ax[0])
     ax[0] = fig.add_subplot(121, projection='3d')
     ax[0].view_init(40, 20)
     ax[0].plot_surface(x, y, z, cmap='viridis', linewidth =0)
-    ax[0].set_xlabel('x')
-    ax[0].set_ylabel('y')
+    ax[0].set_xlabel('x1')
+    ax[0].set_ylabel('x2')
     ax[0].set_zlabel(r"$f(x_{1}, x_{2})$")
     ax[0].set_title(r"Superfície da função $f(x_{1}, x_{2})$")
 
     ax[1].contour(x, y, z, 200, cmap='viridis')
-    ax[1].plot(golden_sec[0][0], golden_sec[0][1], color='red', markersize=10, marker='x', label = f'Ponto Mínimo')
-    ax[1].set_xlabel('x')
-    ax[1].set_ylabel('y')
+    ax[1].plot(method[3][0], method[3][1], color='green', markersize=7, marker='o', label = f'Ponto Inicial')
+    ax[1].text(method[3][0]+1, method[3][1], f'{method[3][0]}, {method[3][1]}', size=10, zorder=2, color='k', bbox=dict(boxstyle="round", alpha=1, facecolor='white'))
+    ax[1].plot(method[0][0], method[0][1], color='red', markersize=8, marker='o', label = f'Ponto Mínimo - num_iter: {method[2]}')
+    ax[1].text(method[0][0]+1, method[0][1]-2, f'{method[0][0]}, \n{method[0][1]}', size=10, zorder=2, color='k', bbox=dict(boxstyle="round", alpha=1, facecolor='white'))
+    ax[1].plot([method[3][0], method[0][0]], [method[3][1], method[0][1]], color='black', linestyle='solid')
+    ax[1].set_xlabel('x1')
+    ax[1].set_ylabel('x2')
     ax[1].set_title(r"Curvas de nível da função $f(x_{1}, x_{2})$")
     ax[1].legend(loc = 'upper right')
 
