@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.9.1)  19 SEP 2023 09:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.9.1)  22 SEP 2023 22:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/kcosta/repos/research/optimization-python/exercises/trabalho1/lista2.tex
-(/home/kcosta/repos/research/optimization-python/exercises/trabalho1/lista2.tex
+**/home/kcosta/repos/research/optimization-python/exercises/trabalho1/trabalho1.tex
+(/home/kcosta/repos/research/optimization-python/exercises/trabalho1/trabalho1.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -162,8 +162,8 @@ Package: fancyhdr 2021/01/28 v4.0.1 Extensive control of page headers and footer
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count277
 \l__pdf_internal_box=\box54
-) (./lista2.aux)
-\openout1 = `lista2.aux'.
+) (./trabalho1.aux)
+\openout1 = `trabalho1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
 LaTeX Font Info:    ... okay on input line 38.
@@ -242,17 +242,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] (./lista2.aux) ) 
+] (./trabalho1.aux) ) 
 Here is how much of TeX's memory you used:
  3843 strings out of 478287
- 61331 string characters out of 5849290
- 373968 words of memory out of 5000000
+ 61364 string characters out of 5849290
+ 373974 words of memory out of 5000000
  22021 multiletter control sequences out of 15000+600000
  473574 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,12n,62p,274b,279s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,12n,62p,277b,279s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on lista2.pdf (1 page, 40103 bytes).
+Output written on trabalho1.pdf (1 page, 40103 bytes).
 PDF statistics:
  23 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream
