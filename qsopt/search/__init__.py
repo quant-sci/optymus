@@ -1,13 +1,11 @@
 
 
 from ._search import (
-    constant_step, 
     golden_search,
-    bisection
+    line_search,
 )
 
 __all__ = [
-    'constant_step', 
     'golden_search',
-    'bisection'
+    'line_search',
 ]

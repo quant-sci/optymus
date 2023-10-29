@@ -2,18 +2,18 @@
 
 from ._methods import(
     univariant,
-    steepest_descent,
     powell,
+    steepest_descent,
     fletcher_reeves,
+    newton_raphson,
     bfgs,
-    newton_raphson
 )
 
 __all__ = [
     'univariant',
-    'steepest_descent',
     'powell',
+    'steepest_descent',
     'fletcher_reeves',
+    'newton_raphson',
     'bfgs',
-    'newton_raphson'
 ]
