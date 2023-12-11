@@ -1,101 +1,62 @@
 import sys
 sys.path.append('./')
+import time 
 
-import time
+import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
+from qsopt.plots import plot_countour
+from qsopt.optim import method_optim
+
+
 import sympy as sy
 from sympy import *
-
-from qsopt.plots import plot_optim
-
-def golden_search(f, lbound, ubound, max_iter=100, tol=1e-5):
-    phi = (np.sqrt(5)-1)/2  # Golden ratio
-    num_iter = 0
-    a, b = lbound, ubound
-    beta = np.linalg.norm(b-a)
-    alpha_e = a + (1 - phi)*beta
-    alpha_d = a + (phi*beta)
-    a_list = [a]
-    b_list = [b]
-    
-    while beta > tol:
-        #if num_iter > max_iter:
-        #    break
-        if f(alpha_e) < f(alpha_d):  # f(alpha) > f(alpha_d) to find the maximum
-            b = alpha_d
-        else:
-            a = alpha_e
-
-        beta = np.linalg.norm(b-a)
-        alpha_e = a + (1 - phi)*beta
-        alpha_d = a + (phi*beta)
-
-        num_iter += 1
-        a_list.append(a)
-        b_list.append(b)
-        
-    alpha = (b + a) / 2
-    fmin = f(alpha)
-
-    result = {
-        'alpha': alpha[np.argmin(alpha)],
-        'fmin': fmin,
-        'num_iter': num_iter,
-        'path_a': np.array(a_list),
-        'path_b': np.array(b_list),
-    }
-    return result
-
-def line_search(objective_function, initial_point, d, search_method='golden_search'):
-    def f(alpha): return objective_function(initial_point + alpha*d)
-    if search_method == 'golden_search':
-        a, b = np.array([-10, -10]), np.array([10, 10])
-        r = golden_search(f, a, b)
-    a = r['alpha']
-    x_opt = initial_point + a*d
-    result = {
-        'alpha': a,
-        'xopt': x_opt,
-        'fmin': objective_function(x_opt),
-        'initial_point': initial_point,
-        'num_iter': r['num_iter'],
-    }
-    return result
+x1, x2 = sy.symbols("x1 x2")
+func = x1**2-3*x1*x2+4*x2**2+x1-x2
+print('Objective Function: ', func)
+print('Gradient: ', Matrix([func]).jacobian(Matrix(list(func.free_symbols))))
+print('Hessian: ', sy.hessian(func, varlist=[x1, x2]))
 
 
-def univariate(objective_function, initial_point, max_iter=100, tol=1e-6):
-    x = initial_point.copy()
-    n = len(x)
-    path = [x]
-    num_iter = 0
-    x_star = np.ones(n)
-    
-    for _ in range(max_iter):
-        for k in range(n):
-            x_k_copy = x.copy()
-            x_k_copy[k] = 1.0
-            f_x_k = objective_function(x_k_copy)
-            if f_x_k < objective_function(x):
-                x = x_k_copy
-        path.append(x)
-        num_iter += 1
-        
-        if np.linalg.norm(x - x_star) < tol:
-            break
-    
-    result = {
-        'xopt': x,
-        'fopt': objective_function(x),
-        'num_iter': num_iter,
-        'initial_point': initial_point,
-        'path': np.array(path)
-    }
-    return result
+np.random.seed(1234)
+f = lambda x: x[0]**[2]-3*x[0]*x[1]+4*x[1]**2+x[0]-x[1]
+grad = lambda x: np.array([2*x[0]-3*x[1]+1, -3*x[0]+8*x[1]-1])
+hess = lambda x: np.array([[2, -3], [-3, 8]])
 
-def f(x): 
-    return x[0]**[2]-3*x[0]*x[1]+4*x[1]**2+x[0]-x[1]
+x = np.linspace(-10, 10, 100)
+y = np.linspace(-10, 10, 100)
+X, Y = np.meshgrid(x, y)
+Z = f([X, Y])
 
-x0 = np.array([-2,3])
-method = univariate(f, x0)
-plot_optim(f, x0, method)
-#print(method['alphas'])
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+ax.view_init(40, 20)
+ax.plot_surface(X, Y, Z, cmap='cividis', linewidth =0)
+
+initial_point = [np.array([-2,2]), np.array([-1,-3])]
+
+result = pd.DataFrame(columns=['Method', 'X0', 'XOPT', 'FMIN', 'NUM_ITER', 'TIME'])
+for x0 in initial_point:
+    METHODS_OPTIM = {
+        'univariant': method_optim(method_name='univariant', objective_function=f, gradient=grad, initial_point=x0),
+        'powell': method_optim(method_name='powell', objective_function=f, gradient=grad, initial_point=x0),
+        'steepest_descent': method_optim(method_name='steepest_descent', objective_function=f, gradient=grad, initial_point=x0),
+        'fletcher_reeves': method_optim(method_name='fletcher_reeves', objective_function=f, gradient=grad, initial_point=x0),
+        'bfgs': method_optim(method_name='bfgs', objective_function=f, gradient=grad, initial_point=x0),
+        'newton_raphson': method_optim(method_name='newton_raphson', objective_function=f, gradient=grad, hessian=hess, initial_point=x0),
+        }
+    methods = ['univariant', 'powell', 'steepest_descent', 'fletcher_reeves', 'bfgs', 'newton_raphson']
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    axes = axes.flatten()
+    for i, m in enumerate(methods):
+        start = time.time()
+        method =  METHODS_OPTIM[m]
+        end = time.time()
+        time_elapsed = end - start
+        r = pd.DataFrame([[method['method_name'], x0, method['xopt'], method['fmin'], method['num_iter'], time_elapsed]], 
+                        columns=['Method', 'X0', 'XOPT', 'FMIN', 'NUM_ITER', 'TIME'])
+        result = pd.concat([result, r], ignore_index=True, axis=0)
+        plot_countour(f, x0, method, ax=axes[i], path = True)
+    plt.tight_layout()
+    plt.show()
+result

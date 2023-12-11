@@ -7,6 +7,7 @@ from ._methods import(
     fletcher_reeves,
     newton_raphson,
     bfgs,
+    method_optim
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     'fletcher_reeves',
     'newton_raphson',
     'bfgs',
+    'method_optim'
 ]

@@ -1,11 +1,13 @@
 
 
 from ._search import (
-    golden_search,
+    bracket_minimum,
+    golden_section,
     line_search,
 )
 
 __all__ = [
-    'golden_search',
+    'bracket_minimum',
+    'golden_section',
     'line_search',
 ]
