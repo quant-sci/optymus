@@ -275,16 +275,61 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 OUTPUT trabalho2.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT ./penalidade_Powell_[3 2].pdf
+INPUT ./penalidade_Powell_[3 2].pdf
+INPUT penalidade_Powell_[3 2].pdf
+INPUT ./penalidade_Powell_[3 2].pdf
+INPUT ./penalidade_Powell_[3 2].pdf
+INPUT ./penalidade_BFGS_[3 2].pdf
+INPUT ./penalidade_BFGS_[3 2].pdf
+INPUT penalidade_BFGS_[3 2].pdf
+INPUT ./penalidade_BFGS_[3 2].pdf
+INPUT ./penalidade_BFGS_[3 2].pdf
+INPUT ./barreira_Powell_[0 1].pdf
+INPUT ./barreira_Powell_[0 1].pdf
+INPUT barreira_Powell_[0 1].pdf
+INPUT ./barreira_Powell_[0 1].pdf
+INPUT ./barreira_Powell_[0 1].pdf
+INPUT ./barreira_BFGS_[0 1].pdf
+INPUT ./barreira_BFGS_[0 1].pdf
+INPUT barreira_BFGS_[0 1].pdf
+INPUT ./barreira_BFGS_[0 1].pdf
+INPUT ./barreira_BFGS_[0 1].pdf
+INPUT ./problema_2_penalidade_Powell_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_Powell_[ 4 -2].pdf
+INPUT problema_2_penalidade_Powell_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_Powell_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_Powell_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_BFGS_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_BFGS_[ 4 -2].pdf
+INPUT problema_2_penalidade_BFGS_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_BFGS_[ 4 -2].pdf
+INPUT ./problema_2_penalidade_BFGS_[ 4 -2].pdf
+INPUT ./problema_2_barreira_Powell_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_Powell_[0.5 0.5].pdf
+INPUT problema_2_barreira_Powell_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_Powell_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_Powell_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_BFGS_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_BFGS_[0.5 0.5].pdf
+INPUT problema_2_barreira_BFGS_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_BFGS_[0.5 0.5].pdf
+INPUT ./problema_2_barreira_BFGS_[0.5 0.5].pdf
 INPUT trabalho2.aux
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
