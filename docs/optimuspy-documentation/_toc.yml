@@ -1,0 +1,23 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+options:
+  numbered: true
+parts:
+  - caption: Métodos de otimização sem restrições
+    chapters:
+    - file: osr/unidimensional
+    - file: osr/univariante
+    - file: osr/powell
+    - file: osr/steepestdescent
+    - file: osr/fletcherreeves
+    - file: osr/bfgs
+    - file: osr/newtonraphson
+  - caption: Métodos de otimização com restrições 
+    chapters:
+    - file: ocr/simplex
+  - caption: Aplicações
+    chapters:
+    - file: applications/functions
