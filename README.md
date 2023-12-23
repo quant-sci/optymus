@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="logo.png" width="500">
+<img src="logo.png" width="400">
 </h1>
 
 Welcome to _optimuspy_, the Optimization Methods Library for Python! This library provides a comprehensive collection of optimization methods, both with and without constraints, implemented in the Python programming language.
