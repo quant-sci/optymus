@@ -6,7 +6,7 @@ version_files = [
 ]
 
 [tool.poetry]
-name = "optimuspy"
+name = "optymus"
 version = "0.0.1"
 description = "Optimization Methods Library"
 authors = ["Kleyton da Costa"]
