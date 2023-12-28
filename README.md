@@ -18,7 +18,7 @@ _optymus_ is designed to empower users with a versatile set of optimization tool
 
 ## Getting Started
 
-To begin using Optymus, follow these steps:
+To begin using _optymus_, follow these steps:
 
 1. **Install optymus:**
    ```bash
@@ -26,10 +26,28 @@ To begin using Optymus, follow these steps:
    ```
 
 2. **Explore the Documentation:**
-   Visit the [official documentation](https://optymus-docs.readthe.com) to understand the available optimization methods and how to use them effectively.
+   Visit the [official documentation](https://optymus-docs.readthedocs.com) to understand the available optimization methods and how to use them effectively.
 
-3. **Try Examples:**
-   Explore the `examples` directory in the Optymus repository to find sample code snippets and usage demonstrations.
+3. **Get Started:**
+   ```python
+   from optymus.minimize import Optimizer
+   
+   import numpy as np
+   f = lambda x: x[0]**[2]-3*x[0]*x[1]+4*x[1]**2+x[0]-x[1]
+   grad = lambda x: np.array([2*x[0]-3*x[1]+1, -3*x[0]+8*x[1]-1])
+   hess = lambda x: np.array([[2, -3], [-3, 8]])
+   initial_point = np.array([2, 2])
+
+   optimizer = Optimizer(f_obj=f,
+                        x0=initial_point,
+                        grad=grad,
+                        hess=hess,
+                        method='bfgs')
+   
+   optimizer.report()
+
+   optimizer.plot()
+   ```
 
 ## Content
 
