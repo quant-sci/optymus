@@ -10,7 +10,7 @@ on:
     # folder has been modified.
     #
     paths:
-    - docs/optymus-page
+    - docs/
 
 # This job installs dependencies, builds the book, and pushes it to `gh-pages`
 jobs:
@@ -39,4 +39,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3.6.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: _build/html
+        publish_dir: ./_build/html
