@@ -2,6 +2,9 @@
 <img src="logo.png" width="400">
 </h1>
 
+[![PyPI](https://img.shields.io/pypi/v/optymus)](https://pypi.org/project/optymus/)
+[![GitHub](https://img.shields.io/github/license/kleyt0n/agentpy)](https://github.com/kleyt0n/optymus/blob/master/LICENSE)
+
 Welcome to _optymus_, the Optimization Methods Library for Python! This library provides a comprehensive collection of optimization methods, both with and without constraints, implemented in the Python programming language.
 
 ## Table of Contents
