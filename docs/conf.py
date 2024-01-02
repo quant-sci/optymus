@@ -31,6 +31,13 @@ release = '0.1.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "myst_parser",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.coverage",
+    "sphinx.ext.napoleon",
+    "nbsphinx",
+    "sphinx_copybutton",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -41,6 +48,21 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+
+"""
+NOTEBOOKS_DIR = os.path.abspath("examples")
+if os.path.exists(NOTEBOOKS_DIR):
+    import warnings
+
+    warnings.warn("tutorials directory exists, replacing...")
+    shutil.rmtree(NOTEBOOKS_DIR)
+shutil.copytree(
+    os.path.abspath("../tutorials"),
+    NOTEBOOKS_DIR,
+)
+if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
+    shutil.rmtree(NOTEBOOKS_DIR + "/local_scratch")
+"""
 
 # -- Options for HTML output -------------------------------------------------
 
