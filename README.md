@@ -25,7 +25,7 @@ To begin using _optymus_, follow these steps:
 
 1. **Install optymus:**
    ```bash
-   pip install optymus
+   pip install --upgrade optymus
    ```
 
 2. **Explore the Documentation:**

@@ -54,8 +54,8 @@ class Optimizer:
         print(f"Optimal point: {self.opt['xopt']}")
         print("--------------------")
     
-    def plot(self):
+    def plot(self, path=True, print_opt=True):
         if self.check_dimension() == 2:
-            plot_optim(f = self.f_obj, x0=self.x0, method=self.opt)
+            plot_optim(f = self.f_obj, x0=self.x0, method=self.opt, path=path, print_opt=print_opt)
         else:
             print("Plot not available for this dimension. Try functions with 2 variables.")
