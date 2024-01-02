@@ -5,8 +5,6 @@ import seaborn as sns
 
 sns.set_style('whitegrid')
 sns.set_context('notebook')
-plt.rc('text', usetex=True)
-plt.rcParams['text.usetex'] = True
 
 
 def plot_optim(f, x0, method, path=True):
