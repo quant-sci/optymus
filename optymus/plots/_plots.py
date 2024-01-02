@@ -40,8 +40,8 @@ def plot_optim(f, x0, method, path=True):
     ax[0].plot_surface(X, Y, Z, cmap='cividis', linewidth =0)
     ax[0].set_xlabel('x1')
     ax[0].set_ylabel('x2')
-    ax[0].set_zlabel(r"$f(x_{1}, x_{2})$")
-    ax[0].set_title(r"Function surface $f(x_{1}, x_{2})$")
+    ax[0].set_zlabel("f(x_1, x2)$")
+    ax[0].set_title("Function surface f(x1, x2)")
 
     contour = ax[1].contour(X, Y, Z, 200, cmap='cividis')
     ax[1].plot(x0[0], x0[1], color='green', marker='o', label=f'Initial Point - {x0}')
