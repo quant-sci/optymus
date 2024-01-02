@@ -54,7 +54,7 @@ To begin using _optymus_, follow these steps:
 
 ## Content
 
-Optymus includes a rich set of optimization methods, such as:
+_optymus_ includes a rich set of optimization methods, such as:
 
 - Unconstrained Optimization Methods
 - Constrained Optimization Methods
