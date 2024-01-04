@@ -11,6 +11,15 @@ Welcome to optymus's documentation!
    :caption: Contents:
 
 
+Installation
+------------
+
+You can install the library with `pip` using the following command:
+
+.. code-block::
+
+  pip install optymus
+
 
 Indices and tables
 ==================
