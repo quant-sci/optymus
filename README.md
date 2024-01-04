@@ -60,9 +60,7 @@ _optymus_ includes a rich set of optimization methods, such as:
 
 - Unconstrained Optimization Methods
 - Constrained Optimization Methods
-- Global Optimization
-- Gradient Descent
-- Evolutionary Algorithms
+- Global Optimization Methods
 
 Refer to the documentation for detailed information on each method and its application.
 
