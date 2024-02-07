@@ -7,19 +7,18 @@
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 
 
-Welcome to _optymus_, the Optimization Methods Library for Python! This library provides a comprehensive collection of optimization methods, both with and without constraints, implemented in the Python programming language.
+This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
-## Table of Contents
+## Implemented Methods
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-- [Content](#content)
-- [Contributions](#contributions)
-- [License](#license)
+| Method | Description |
+| --- | --- |
+| bfgs | Broyden-Fletcher-Goldfarb-Shanno (BFGS) |
+| steepdesc | Steepest Descent |
+| newton_raphson | Newton-Raphson Method |
+| powell | Powell's Method |
+|fletcher_reeves | Fletcher-Reeves |
 
-## Introduction
-
-_optymus_ is designed to empower users with a versatile set of optimization tools, facilitating the search for optimal solutions in various problem domains. This library covers a range of optimization methods, making it suitable for diverse applications in computer science and engineering.
 
 ## Getting Started
 
@@ -48,28 +47,31 @@ To begin using _optymus_, follow these steps:
                         grad=grad,
                         hess=hess,
                         method='bfgs')
-   
+
    optimizer.report()
 
    optimizer.plot()
    ```
 
-## Content
-
-_optymus_ includes a rich set of optimization methods, such as:
-
-- Unconstrained Optimization Methods
-- Constrained Optimization Methods
-- Global Optimization Methods
-
 Refer to the documentation for detailed information on each method and its application.
+
+## Implement your own method an compare with the implemented ones
+
+We are working to implement a simple way to add your own optimization method. 
 
 ## Contributions
 
-Contributions to Optymus are highly appreciated! If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the [contribution guidelines](CONTRIBUTING.md).
+Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the [contribution guidelines](CONTRIBUTING.md).
 
-## License
+## Cite
 
-Optymus is licensed under the [MIT License](LICENSE), allowing you to use, modify, and distribute the library for both commercial and non-commercial purposes.
+If you use Optymus in your research, please consider citing the library using the following BibTeX entry:
 
-Start optimizing with Optymus and unlock the potential for finding optimal solutions in your Python projects!
+```bibtex
+@misc{optymus2024costa,
+  author = {Costa, Kleyton},
+  title = {Optymus: Optimization Methods Library for Python},
+  year = {2024},
+  note = {GitHub Repository},
+  url = {https://github.com/kleyt0n/optymus}
+}
