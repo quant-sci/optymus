@@ -6,6 +6,7 @@
 [![GitHub](https://img.shields.io/github/license/kleyt0n/optymus)](https://github.com/kleyt0n/optymus/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 
+> Optymus is part of [quantsci](https://quantsci.org) project.
 
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
@@ -69,7 +70,7 @@ If you use Optymus in your research, please consider citing the library using th
 
 ```bibtex
 @misc{optymus2024costa,
-  author = {Costa, Kleyton},
+  author = {Costa, Kleyton and Menezes, Ivan},
   title = {Optymus: Optimization Methods Library for Python},
   year = {2024},
   note = {GitHub Repository},
