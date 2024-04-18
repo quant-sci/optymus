@@ -39,12 +39,13 @@ To begin using _optymus_, follow these steps:
    from optymus.utils import mccormick_function
    
    import numpy as np
+
    f = mccormick_function()
    initial_point = np.array([2, 2])
 
    opt = Optimizer(f_obj=f,
-                        x0=initial_point,
-                        method='bfgs')
+                   x0=initial_point,
+                   method='bfgs')
 
    opt.report()
 
