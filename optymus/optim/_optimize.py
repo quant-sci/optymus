@@ -5,22 +5,22 @@ from optymus.utils._plots import (
     plot_optim
 )
 
-from optymus.opt._zero_order import (
+from optymus.optim._zero_order import (
     univariant,
     powell,
 )
-from optymus.opt._first_order import (
+from optymus.optim._first_order import (
     sgd,
     conjugate_gradients, 
     bfgs, 
     l_bfgs,
 )
 
-from optymus.opt._second_order import (
+from optymus.optim._second_order import (
     newton_raphson
 )
 
-from optymus.opt._adaptative import (
+from optymus.optim._adaptative import (
     adagrad,
     rmsprop,
     adam,
