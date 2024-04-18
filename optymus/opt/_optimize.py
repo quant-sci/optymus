@@ -1,36 +1,62 @@
-# Full path: optymus/optymus/minimize/_minimize.py
+# Full path: optymus/optymus/opt/_optimize.py
 # Optimizer class
 
-from optymus.plots import plot_optim
-
-from optymus.utils._optim_methods import (
-    univariant, powell, steepest_descent, fletcher_reeves, newton_raphson, bfgs
+from optymus.utils._plots import (
+    plot_optim
 )
+
+from optymus.opt._zero_order import (
+    univariant,
+    powell,
+)
+from optymus.opt._first_order import (
+    sgd,
+    conjugate_gradients, 
+    bfgs, 
+    l_bfgs,
+)
+
+from optymus.opt._second_order import (
+    newton_raphson
+)
+
+from optymus.opt._adaptative import (
+    adagrad,
+    rmsprop,
+    adam,
+    adamax
+)
+
+METHODS = {
+    "univariant": univariant,
+    "powell": powell,
+    "sgd": sgd,
+    "conjugate_gradients": conjugate_gradients, 
+    "bfgs": bfgs, 
+    "l_bfgs": l_bfgs,
+    "newton_raphson": newton_raphson,
+    "adagrad": adagrad,
+    "rmsprop": rmsprop,
+    "adam": adam,
+    "adamax": adamax
+
+}
 
 
 class Optimizer:
-    def __init__(self, f_obj, x0, grad=None, hess=None, method=None, const=None, tol=1e-5, max_iter=100):
-        self.const = const
+    def __init__(self, f_obj, x0, method=None, tol=1e-5, max_iter=100):
         self.f_obj = f_obj
         self.x0 = x0
-        self.grad = grad
-        self.hess = hess
         self.method = method
         self.tol = tol
         self.max_iter = max_iter
 
         if self.method is None:
-            self.opt = steepest_descent(self.f_obj, self.x0, self.grad, self.tol, self.max_iter)
-        elif self.method == 'powell':
-            self.opt = powell(self.f_obj, self.x0, self.tol, self.max_iter)
-        elif self.method == 'steepest_descent':
-            self.opt = steepest_descent(self.f_obj, self.x0, self.grad, self.tol, self.max_iter)
-        elif self.method == 'fletcher_reeves':
-            self.opt = fletcher_reeves(self.f_obj, self.x0, self.grad, self.tol, self.max_iter)
-        elif self.method == 'newton_raphson':
-            self.opt = newton_raphson(self.f_obj, self.x0, self.grad, self.hess, self.tol, self.max_iter)
-        elif self.method == 'bfgs':
-            self.opt = bfgs(self.f_obj, self.x0, self.grad, self.tol, self.max_iter)
+            self.opt = sgd(self.f_obj, self.x0, self.tol, self.max_iter)
+
+        elif self.method is not None:
+            self.opt = METHODS[self.method](self.f_obj, self.x0, self.tol, self.max_iter)
+        
         else:
             raise ValueError("Method not available")
 
