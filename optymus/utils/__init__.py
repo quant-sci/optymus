@@ -7,17 +7,21 @@ from ._search import (
 )
 
 from ._obj_functions import (
-    mccormick_function
+    rastrigin_function,
+    mccormick_function,
 )
 
 from ._plots import (
-    plot_optim
+    plot_function,
+    plot_optim,
 )
 
 __all__ = [
     "bracket_minimum",
     "golden_section",
     "line_search",
-    "plot_optim"
-    "mccormick_function"
+    "plot_function",
+    "plot_optim",
+    "mccormick_function",
+    "rastrigin_function"
 ]
