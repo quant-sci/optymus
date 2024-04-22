@@ -6,6 +6,8 @@
 [![GitHub](https://img.shields.io/github/license/kleyt0n/optymus)](https://github.com/kleyt0n/optymus/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 
+> Check the [Optimization in Deep Learning and Engineering](https://quantsci.org/odle-book) material.
+
 > Optymus is part of [quantsci](https://quantsci.org) project.
 
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
@@ -35,23 +37,21 @@ To begin using _optymus_, follow these steps:
 
 3. **Get Started:**
    ```python
-   from optymus.minimize import Optimizer
+   from optymus.optim import Optimizer
+   from optymus.utils import mccormick_function
    
    import numpy as np
-   f = lambda x: x[0]**[2]-3*x[0]*x[1]+4*x[1]**2+x[0]-x[1]
-   grad = lambda x: np.array([2*x[0]-3*x[1]+1, -3*x[0]+8*x[1]-1])
-   hess = lambda x: np.array([[2, -3], [-3, 8]])
+
+   f = mccormick_function()
    initial_point = np.array([2, 2])
 
-   optimizer = Optimizer(f_obj=f,
-                        x0=initial_point,
-                        grad=grad,
-                        hess=hess,
-                        method='bfgs')
+   opt = Optimizer(f_obj=f,
+                   x0=initial_point,
+                   method='bfgs')
 
-   optimizer.report()
+   opt.report()
 
-   optimizer.plot()
+   opt.plot()
    ```
 
 Refer to the documentation for detailed information on each method and its application.
@@ -69,10 +69,11 @@ Contributions to Optymus are highly appreciated. If you have additional optimiza
 If you use Optymus in your research, please consider citing the library using the following BibTeX entry:
 
 ```bibtex
-@misc{optymus2024costa,
+@misc{optymus2024,
   author = {Costa, Kleyton and Menezes, Ivan},
   title = {Optymus: Optimization Methods Library for Python},
   year = {2024},
   note = {GitHub Repository},
-  url = {https://github.com/kleyt0n/optymus}
+  url = {https://github.com/quantsci/optymus}
 }
+```
