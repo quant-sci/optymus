@@ -1,17 +1,22 @@
-import numpy as np
+import jax.numpy as jnp
 
-def bracket_minimum(f, x=0, s=0.01):
-    a, ya = x, f(x)
-    b, yb = a + s, f(a + s)
-    if yb > ya:
-        a, b = b, a
-        ya, yb = yb, ya
-        s = -s
-    while True:
-        c, yc = b + s, f(b + s)
-        if yc > yb:
-            return (a, c) if np.all(a < c) else (c, a)
-        a, ya, b, yb = b, yb, c, yc
+def bracket_minimum(f, x=0.0, s=0.01):
+  a = jnp.array(x)  # Ensure x is a JAX array
+  ya = f(a)
+  b = a + s
+  yb = f(b)
+
+  if yb > ya:
+    a, b = b, a
+    ya, yb = yb, ya
+    s = -s
+
+  while True:
+    c = b + s
+    yc = f(c)
+    if yc > yb:
+      return jnp.where(a < c, jnp.stack((a, c)), jnp.stack((c, a)))  # Use jnp.where for condition
+    a, ya, b, yb = b, yb, c, yc
 
 def golden_section(f, a, b, tol=1e-5):
     phi = (np.sqrt(5)-1)/2

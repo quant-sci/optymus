@@ -1,56 +1,59 @@
-import numpy as np
+import jax.numpy as jnp
+import jax
+
 from optymus.utils import line_search
 
-def sgd(f_obj, x0, grad, tol=1e-4, max_iter=100):
+def gradient_descent(f_obj, x0, tol=1e-4, max_iter=100):
     """
-    Stochastic Gradient Descent
+    Gradient Descent
     """
     x = x0.copy()
-    g = grad(x)
+    g = jax.grad(f_obj)(x)
     d = -g
     path = [x]
     alphas = []
     num_iter = 0
     for _ in range(max_iter):
-        if np.linalg.norm(g) < tol:
+        if jnp.linalg.norm(g) < tol:
             break
         r = line_search(f_obj, x, d)
         alphas.append(r['alpha'])
         x = r['xopt']
-        g = grad(x)
+        g = jax.grad(f_obj)(x)
         d = -g
         num_iter += 1
         path.append(x)
     result = {
-                'method_name': 'Steepest Descent',
+                'method_name': 'Gradient Descent',
                 'xopt': x, 
                 'fmin': f_obj(x), 
                 'num_iter': num_iter, 
-                'path': np.array(path),
-                'alphas': np.array(alphas),
+                'path': jnp.array(path),
+                'alphas': jnp.array(alphas),
                 }        
     return result
 
 
-def conjugate_gradients(f_obj, x0, grad, tol=1e-5, maxiter=100, type='fletcher-reeves'):
+def conjugate_gradients(f_obj, x0, grad, tol=1e-5, maxiter=100, type=None):
     """
     Gradient Conjugates
     """
     x = x0.copy()
-    grad = grad(x)
+    grad = jax.grad(f_obj)(x)
     direction = -grad
     path = [x]
     alphas = []
     num_iter = 0
     for _ in range(maxiter):
-        if np.linalg.norm(grad) <= tol:
+        if jnp.linalg.norm(grad) <= tol:
             break
         r = line_search(f_obj, x, direction)
         x = r['xopt']
         new_grad = -grad(x)
-        if np.linalg.norm(new_grad) <= tol:
+        if jnp.linalg.norm(new_grad) <= tol:
             break
-        beta = np.dot(new_grad, new_grad) / np.dot(grad, grad)
+        if type is None:
+            beta = jnp.dot(new_grad, new_grad) / jnp.dot(grad, grad)
         direction = -new_grad + beta * direction
         r = line_search(f_obj, x, direction)
         x = r['xopt']
@@ -58,33 +61,39 @@ def conjugate_gradients(f_obj, x0, grad, tol=1e-5, maxiter=100, type='fletcher-r
         path.append(x)
         num_iter += 1
     result = {
-        'method_name': 'Fletcher-Reeves',
+        'method_name': 'Conjugate Gradients',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
-        'path': np.array(path),
-        'alphas': np.array(alphas)
+        'path': jnp.array(path),
+        'alphas': jnp.array(alphas)
         }
     return result
 
 
-def bfgs(f_obj, x0, grad, tol=1e-5, maxiter=100):
-    """
-    BFGS
-    """
+def bfgs(f_obj, x0, tol=1e-5, maxiter=100):
+    """BFGS with JAX"""
+
+    grad = jax.grad(f_obj)
+
     x = x0.copy()
     path = [x]
-    alphas = []
     num_iter = 0
-    for i in range(maxiter):
-        Q, g = np.identity(len(x)), grad(x)
-        x_new = line_search(f_obj, x, -np.dot(Q, g))['xopt']
+    Q = jnp.identity(len(x))  # Initial approximation of the inverse Hessian
+
+    for _ in range(maxiter):
+        g = grad(x)
+        d = -jnp.dot(Q, g)
+        x_new = line_search(f_obj, x, d)['xopt']
         delta = x_new - x
         gamma = grad(x_new) - g
-        if np.linalg.norm(delta) < tol:
+
+        if jnp.linalg.norm(delta) < tol:
             break
-        if np.dot(delta, gamma) > 0:
-            Q = np.dot(np.dot(delta, gamma), np.dot(delta, gamma)) / np.dot(delta, gamma)
+
+        rho = 1.0 / jnp.dot(delta, gamma)
+        Q = (jnp.eye(len(x)) - rho * jnp.outer(delta, gamma)) @ Q @ (jnp.eye(len(x)) - rho * jnp.outer(gamma, delta)) + rho * jnp.outer(delta, delta)  # BFGS update
+
         x = x_new
         path.append(x)
         num_iter += 1
@@ -95,8 +104,8 @@ def bfgs(f_obj, x0, grad, tol=1e-5, maxiter=100):
         'fmin': f_obj(x),
         'num_iter': num_iter,
         'x0': x0,
-        'path': np.array(path)
-        }
+        'path': jnp.array(path)
+    }
     return result
 
 def l_bfgs():

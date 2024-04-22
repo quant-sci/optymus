@@ -10,7 +10,7 @@ from optymus.optim._zero_order import (
     powell,
 )
 from optymus.optim._first_order import (
-    sgd,
+    gradient_descent,
     conjugate_gradients, 
     bfgs, 
     l_bfgs,
@@ -30,7 +30,7 @@ from optymus.optim._adaptative import (
 METHODS = {
     "univariant": univariant,
     "powell": powell,
-    "sgd": sgd,
+    "gradient_descent": gradient_descent,
     "conjugate_gradients": conjugate_gradients, 
     "bfgs": bfgs, 
     "l_bfgs": l_bfgs,
@@ -52,7 +52,7 @@ class Optimizer:
         self.max_iter = max_iter
 
         if self.method is None:
-            self.opt = sgd(self.f_obj, self.x0, self.tol, self.max_iter)
+            self.opt = gradient_descent(self.f_obj, self.x0, self.tol, self.max_iter)
 
         elif self.method is not None:
             self.opt = METHODS[self.method](self.f_obj, self.x0, self.tol, self.max_iter)

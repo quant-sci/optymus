@@ -9,6 +9,15 @@ from ._search import (
 from ._obj_functions import (
     rastrigin_function,
     mccormick_function,
+    ackley_function,
+    eggholder_function,
+    crossintray_function,
+    sphere_function,
+    rosenbrock_function,
+    beale_function,
+    goldenstein_price_function,
+    booth_function,
+    styblinski_tang_function,
 )
 
 from ._plots import (
@@ -23,5 +32,14 @@ __all__ = [
     "plot_function",
     "plot_optim",
     "mccormick_function",
-    "rastrigin_function"
+    "rastrigin_function",
+    "ackley_function",
+    "eggholder_function",
+    "crossintray_function",
+    "sphere_function",
+    "rosenbrock_function",
+    "beale_function",
+    "goldenstein_price_function",
+    "booth_function",
+    "styblinski_tang_function",
 ]
