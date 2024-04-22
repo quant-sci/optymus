@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>3.3. First-order methods &#8212; Optimization in Deep Learning - theory, algorithms, and applications</title>
+    <title>3.3. First-order methods &#8212; Optimization in Deep Learning and Engineering</title>
   
   
   
@@ -150,8 +150,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="Optimization in Deep Learning - theory, algorithms, and applications - Home"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Optimization in Deep Learning - theory, algorithms, and applications - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Optimization in Deep Learning and Engineering - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Optimization in Deep Learning and Engineering - Home"/>`);</script>
   
   
 </a></div>
@@ -194,7 +194,8 @@
 <li class="toctree-l2"><a class="reference internal" href="zero_order.html">3.2. Zero-order methods</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">3.3. First-order methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="second_order.html">3.4. Second-order methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="momentum.html">3.5. Momentum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptative_learning.html">3.5. Adaptative learning methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="momentum.html">3.6. Momentum</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../ch4/information_algorithms.html">4. Information-theoretical algorithms</a></li>
@@ -261,7 +262,7 @@
       
       
       
-      <li><a href="https://github.com/quant-sci/optymus/book" target="_blank"
+      <li><a href="https://github.com/quant-sci/optymus" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -278,7 +279,7 @@
       
       
       
-      <li><a href="https://github.com/quant-sci/optymus/book/issues/new?title=Issue%20on%20page%20%2Fchapters/ch3/first_order.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/quant-sci/optymus/issues/new?title=Issue%20on%20page%20%2Fchapters/ch3/first_order.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -403,9 +404,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent">3.3.1. Gradient descent</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-gradients">3.3.2. Conjugate gradients</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bfgs">3.3.3. BFGS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l-bfgs">3.3.4. L-BFGS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-descent">3.3.2. Stochastic gradient descent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-gradients">3.3.3. Conjugate gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bfgs">3.3.4. BFGS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l-bfgs">3.3.5. L-BFGS</a></li>
 </ul>
             </nav>
         </div>
@@ -422,14 +424,17 @@ document.write(`
 <section id="gradient-descent">
 <h2><span class="section-number">3.3.1. </span>Gradient descent<a class="headerlink" href="#gradient-descent" title="Link to this heading">#</a></h2>
 </section>
+<section id="stochastic-gradient-descent">
+<h2><span class="section-number">3.3.2. </span>Stochastic gradient descent<a class="headerlink" href="#stochastic-gradient-descent" title="Link to this heading">#</a></h2>
+</section>
 <section id="conjugate-gradients">
-<h2><span class="section-number">3.3.2. </span>Conjugate gradients<a class="headerlink" href="#conjugate-gradients" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3.3. </span>Conjugate gradients<a class="headerlink" href="#conjugate-gradients" title="Link to this heading">#</a></h2>
 </section>
 <section id="bfgs">
-<h2><span class="section-number">3.3.3. </span>BFGS<a class="headerlink" href="#bfgs" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3.4. </span>BFGS<a class="headerlink" href="#bfgs" title="Link to this heading">#</a></h2>
 </section>
 <section id="l-bfgs">
-<h2><span class="section-number">3.3.4. </span>L-BFGS<a class="headerlink" href="#l-bfgs" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3.5. </span>L-BFGS<a class="headerlink" href="#l-bfgs" title="Link to this heading">#</a></h2>
 </section>
 </section>
 
@@ -498,9 +503,10 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent">3.3.1. Gradient descent</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-gradients">3.3.2. Conjugate gradients</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bfgs">3.3.3. BFGS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l-bfgs">3.3.4. L-BFGS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-descent">3.3.2. Stochastic gradient descent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conjugate-gradients">3.3.3. Conjugate gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bfgs">3.3.4. BFGS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l-bfgs">3.3.5. L-BFGS</a></li>
 </ul>
   </nav></div>
 

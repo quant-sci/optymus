@@ -2,6 +2,8 @@
 
 ## Gradient descent
 
+## Stochastic gradient descent
+
 ## Conjugate gradients
 
 ## BFGS
