@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import jax.numpy as jnp
 
 def mccormick_function():

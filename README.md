@@ -38,12 +38,12 @@ To begin using _optymus_, follow these steps:
 3. **Get Started:**
    ```python
    from optymus.optim import Optimizer
-   from optymus.utils import mccormick_function
+   from optymus.utils import sphere_function
    
-   import numpy as np
+   import jax.numpy as jnp
 
-   f = mccormick_function()
-   initial_point = np.array([2, 2])
+   f = sphere_function()
+   initial_point = jnp.array([2., 2.])
 
    opt = Optimizer(f_obj=f,
                    x0=initial_point,

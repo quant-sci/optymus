@@ -19,9 +19,9 @@ def bracket_minimum(f, x=0.0, s=0.01):
     a, ya, b, yb = b, yb, c, yc
 
 def golden_section(f, a, b, tol=1e-5):
-    phi = (np.sqrt(5)-1)/2
+    phi = (jnp.sqrt(5)-1)/2
     num_iter = 0
-    beta = np.linalg.norm(b-a)
+    beta = jnp.linalg.norm(b-a)
     alpha_e = a + (1 - phi)*beta
     alpha_d = a + (phi*beta)
     path = []
@@ -32,7 +32,7 @@ def golden_section(f, a, b, tol=1e-5):
         else:
             a = alpha_e
 
-        beta = np.linalg.norm(b-a)
+        beta = jnp.linalg.norm(b-a)
         alpha_e = a + (1 - phi)*beta
         alpha_d = a + (phi*beta)
 
@@ -47,7 +47,7 @@ def golden_section(f, a, b, tol=1e-5):
         'xopt': alpha,
         'fmin': fmin,
         'num_iter': num_iter,
-        'path': np.array(path),
+        'path': jnp.array(path),
     }
     return result
 

@@ -1,1 +1,0 @@
-# Optymus library

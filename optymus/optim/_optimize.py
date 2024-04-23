@@ -1,6 +1,9 @@
 # Full path: optymus/optymus/opt/_optimize.py
 # Optimizer class
 
+import jax
+jax.config.update("jax_enable_x64", True)
+
 from optymus.utils._plots import (
     plot_optim
 )

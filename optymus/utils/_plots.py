@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -29,13 +32,13 @@ def plot_function(f, title=None, min=-10, max=10, n=100):
     fig.delaxes(ax[0])
     ax[0] = fig.add_subplot(121, projection='3d')
     ax[0].view_init(40, 20)
-    ax[0].plot_surface(X, Y, Z, cmap='cividis', linewidth =0)
+    ax[0].plot_surface(X, Y, Z, cmap='viridis', linewidth =0)
     ax[0].set_xlabel('x1')
     ax[0].set_ylabel('x2')
     ax[0].set_zlabel("f(x_1, x2)")
     ax[0].set_title(f'{title} surface f(x1, x2)')
 
-    countour = ax[1].contour(X, Y, Z, 200, cmap='cividis')
+    countour = ax[1].contour(X, Y, Z, 200, cmap='viridis')
     ax[1].set_xlabel('x1')
     ax[1].set_ylabel('x2')
     if title is not None:
@@ -75,13 +78,13 @@ def plot_optim(f, x0, method, path=True, print_opt=True):
     fig.delaxes(ax[0])
     ax[0] = fig.add_subplot(121, projection='3d')
     ax[0].view_init(40, 20)
-    ax[0].plot_surface(X, Y, Z, cmap='cividis', linewidth =0)
+    ax[0].plot_surface(X, Y, Z, cmap='viridis', linewidth =0)
     ax[0].set_xlabel('x1')
     ax[0].set_ylabel('x2')
     ax[0].set_zlabel("f(x_1, x2)")
     ax[0].set_title("Function surface f(x1, x2)")
 
-    contour = ax[1].contour(X, Y, Z, 200, cmap='cividis')
+    contour = ax[1].contour(X, Y, Z, 200, cmap='viridis')
     ax[1].plot(x0[0], x0[1], color='green', marker='o', label=f'Initial Point - {x0}')
     ax[1].scatter(method['xopt'][0], method['xopt'][1], color='red', s=50, marker='o', label=f'Optimal point ({method["num_iter"]} iter.)')
     if print_opt == True:
