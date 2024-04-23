@@ -7,7 +7,7 @@ version_files = [
 
 [tool.poetry]
 name = "optymus"
-version = "0.1.1"
+version = "0.1.2"
 description = "Optimization Methods Library"
 authors = ["Kleyton da Costa", "Ivan Menezes"]
 maintainers = ["Kleyton da Costa <kleyton.vsc@gmail.com>", "Ivan Menezes <ivan@puc-rio.br >"]
