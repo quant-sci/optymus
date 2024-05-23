@@ -1,5 +1,0 @@
-# Momentum 
-
-## Momentum
-
-## Nesterov momentum
