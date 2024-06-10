@@ -9,10 +9,15 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(".."))
+work_dir = '/'.join(os.getcwd().split("/")[:-2])
+src_path = os.path.join(work_dir,'src')
+print(src_path)
+
+sys.path.insert(0, src_path)
 
 
 # -- Project information -----------------------------------------------------
@@ -22,7 +27,7 @@ copyright = '2024, quantsci'
 author = 'Kleyton da Costa'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.1'
+release = '0.1.3'
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,15 +66,10 @@ autodoc_default_options = {"members": True, "inherited-members": True}
 # Turn on autosummary
 autosummary_generate = True
 
-
-import os
-import shutil
-import sys
-
-sys.path.insert(0, os.path.abspath(".."))
-
-
 """
+import shutil
+
+#sys.path.insert(0, os.path.abspath(".."))
 NOTEBOOKS_DIR = os.path.abspath("examples")
 if os.path.exists(NOTEBOOKS_DIR):
     import warnings
@@ -77,7 +77,7 @@ if os.path.exists(NOTEBOOKS_DIR):
     warnings.warn("tutorials directory exists, replacing...")
     shutil.rmtree(NOTEBOOKS_DIR)
 shutil.copytree(
-    os.path.abspath("docs/source/examples"),
+    os.path.abspath("examples"),
     NOTEBOOKS_DIR,
 )
 if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
@@ -89,7 +89,14 @@ if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'pydata_sphinx_theme'
+html_theme = 'alabaster'
+html_theme_options = {
+    "github_user": "quant-sci",
+    "github_repo": "optymus",
+    "github_button": True,
+    "github_type": "star",
+    "github_banner": True,
+}
 html_logo = '../logo.svg'
 html_favicon = '../logo.svg'
 

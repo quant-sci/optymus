@@ -1,15 +1,17 @@
 import jax
 import jax.numpy as jnp
+
 from optymus.search import line_search
 
-def univariant(f_obj, x0, tol=1e-5, max_iter=100):
+
+def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, max_iter=100):
     x = x0.copy()
-    n = len(x)                        
+    n = len(x)
     u = jnp.identity(n)
     path = [x]
     alphas = []
-    num_iter = 0       
-    for _ in range(max_iter):             
+    num_iter = 0
+    for _ in range(max_iter):
         for i in range(n):
             v = u[i]
             r = line_search(f_obj, x, v)
@@ -17,19 +19,18 @@ def univariant(f_obj, x0, tol=1e-5, max_iter=100):
             alphas.append(r['alpha'])
             path.append(x)
             if jnp.linalg.norm(jax.grad(f_obj)(x)) < tol:
-                result = {
+                return {
                     'method_name': 'Univariant',
-                    'xopt': x, 
-                    'fmin': f_obj(x), 
-                    'num_iter': num_iter, 
+                    'xopt': x,
+                    'fmin': f_obj(x),
+                    'num_iter': num_iter,
                     'path': jnp.array(path),
                     'alphas': jnp.array(alphas),
                     }
-                return result
-                
         num_iter += 1
+    return None
 
-def powell(f_obj, x0, tol=1e-5, max_iter=100):
+def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, max_iter=100):
     """Powell's Method"""
 
     # Define gradient function using JAX's automatic differentiation
@@ -69,7 +70,7 @@ def powell(f_obj, x0, tol=1e-5, max_iter=100):
         path.append(x)
         num_iter += 1
 
-        result = {
+        return {
             'method_name': 'Powell',
             'xopt': x,
             'fmin': f_obj(x),
@@ -77,4 +78,4 @@ def powell(f_obj, x0, tol=1e-5, max_iter=100):
             'path': jnp.array(path),
             'alphas': jnp.array(alphas),
         }
-        return result
+    return None

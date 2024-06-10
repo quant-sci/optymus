@@ -1,6 +1,7 @@
 import warnings
 
 import jax.numpy as jnp
+
 from optymus.plots import plot_function
 
 warnings.filterwarnings('ignore')
@@ -13,7 +14,7 @@ class MccormickFunction:
   It is defined as:
 
   .. math::
-     f(x) = x_0^2 - 3x_0x_1 + 4x_1^2 + x_0 - x_1
+     f(x) = sin(x_0 + x_1) + (x_0 - x_1)^2 - 1.5x_0 + 2.5x_1 + 1
 
   Reference:
     https://www.sfu.ca/~ssurjano/mccorm.html
@@ -21,12 +22,16 @@ class MccormickFunction:
   def __init__(self):
     self.name = 'McCormick Function'
 
+  def min_point(self):
+    return [-0.54719, -1.54719]
+
   def __call__(self, x):
     x = jnp.array(x)
-    return x[0]**2 - 3*x[0]*x[1] + 4*x[1]**2 + x[0] - x[1]
+    return jnp.sin(x[0] + x[1]) + (x[0] - x[1])**2 - 1.5*x[0] + 2.5*x[1] + 1
 
   def plot(self):
     plot_function(self, title=self.name, min=-5.12, max=5.12)
+
 
 class RastriginFunction:
   r"""Rastrigin Function

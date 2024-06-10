@@ -1,8 +1,9 @@
 import jax
 import jax.numpy as jnp
+
 jax.config.update("jax_enable_x64", True)
 
-def adam(f_obj, x0, alpha=0.001, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, max_iter=100):
+def adam(f_obj=None, f_constr=None, x0=None, alpha=0.001, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, max_iter=100):
     """Adam optimization algorithm"""
 
     grad = jax.grad(f_obj)
@@ -23,20 +24,19 @@ def adam(f_obj, x0, alpha=0.001, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, max
         x = x - alpha * m_hat / (jnp.sqrt(v_hat) + eps)  # Update parameters
 
         path.append(x)
-        
+
         if jnp.linalg.norm(g) < tol:
             break
 
-    result = {
+    return {
         'method_name': 'Adam',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': t,
         'path': jnp.array(path)
     }
-    return result
 
-def adagrad(f_obj, x0, alpha=0.01, eps=1e-8, tol=1e-5, max_iter=100):
+def adagrad(f_obj=None, f_constr=None, x0=None, alpha=0.01, eps=1e-8, tol=1e-5, max_iter=100):
     """Adagrad optimizer"""
 
     grad = jax.grad(f_obj)
@@ -52,15 +52,15 @@ def adagrad(f_obj, x0, alpha=0.01, eps=1e-8, tol=1e-5, max_iter=100):
       if jnp.linalg.norm(g) < tol:
         break
 
-    return {'method_name': 'Adagrad', 
-            'xopt': x, 
-            'fmin': f_obj(x), 
-            'num_iter': _, 
+    return {'method_name': 'Adagrad',
+            'xopt': x,
+            'fmin': f_obj(x),
+            'num_iter': _,
             'path': jnp.array(path)
             }
 
 # --- RMSprop ---
-def rmsprop(f_obj, x0, alpha=0.001, beta=0.9, eps=1e-8, tol=1e-5, max_iter=100):
+def rmsprop(f_obj=None, f_constr=None, x0=None, alpha=0.001, beta=0.9, eps=1e-8, tol=1e-5, max_iter=100):
     """RMSprop optimizer"""
 
     grad = jax.grad(f_obj)
@@ -76,14 +76,14 @@ def rmsprop(f_obj, x0, alpha=0.001, beta=0.9, eps=1e-8, tol=1e-5, max_iter=100):
       if jnp.linalg.norm(g) < tol:
         break
 
-    return {'method_name': 'RMSprop', 
-            'xopt': x, 
-            'fmin': f_obj(x), 
-            'num_iter': _, 
+    return {'method_name': 'RMSprop',
+            'xopt': x,
+            'fmin': f_obj(x),
+            'num_iter': _,
             'path': jnp.array(path)
             }
 
-def adamax(f_obj, x0, alpha=0.002, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, max_iter=100):
+def adamax(f_obj=None, f_constr=None, x0=None, alpha=0.002, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, max_iter=100):
     """Adamax optimizer"""
 
     grad = jax.grad(f_obj)
@@ -101,14 +101,14 @@ def adamax(f_obj, x0, alpha=0.002, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, m
       if jnp.linalg.norm(g) < tol:
         break
 
-    return {'method_name': 'Adamax', 
-            'xopt': x, 
-            'fmin': f_obj(x), 
-            'num_iter': t, 
+    return {'method_name': 'Adamax',
+            'xopt': x,
+            'fmin': f_obj(x),
+            'num_iter': t,
             'path': jnp.array(path)
             }
 
-def yogi(f_obj, x0, alpha=0.01, beta1=0.9, beta2=0.999, eps=1e-3, tol=1e-5, max_iter=100):
+def yogi(f_obj=None, f_constr=None, x0=None, alpha=0.01, beta1=0.9, beta2=0.999, eps=1e-3, tol=1e-5, max_iter=100):
     """Yogi optimizer"""
 
     grad = jax.grad(f_obj)
@@ -128,9 +128,9 @@ def yogi(f_obj, x0, alpha=0.01, beta1=0.9, beta2=0.999, eps=1e-3, tol=1e-5, max_
       if jnp.linalg.norm(g) < tol:
         break
 
-    return {'method_name': 'Yogi', 
-            'xopt': x, 
-            'fmin': f_obj(x), 
-            'num_iter': t, 
+    return {'method_name': 'Yogi',
+            'xopt': x,
+            'fmin': f_obj(x),
+            'num_iter': t,
             'path': jnp.array(path)
             }

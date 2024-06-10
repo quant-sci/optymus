@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
     "jax>=0.4.28",
     "jaxlib>=0.4.28",
+    "tqdm>=4.66.4",
     ]
 
 
@@ -63,12 +64,12 @@ dependencies = [
   "sphinx_design==0.5.0",
   "sphinx_togglebutton==0.3.2",
   "sphinxcontrib.youtube==1.4.1",
-  "pydata_sphinx_theme==0.14.4",
-  "optymus",
+  "dash>=2.17.0",
+  "dash_bootstrap_components>=1.6.0",
 ]
 
 [tool.hatch.envs.docs.scripts]
-build = ["sphinx-build -M html docs/source docs/build -W --keep-going"]
+build = ["PYTHONPATH=./src sphinx-build -M html docs/source docs/build -W --keep-going"]
 
 [tool.hatch.envs.testing]
 dependencies = [

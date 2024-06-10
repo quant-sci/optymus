@@ -1,0 +1,15 @@
+
+Plots
+====================
+
+This module contains the fucntions to plot the results of the optimization.
+
+
+Plots
+----------------
+
+.. autosummary::
+    :toctree: .generated/
+
+    optymus.plots.plot_function
+    optymus.plots.plot_optim

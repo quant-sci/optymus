@@ -1,39 +1,63 @@
 import jax
 import jax.numpy as jnp
+from tqdm import tqdm
+
 from optymus.search import line_search
 
 
-def gradient_descent(f_obj, x0, tol=1e-4, max_iter=100):
+def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, max_iter=100, maximize=False):
     """
-    Gradient Descent
+    Gradient Descent with constraints and maximization option.
+
+    Args:
+        f_obj (function): Objective function to be minimized or maximized.
+        x0 (array): Initial guess for the variables.
+        f_constr (function, optional): Constraint function to be satisfied.
+        tol (float, optional): Tolerance for the gradient norm to determine convergence.
+        max_iter (int, optional): Maximum number of iterations.
+        maximize (bool, optional): If True, maximize the objective function.
+
+    Returns:
+        dict: Contains optimization results including optimal point, function value,
+              number of iterations, path taken, and step sizes.
     """
-    x = x0.copy()
-    g = jax.grad(f_obj)(x)
-    d = -g
+    x = x0.astype(float)  # Ensure x0 is of a floating-point type
+    sign = -1 if maximize else 1  # Multiply by -1 to maximize
+
+    def penalized_obj(x):
+        penalty = 0.0
+        if f_constr is not None:
+            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        return f_obj(x) + sign * penalty
+
+    g = jax.grad(penalized_obj)(x)
+    d = -sign * g
     path = [x]
     alphas = []
     num_iter = 0
-    for _ in range(max_iter):
+
+    for _ in tqdm(range(max_iter), desc=f'Gradient Descent {num_iter}',):
         if jnp.linalg.norm(g) < tol:
             break
-        r = line_search(f_obj, x, d)
+        r = line_search(f=penalized_obj, x=x, d=d, maximize=maximize)
         alphas.append(r['alpha'])
-        x = r['xopt']
-        g = jax.grad(f_obj)(x)
-        d = -g
+        x = r['xopt'].astype(float)  # Ensure xopt is of a floating-point type
+        g = jax.grad(penalized_obj)(x)
+        d = -sign * g
         num_iter += 1
         path.append(x)
+
     return {
-                'method_name': 'Gradient Descent',
-                'xopt': x,
-                'fmin': f_obj(x),
-                'num_iter': num_iter,
-                'path': jnp.array(path),
-                'alphas': jnp.array(alphas),
-                }
+        'method_name': 'Gradient Descent',
+        'xopt': x,
+        'fmin': f_obj(x) if not maximize else -f_obj(x),
+        'num_iter': num_iter,
+        'path': jnp.array(path),
+        'alphas': jnp.array(alphas),
+    }
 
 
-def conjugate_gradients(f_obj, x0, grad, tol=1e-5, maxiter=100, gradient_type=None):
+def conjugate_gradients(f_obj=None, f_constr=None, x0=None, tol=1e-5, maxiter=100, gradient_type=None):
     """
     Gradient Conjugates
     """
@@ -69,7 +93,7 @@ def conjugate_gradients(f_obj, x0, grad, tol=1e-5, maxiter=100, gradient_type=No
         }
 
 
-def bfgs(f_obj, x0, tol=1e-5, maxiter=100):
+def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, maxiter=100):
     """BFGS with JAX"""
 
     grad = jax.grad(f_obj)
@@ -107,7 +131,7 @@ def bfgs(f_obj, x0, tol=1e-5, maxiter=100):
         'path': jnp.array(path)
     }
 
-def l_bfgs():
+def l_bfgs(f_obj=None, f_constr=None, x0=None):
     """
     L-BFGS
     """

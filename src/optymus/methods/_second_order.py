@@ -1,9 +1,11 @@
 
 import jax
 import jax.numpy as jnp
+
 from optymus.search import line_search
 
-def newton_raphson(f_obj, x0, tol=1e-5, maxiter=100):
+
+def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, maxiter=100):
   """Newton-Raphson"""
 
   grad = jax.grad(f_obj)
@@ -31,7 +33,7 @@ def newton_raphson(f_obj, x0, tol=1e-5, maxiter=100):
     path.append(x)
     num_iter += 1
 
-  result = {
+  return {
       'method_name': 'Newton-Raphson',
       'xopt': x,
       'fmin': f_obj(x),
@@ -39,4 +41,3 @@ def newton_raphson(f_obj, x0, tol=1e-5, maxiter=100):
       'path': jnp.array(path),
       'alphas': jnp.array(alphas)
   }
-  return result

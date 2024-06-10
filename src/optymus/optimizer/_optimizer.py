@@ -39,7 +39,7 @@ METHODS = {
 
 
 class Optimizer:
-    def __init__(self, f_obj, x0, method='gradient_descent', tol=1e-5, max_iter=100):
+    def __init__(self, f_obj=None, f_constr=None, x0=None, method='gradient_descent', tol=1e-5, max_iter=100, **kwargs):
         """
         Initializes the Optimizer class.
 
@@ -51,6 +51,7 @@ class Optimizer:
             max_iter (int, optional): The maximum number of iterations. Defaults to 100.
         """
         self.f_obj = f_obj
+        self.f_constr = f_constr
         self.x0 = x0
         self.method = method
         self.tol = tol
@@ -60,8 +61,21 @@ class Optimizer:
             msg = f"Method '{method}' not available. Available methods: {list(METHODS.keys())}"
             raise ValueError(msg)
 
+        if self.f_obj is None:
+            msg = "Objective function is required."
+            raise ValueError(msg)
+
+        if self.x0 is None:
+            msg = "Initial guess is required."
+            raise ValueError(msg)
+
         # Run the optimization and store results
-        self.opt = METHODS[self.method](f_obj=self.f_obj, x0=self.x0, tol=self.tol)
+        self.opt = METHODS[self.method](f_obj=self.f_obj,
+                                        f_constr=self.f_constr,
+                                        x0=self.x0,
+                                        tol=self.tol,
+                                        max_iter=self.max_iter,
+                                        **kwargs)
 
     def check_dimension(self):
         """Returns the dimension of the problem."""
@@ -97,6 +111,9 @@ class Optimizer:
             x_grid, y_grid = np.meshgrid(x_values, y_values)
             z_grid = self.f_obj([x_grid, y_grid])
 
+        if self.f_constr is not None:
+            self.method = f"{self.method} with constraints"
+
         self.path = self.opt.get('path', None)
 
         navbar = html.H4(
@@ -107,7 +124,6 @@ class Optimizer:
         app.layout = html.Div(children=[
             navbar,
 
-            # Optimization path plot (only if 2D - adapted for 3D surface)
             dbc.Row(
             [
                 dbc.Col(dbc.Card(dbc.CardBody([html.Div(dcc.Graph(
@@ -178,22 +194,22 @@ class Optimizer:
                         ),
                     ),
                 dbc.Col(
-                    html.Div(
-                        dbc.Table(
-                            children=[
-                                html.Tr([html.Th("Parameter"), html.Th("Value")]),
-                                html.Tr([html.Td("Method"),
-                                            html.Td(str(self.method))]),
-                                html.Tr([html.Td("Final Solution"),
-                                            html.Td(str(self.opt.get('xopt', 'N/A')))]),
-                                html.Tr([html.Td("Objective Function Value"),
-                                            html.Td(str(self.opt.get('fmin', 'N/A')))]),
-                                html.Tr([html.Td("Number of Iterations"),
-                                            html.Td(str(self.opt.get('num_iter', 'N/A')))]),
-                                html.Tr([html.Td("Initial Guess"),
-                                            html.Td(str(self.x0))]),
-                            ],
-                            bordered=True,
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H5("Optimization Details", className="card-title"),
+                                dbc.Table(
+                                    [
+                                        html.Tr([html.Th("Parameter"), html.Th("Value")]),
+                                        html.Tr([html.Td("Method"), html.Td(str(self.method))]),
+                                        html.Tr([html.Td("Final Solution"), html.Td(str(self.opt.get('xopt', 'N/A')))]),
+                                        html.Tr([html.Td("Objective Function Value"), html.Td(str(self.opt.get('fmin', 'N/A')))]),
+                                        html.Tr([html.Td("Number of Iterations"), html.Td(str(self.opt.get('num_iter', 'N/A')))]),
+                                        html.Tr([html.Td("Initial Guess"), html.Td(str(self.x0))]),
+                                    ],
+                                    bordered=True,
+                                )
+                            ]
                         )
                     )
                 ),
@@ -226,3 +242,4 @@ class Optimizer:
         # open the browser
         import webbrowser
         webbrowser.open(f'http://localhost:{port}')
+

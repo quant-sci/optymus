@@ -1,7 +1,7 @@
-﻿optymus.optim.Optimizer
-=======================
+﻿optymus.Optimizer
+=================
 
-.. currentmodule:: optymus.optim
+.. currentmodule:: optymus
 
 .. autoclass:: Optimizer
 
@@ -15,9 +15,9 @@
    
       ~Optimizer.__init__
       ~Optimizer.check_dimension
-      ~Optimizer.plot
-      ~Optimizer.report
-      ~Optimizer.results
+      ~Optimizer.create_dashboard
+      ~Optimizer.get_results
+      ~Optimizer.print_report
    
    
 
