@@ -3,23 +3,21 @@
 import dash
 import dash_bootstrap_components as dbc
 import jax
-import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 from dash import dcc, html
 from optymus.methods import (
     adagrad,
     adam,
     adamax,
     bfgs,
-    conjugate_gradients,
+    conjugate_gradient,
     gradient_descent,
-    l_bfgs,
     newton_raphson,
     powell,
     rmsprop,
     univariant,
 )
+from optymus.plots import plot_optim
 
 jax.config.update("jax_enable_x64", True)
 
@@ -27,9 +25,8 @@ METHODS = {
     "univariant": univariant,
     "powell": powell,
     "gradient_descent": gradient_descent,
-    "conjugate_gradients": conjugate_gradients,
+    "conjugate_gradient": conjugate_gradient,
     "bfgs": bfgs,
-    "l_bfgs": l_bfgs,
     "newton_raphson": newton_raphson,
     "adagrad": adagrad,
     "rmsprop": rmsprop,
@@ -97,24 +94,20 @@ class Optimizer:
 
         return pd.DataFrame(table_data, index=['Optimization Results'])
 
+    def plot_results(self, **kwargs):
+        """Plots the optimization path and function surface."""
+        plot_optim(self.f_obj, self.x0, self.opt, **kwargs)
+
     def create_dashboard(self, port=8050):
         """Generates a Dash dashboard with optimization results."""
 
         app = dash.Dash(__name__, title="optymus", external_stylesheets=[dbc.themes.FLATLY])
 
-        # Create 3D surface data (if applicable)
-        dimension = 2
-
-        if self.check_dimension() == dimension:
-            x_values = np.linspace(-3, 3, 100)
-            y_values = np.linspace(-3, 3, 100)
-            x_grid, y_grid = np.meshgrid(x_values, y_values)
-            z_grid = self.f_obj([x_grid, y_grid])
-
         if self.f_constr is not None:
             self.method = f"{self.method} with constraints"
 
         self.path = self.opt.get('path', None)
+        fig = plot_optim(self.f_obj, self.x0, self.opt, path=True, show=False)
 
         navbar = html.H4(
             "Optymus Dashboard", className="bg-primary text-white p-2 mb-2 text-left"
@@ -126,73 +119,16 @@ class Optimizer:
 
             dbc.Row(
             [
-                dbc.Col(dbc.Card(dbc.CardBody([html.Div(dcc.Graph(
-                                            id='path-graph',
-                                            figure={
-                                                'data': [
-                                                    go.Surface(
-                                                        x=x_grid,
-                                                        y=y_grid,
-                                                        z=z_grid,
-                                                        colorscale='Viridis',
-                                                        opacity=0.8
-                                                    ),
-                                                    go.Scatter3d(
-                                                        x=[],
-                                                        y=[],
-                                                        z=[],
-                                                        mode='lines+markers',
-                                                        marker={"size": 5, "color": 'red'},
-                                                        line={"width": 3, "color": 'red'}
-                                                    )
-                                                ],
-                                                'layout': go.Layout(
-                                                    title='Objective Function Surface',
-                                                    scene={
-                                                        "xaxis_title": 'X',
-                                                        "yaxis_title": 'Y',
-                                                        "zaxis_title": 'Objective Function Value'
-                                                    },
-                                                    margin={"l": 0, "r": 0, "b": 0, "t": 40}
-                                                )
-                                            },
-
-                                        ),
-                                    ),
-                                ],) if self.check_dimension() == 2 else html.Div(),
-
-                                        )),
-                dbc.Col(dbc.Card(dbc.CardBody([html.Div(dcc.Graph(
-                                        id='convergence-graph',
-                                        figure={
-                                            'data': [
-                                                go.Contour(
-                                                    z=z_grid,
-                                                    x=x_values,
-                                                    y=y_values,
-                                                    colorscale='Viridis',
-                                                    opacity=0.8,
-                                                    contours={"showlabels": True},
-                                                ),
-                                                go.Scatter(
-                                                    x=[i[0] for i in self.path],
-                                                    y=[i[1] for i in self.path],
-                                                    mode='lines+markers',
-                                                    marker={"size": 5, "color": 'red'},
-                                                    line={"width": 3, "color": 'red'}
-                                                )
-                                            ],
-                                            'layout': go.Layout(
-                                                title='Path of Optimization',
-                                                margin={"l": 0, "r": 0, "b": 0, "t": 40}
-                                           )
-                                            },
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                    ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H5("Function surface and countour", className="card-title"),
+                                dcc.Graph(id='contour-plot', figure=fig),
+                            ]
+                        )
+                    )
+                ),
                 dbc.Col(
                     dbc.Card(
                         dbc.CardBody(

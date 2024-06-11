@@ -17,13 +17,9 @@ def bracket_minimum(func, x0, dir, alpha=0.0, step_size=0.01, eps=1e-5):
 import scipy.optimize as opt
 
 
-def line_search(f, x, d, step_size=0.01, maximize=False):
+def line_search(f, x, d, step_size=0.01):
     a, b = bracket_minimum(func=f, x0=x, dir=d, step_size=step_size)
-    if maximize:
-        alpha = opt.golden(lambda alpha: -f(x + alpha * d), brack=(a, b), tol=1e-5)
-    else:
-        alpha = opt.golden(lambda alpha: f(x + alpha * d), brack=(a, b), tol=1e-5)
-
+    alpha = opt.golden(lambda alpha: f(x + alpha * d), brack=(a, b), tol=1e-5)
     x_opt = x + alpha * d
     return {
         'method_name': 'Line Search',

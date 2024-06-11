@@ -89,14 +89,7 @@ if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
-html_theme_options = {
-    "github_user": "quant-sci",
-    "github_repo": "optymus",
-    "github_button": True,
-    "github_type": "star",
-    "github_banner": True,
-}
+html_theme = 'pydata_sphinx_theme'
 html_logo = '../logo.svg'
 html_favicon = '../logo.svg'
 

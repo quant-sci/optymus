@@ -14,6 +14,7 @@
    .. autosummary::
    
       ~MccormickFunction.__init__
+      ~MccormickFunction.min_point
       ~MccormickFunction.plot
    
    

@@ -22,7 +22,7 @@ First Order Methods
     :toctree: .generated/
 
     optymus.methods.bfgs
-    optymus.methods.conjugate_gradients
+    optymus.methods.conjugate_gradient
     optymus.methods.gradient_descent
     optymus.methods.l_bfgs
 

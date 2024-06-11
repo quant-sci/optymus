@@ -17,6 +17,7 @@
       ~Optimizer.check_dimension
       ~Optimizer.create_dashboard
       ~Optimizer.get_results
+      ~Optimizer.plot_results
       ~Optimizer.print_report
    
    
