@@ -1,4 +1,5 @@
 
+from optymus.benchmark._comparison import methods_comparison
 from optymus.benchmark._obj_functions import (
     AckleyFunction,
     BealeFunction,
@@ -7,6 +8,7 @@ from optymus.benchmark._obj_functions import (
     CustomFunction,
     EggholderFunction,
     GoldsteinPriceFunction,
+    HimmeblauFunction,
     MccormickFunction,
     RastriginFunction,
     RosenbrockFunction,
@@ -27,4 +29,6 @@ __all__ = [
     'BoothFunction',
     'StyblinskiTangFunction',
     'CustomFunction',
+    'HimmeblauFunction',
+    'methods_comparison',
 ]

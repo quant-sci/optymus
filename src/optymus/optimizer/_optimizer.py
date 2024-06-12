@@ -4,7 +4,8 @@ import dash
 import dash_bootstrap_components as dbc
 import jax
 import pandas as pd
-from dash import dcc, html
+from dash import Input, Output, dcc, html
+from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
 from optymus.methods import (
     adagrad,
     adam,
@@ -16,8 +17,9 @@ from optymus.methods import (
     powell,
     rmsprop,
     univariant,
+    yogi,
 )
-from optymus.plots import plot_optim
+from optymus.plots import plot_alphas, plot_optim
 
 jax.config.update("jax_enable_x64", True)
 
@@ -31,12 +33,13 @@ METHODS = {
     "adagrad": adagrad,
     "rmsprop": rmsprop,
     "adam": adam,
-    "adamax": adamax
+    "adamax": adamax,
+    "yogi": yogi,
 }
 
 
 class Optimizer:
-    def __init__(self, f_obj=None, f_constr=None, x0=None, method='gradient_descent', tol=1e-5, max_iter=100, **kwargs):
+    def __init__(self, f_obj=None, f_constr=None, x0=None, method='gradient_descent', tol=1e-5, max_iter=1000, **kwargs):
         """
         Initializes the Optimizer class.
 
@@ -90,32 +93,58 @@ class Optimizer:
             "Optimal Solution": [self.opt.get('xopt', 'N/A')],
             "Objective Function Value": [self.opt.get('fmin', 'N/A')],
             "Number of Iterations": [self.opt.get('num_iter', 'N/A')],
+            "Time Elapsed": [self.opt.get('time', 'N/A')],
         }
 
         return pd.DataFrame(table_data, index=['Optimization Results'])
 
     def plot_results(self, **kwargs):
         """Plots the optimization path and function surface."""
-        plot_optim(self.f_obj, self.x0, self.opt, **kwargs)
+        plot_optim(self.f_obj, self.f_constr, self.x0, self.opt, **kwargs)
 
-    def create_dashboard(self, port=8050):
+    def create_dashboard(self, port=8050, **kwargs):
         """Generates a Dash dashboard with optimization results."""
+        dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
+        app = dash.Dash(__name__, title="optymus", external_stylesheets=[dbc.themes.FLATLY, dbc_css])
 
-        app = dash.Dash(__name__, title="optymus", external_stylesheets=[dbc.themes.FLATLY])
-
+        theme_switch = ThemeSwitchAIO(
+            aio_id="theme", themes=[dbc.themes.FLATLY, dbc.themes.SLATE]
+        )
         if self.f_constr is not None:
             self.method = f"{self.method} with constraints"
 
         self.path = self.opt.get('path', None)
-        fig = plot_optim(self.f_obj, self.x0, self.opt, path=True, show=False)
+
+        fig_optim = dcc.Graph(id='contour-plot')
+        fig_alpha = dcc.Graph(id='alpha-plot')
 
         navbar = html.H4(
-            "Optymus Dashboard", className="bg-primary text-white p-2 mb-2 text-left"
+            "Optymus Dashboard", className="bg-primary text-white p-2 mb-2 text-left",
+        )
+
+        footer = dbc.Container(
+            dbc.Row(
+                dbc.Col(
+                    html.P(
+                        [
+                            html.Span("optymus", className="mr-2"),
+                            html.A(
+                                html.Span("GitHub", className="text-white"),
+                                href="https://github.com/quant-sci/optymus",
+                                target="_blank",
+                            ),
+                        ],
+                        className="lead",
+                    )
+                )
+            )
         )
 
         # Create Dash layout
         app.layout = html.Div(children=[
             navbar,
+            theme_switch,
+            html.Br(),
 
             dbc.Row(
             [
@@ -124,7 +153,7 @@ class Optimizer:
                         dbc.CardBody(
                             [
                                 html.H5("Function surface and countour", className="card-title"),
-                                dcc.Graph(id='contour-plot', figure=fig),
+                                fig_optim,
                             ]
                         )
                     )
@@ -142,6 +171,7 @@ class Optimizer:
                                         html.Tr([html.Td("Objective Function Value"), html.Td(str(self.opt.get('fmin', 'N/A')))]),
                                         html.Tr([html.Td("Number of Iterations"), html.Td(str(self.opt.get('num_iter', 'N/A')))]),
                                         html.Tr([html.Td("Initial Guess"), html.Td(str(self.x0))]),
+                                        html.Tr([html.Td("Time Elapsed"), html.Td(str(self.opt.get('time', 'N/A')))]),
                                     ],
                                     bordered=True,
                                 )
@@ -155,22 +185,36 @@ class Optimizer:
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Div(
-                            dcc.Markdown(
-                                id='pseudocode',
-                                children=f"""
-                                ```python
-                                def {self.method.lower()}(f_obj, x0):
-                                    # Pseudocode for {self.method}
-                                    # ...
-                                ```
-                                """
-                            )
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+                                    html.Div(
+                                        [
+                                            fig_alpha,
+                                        ]
+                                    )
+                                ]
+                            ),
                         )
                     ),
                 ],
             ),
+            html.Br(),
+            footer,
         ])
+
+        @app.callback(
+            Output("contour-plot", "figure"),
+            Output("alpha-plot", "figure"),
+            Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
+        )
+
+        def update_theme(toggle):
+            theme = "flatly" if toggle else "slate"
+            load_figure_template(theme)
+            return plot_optim(self.f_obj, self.f_constr, self.x0, self.opt, path=True, template=theme, **kwargs), \
+                   plot_alphas(self.opt.get('alphas', None), template=theme)
+
 
         # Run the Dash app
         app.run_server(port=port, debug=False, use_reloader=False)

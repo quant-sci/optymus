@@ -1,3 +1,5 @@
+import time
+
 import jax
 import jax.numpy as jnp
 from tqdm import tqdm
@@ -5,7 +7,7 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, step_size=0.01, max_iter=100, verbose=True, maximize=False):
+def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     r"""Gradient Descent
 
     Gradient Descent is a first-order optimization algorithm that uses the
@@ -31,7 +33,7 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, step_size=0.0
         Initial guess
     tol : float
         Tolerance for stopping criteria
-    step_size : float
+    learning_rate : float
         Step size
     max_iter : int
         Maximum number of iterations
@@ -54,6 +56,7 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, step_size=0.0
         alphas : ndarray
             Step sizes
     """
+    start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
@@ -75,25 +78,29 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, step_size=0.0
     for _ in progres_bar:
         if jnp.linalg.norm(grad) < tol:
             break
-        r = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)
-        alphas.append(r['alpha'])
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x = r['xopt'].astype(float)  # Ensure xopt is of a floating-point type
         grad = jax.grad(penalized_obj)(x)
         d = grad
-        num_iter += 1
         path.append(x)
+        alphas.append(r['alpha'])
+        num_iter += 1
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
 
     return {
-        'method_name': 'Gradient Descent',
+        'method_name': 'Gradient Descent' if not f_constr else 'Gradient Descent with Penalty',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),
+        'time': elapsed_time
     }
 
 
-def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):
+def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):
     r"""Conjugate Gradient
 
     Conjugate Gradient is a first-order optimization algorithm that uses the
@@ -133,7 +140,7 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0
         Initial guess
     tol : float
         Tolerance for stopping criteria
-    step_size : float
+    learning_rate : float
         Step size
     max_iter : int
         Maximum number of iterations
@@ -158,6 +165,7 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0
         alphas : ndarray
             Step sizes
     """  # noqa: E501
+    start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
@@ -179,7 +187,7 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0
     for _ in progres_bar:
         if jnp.linalg.norm(grad) <= tol:
             break
-        r = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x = r['xopt']
         new_grad = jax.grad(penalized_obj)(x)
         if jnp.linalg.norm(new_grad) <= tol:
@@ -198,24 +206,28 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0
             beta = jnp.dot(new_grad, new_grad) / jnp.dot(d, new_grad-grad)
 
         d = new_grad + beta * d
-        r = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x = r['xopt']
         alphas.append(r['alpha'])
         path.append(x)
         num_iter += 1
+    end_time = time.time()
+    elapsed_time = end_time - start_time
 
     return {
-        'method_name': f'Conjugate Gradients ({gradient_type})',
+        'method_name': f'Conjugate Gradients ({gradient_type})' if not f_constr else f'Conjugate Gradients ({gradient_type}) with Penalty',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),
+        'time':elapsed_time
         }
 
 
-def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=100, verbose=True, maximize=False):
+def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """BFGS with JAX"""
+    start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
@@ -227,6 +239,7 @@ def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=
         return f_obj(x) + penalty
 
     path = [x]
+    alphas = []
     num_iter = 0
     q = jnp.identity(len(x))  # Initial approximation of the inverse Hessian
 
@@ -235,7 +248,8 @@ def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=
     for _ in progres_bar:
         grad = jax.grad(penalized_obj)(x)
         d = jnp.dot(q, grad)
-        x_new = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)['xopt']
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
+        x_new = r['xopt']
         delta = x_new - x
         gamma = jax.grad(penalized_obj)(x_new) - grad
 
@@ -249,14 +263,17 @@ def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=
 
         x = x_new
         path.append(x)
+        alphas.append(r['alpha'])
         num_iter += 1
-
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     return {
-        'method_name': 'BFGS',
+        'method_name': 'BFGS' if not f_constr else 'BFGS with Penalty',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
-        'x0': x0,
-        'path': jnp.array(path)
+        'path': jnp.array(path),
+        'alphas': jnp.array(alphas),
+        'time':elapsed_time
     }
 

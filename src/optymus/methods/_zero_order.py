@@ -1,3 +1,5 @@
+import time
+
 import jax
 import jax.numpy as jnp
 from tqdm import tqdm
@@ -5,7 +7,7 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=100, verbose=True, maximize=False):
+def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """Univariant Search Method
 
     Parameters
@@ -18,8 +20,8 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max
         Initial guess
     tol : float
         Tolerance for stopping criteria
-    step_size : float
-        Step size
+    learning_rate : float
+        Lerning rate for line search
     max_iter : int
         Maximum number of iterations
     maximize : bool
@@ -39,8 +41,9 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max
         path : ndarray
             Path taken
         alphas : ndarray
-            Step sizes
+            Lerning rate for line searchs
     """
+    start_time = time.time()
     x = x0.astype(float)
     def penalized_obj(x):
         penalty = 0.0
@@ -63,22 +66,24 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max
             break
         for i in range(n):
             v = u[i]
-            r = line_search(f=penalized_obj, x=x, d=v, step_size=step_size)
+            r = line_search(f=penalized_obj, x=x, d=v, learning_rate=learning_rate)
             x = r['xopt']
             alphas.append(r['alpha'])
             path.append(x)
         num_iter += 1
-
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     return {
-            'method_name': 'Univariant',
+            'method_name': 'Univariant' if not f_constr else 'Univariant with Penalty',
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': num_iter,
             'path': jnp.array(path),
             'alphas': jnp.array(alphas),
+            'time': elapsed_time,
             }
 
-def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=100, verbose=True, maximize=False):
+def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """Powell's Method
 
     Parameters
@@ -91,8 +96,8 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_ite
         Initial guess
     tol : float
         Tolerance for stopping criteria
-    step_size : float
-        Step size
+    learning_rate : float
+        Lerning rate for line search
     max_iter : int
         Maximum number of iterations
     maximize : bool
@@ -112,8 +117,9 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_ite
         path : ndarray
             Path taken
         alphas : ndarray
-            Step sizes
+            Lerning rate for line searchs
     """
+    start_time = time.time()
     x = x0.astype(float)
     def penalized_obj(x):
         penalty = 0.0
@@ -147,7 +153,7 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_ite
         x_prime = x.copy()
         for i in range(n):
             d = u[i]
-            r = line_search(f=penalized_obj, x=x_prime, d=d, step_size=step_size)
+            r = line_search(f=penalized_obj, x=x_prime, d=d, learning_rate=learning_rate)
             x_prime = r['xopt']
             alphas.append(r['alpha'])
             path.append(x_prime)
@@ -159,19 +165,21 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_ite
 
         # Perform line search along the new direction
         d = u[n-1]
-        r = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x_prime = r['xopt']
 
         x = x_prime
         alphas.append(r['alpha'])
         path.append(x)
         num_iter += 1
-
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     return {
-        'method_name': 'Powell',
+        'method_name': 'Powell' if not f_constr else 'Powell with Penalty',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),
+        'time': elapsed_time,
     }

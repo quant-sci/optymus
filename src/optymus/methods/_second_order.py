@@ -1,3 +1,5 @@
+import time
+
 import jax
 import jax.numpy as jnp
 from tqdm import tqdm
@@ -5,7 +7,7 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01, max_iter=100, verbose=True, maximize=False):
+def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     r"""Newton-Raphson method
 
     The Newton-Raphson method is a second-order optimization algorithm that uses
@@ -51,6 +53,7 @@ def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01,
         alphas : ndarray
             Step sizes
     """
+    start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
@@ -71,27 +74,30 @@ def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, step_size=0.01,
     progres_bar = tqdm(range(max_iter), desc=f'Newton-Raphson {num_iter}',) if verbose else range(max_iter)
 
     for _ in progres_bar:
-      g = grad(x)
-      H = hess(x)
+        g = grad(x)
+        H = hess(x)
 
-      if jnp.linalg.norm(g) < tol:
-        break
+        if jnp.linalg.norm(g) < tol:
+            break
 
-      d = jax.scipy.linalg.solve(H, -g)
+        d = jax.scipy.linalg.solve(H, -g)
 
-      ls_result = line_search(f=penalized_obj, x=x, d=d, step_size=step_size)
-      alpha = ls_result['alpha']
-      x = ls_result['xopt']
+        r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
+        x = r['xopt']
 
-      alphas.append(alpha)
-      path.append(x)
-      num_iter += 1
+        alphas.append(r['alpha'])
+        path.append(x)
+        num_iter += 1
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
 
     return {
-        'method_name': 'Newton-Raphson',
+        'method_name': 'Newton-Raphson' if not f_constr else 'Newton-Raphson with Penalty',
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': num_iter,
         'path': jnp.array(path),
-        'alphas': jnp.array(alphas)
+        'alphas': jnp.array(alphas),
+        'time': elapsed_time
     }

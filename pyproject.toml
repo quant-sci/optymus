@@ -26,6 +26,9 @@ dependencies = [
     "jax>=0.4.28",
     "jaxlib>=0.4.28",
     "tqdm>=4.66.4",
+    "dash>=2.17.0",
+    "dash_bootstrap_components>=1.6.0",
+    "dash_bootstrap_templates>=1.1.2",
     ]
 
 
@@ -67,6 +70,7 @@ dependencies = [
   "sphinxcontrib.youtube==1.4.1",
   "dash>=2.17.0",
   "dash_bootstrap_components>=1.6.0",
+  "dash_bootstrap_templates>=1.1.2",
 ]
 
 [tool.hatch.envs.docs.scripts]
