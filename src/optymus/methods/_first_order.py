@@ -7,7 +7,7 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-4, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     r"""Gradient Descent
 
     Gradient Descent is a first-order optimization algorithm that uses the
@@ -27,8 +27,12 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate
     ----------
     f_obj : callable
         Objective function to minimize
-    f_constr : callable
+    f_cons : callable
         Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
     x0 : ndarray
         Initial guess
     tol : float
@@ -61,11 +65,12 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)(x)
     d = grad
@@ -90,9 +95,10 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate
     elapsed_time = end_time - start_time
 
     return {
-        'method_name': 'Gradient Descent' if not f_constr else 'Gradient Descent with Penalty',
+        'method_name': 'Gradient Descent' if not f_cons else 'Gradient Descent with Penalty',
+        'x0':x0,
         'xopt': x,
-        'fmin': f_obj(x),
+        'fmin': f_obj(x, *args),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),
@@ -100,7 +106,7 @@ def gradient_descent(f_obj=None, f_constr=None, x0=None, tol=1e-4, learning_rate
     }
 
 
-def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):
+def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):
     r"""Conjugate Gradient
 
     Conjugate Gradient is a first-order optimization algorithm that uses the
@@ -134,8 +140,12 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_ra
     ----------
     f_obj : callable
         Objective function to minimize
-    f_constr : callable
+    f_cons : callable
         Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
     x0 : ndarray
         Initial guess
     tol : float
@@ -170,11 +180,12 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_ra
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)(x)
     d = grad
@@ -215,9 +226,10 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_ra
     elapsed_time = end_time - start_time
 
     return {
-        'method_name': f'Conjugate Gradients ({gradient_type})' if not f_constr else f'Conjugate Gradients ({gradient_type}) with Penalty',
+        'method_name': f'Conjugate Gradients ({gradient_type})' if not f_cons else f'Conjugate Gradients ({gradient_type}) with Penalty',
+        'x0':x0,
         'xopt': x,
-        'fmin': f_obj(x),
+        'fmin': f_obj(x, *args),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),
@@ -225,18 +237,19 @@ def conjugate_gradient(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_ra
         }
 
 
-def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def bfgs(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """BFGS with JAX"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     path = [x]
     alphas = []
@@ -268,9 +281,10 @@ def bfgs(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_i
     end_time = time.time()
     elapsed_time = end_time - start_time
     return {
-        'method_name': 'BFGS' if not f_constr else 'BFGS with Penalty',
+        'method_name': 'BFGS' if not f_cons else 'BFGS with Penalty',
+        'x0':x0,
         'xopt': x,
-        'fmin': f_obj(x),
+        'fmin': f_obj(x, *args),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),

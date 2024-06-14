@@ -6,18 +6,19 @@ from tqdm import tqdm
 
 jax.config.update("jax_enable_x64", True)
 
-def adam(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=1000, verbose=True, maximize=False):
+def adam(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=1000, verbose=True, maximize=False):
     """Adam optimization algorithm"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
     m = jnp.zeros_like(x)  # First moment estimate
@@ -45,7 +46,8 @@ def adam(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8, t
     end_time = time.time()
     elapsed_time = end_time - start_time
     return {
-        'method_name': 'Adam' if not f_constr else 'Adam with Penalty',
+        'method_name': 'Adam' if not f_cons else 'Adam with Penalty',
+        'x0':x0,
         'xopt': x,
         'fmin': f_obj(x),
         'num_iter': t,
@@ -54,18 +56,19 @@ def adam(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8, t
         'time': elapsed_time
     }
 
-def adagrad(f_obj=None, f_constr=None, x0=None, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
+def adagrad(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
     """Adagrad optimizer"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
 
@@ -74,7 +77,7 @@ def adagrad(f_obj=None, f_constr=None, x0=None, eps=1e-8, tol=1e-5, learning_rat
     g_sum_list = []
     num_iter = 0
 
-    progress_bar = tqdm(range(max_iter), desc=f'Adagrad {num_iter}',) if verbose else range(max_iter)
+    progress_bar = tqdm(range(1, max_iter+1), desc=f'Adagrad {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
         if jnp.linalg.norm(grad(x)) < tol:
@@ -89,7 +92,8 @@ def adagrad(f_obj=None, f_constr=None, x0=None, eps=1e-8, tol=1e-5, learning_rat
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return {'method_name': 'Adagrad' if not f_constr else 'Adagrad with Penalty',
+    return {'method_name': 'Adagrad' if not f_cons else 'Adagrad with Penalty',
+            'x0':x0,
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': _,
@@ -99,18 +103,19 @@ def adagrad(f_obj=None, f_constr=None, x0=None, eps=1e-8, tol=1e-5, learning_rat
             }
 
 
-def rmsprop(f_obj=None, f_constr=None, x0=None, beta=0.9, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
+def rmsprop(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta=0.9, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
     """RMSprop optimizer"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
     Eg2 = jnp.zeros_like(x)
@@ -118,7 +123,7 @@ def rmsprop(f_obj=None, f_constr=None, x0=None, beta=0.9, eps=1e-8, tol=1e-5, le
     eg2_list = []
     num_iter = 0
 
-    progress_bar = tqdm(range(max_iter), desc=f'RMSProp {num_iter}',) if verbose else range(max_iter)
+    progress_bar = tqdm(range(1, max_iter+1), desc=f'RMSProp {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
         if jnp.linalg.norm(grad(x)) < tol:
@@ -135,7 +140,8 @@ def rmsprop(f_obj=None, f_constr=None, x0=None, beta=0.9, eps=1e-8, tol=1e-5, le
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return {'method_name': 'RMSprop',
+    return {'method_name': 'RMSprop' if not f_cons else 'RMSprop with Penalty',
+            'x0':x0,
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': _,
@@ -144,18 +150,19 @@ def rmsprop(f_obj=None, f_constr=None, x0=None, beta=0.9, eps=1e-8, tol=1e-5, le
             'time': elapsed_time
             }
 
-def adamax(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
+def adamax(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, beta2=0.999, eps=1e-8, tol=1e-5, learning_rate=0.1, max_iter=100, verbose=True, maximize=False):
     """Adamax optimizer"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
     m = jnp.zeros_like(x)
@@ -164,7 +171,7 @@ def adamax(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8,
     u_list = []
     num_iter = 0
 
-    progress_bar = tqdm(range(max_iter), desc=f'Adamax {num_iter}',) if verbose else range(max_iter)
+    progress_bar = tqdm(range(1, max_iter+1), desc=f'Adamax {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
         if jnp.linalg.norm(grad(x)) < tol:
@@ -180,7 +187,8 @@ def adamax(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8,
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return {'method_name': 'Adamax' if not f_constr else 'Adamax with Penalty',
+    return {'method_name': 'Adamax' if not f_cons else 'Adamax with Penalty',
+            'x0':x0,
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': num_iter,
@@ -189,18 +197,19 @@ def adamax(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-8,
             'time': elapsed_time
             }
 
-def yogi(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-3, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def yogi(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, beta2=0.999, eps=1e-3, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """Yogi optimizer"""
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
     m = jnp.zeros_like(x)
@@ -228,7 +237,8 @@ def yogi(f_obj=None, f_constr=None, x0=None, beta1=0.9, beta2=0.999, eps=1e-3, t
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return {'method_name': 'Yogi' if not f_constr else 'Yogi with Penalty',
+    return {'method_name': 'Yogi' if not f_cons else 'Yogi with Penalty',
+            'x0':x0,
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': num_iter,

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from optymus import Optimizer
 
 
-def methods_comparison(f_obj, initial_point, **kwargs):
+def methods_comparison(f_obj=None, initial_point=None, **kwargs):
     METHODS = ['gradient_descent', 'newton_raphson', 'bfgs', 'conjugate_gradient', 'univariant', 'powell',
                'adam', 'adamax', 'adagrad', 'rmsprop', 'yogi']
 

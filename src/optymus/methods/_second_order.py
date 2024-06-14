@@ -7,7 +7,7 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     r"""Newton-Raphson method
 
     The Newton-Raphson method is a second-order optimization algorithm that uses
@@ -27,8 +27,12 @@ def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0
     ----------
     f_obj : callable
         Objective function to minimize
-    f_constr : callable
+    f_cons : callable
         Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
     x0 : ndarray
         Initial guess
     tol : float
@@ -58,11 +62,12 @@ def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0
 
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     grad = jax.grad(penalized_obj)
     hess = jax.hessian(penalized_obj)
@@ -93,9 +98,10 @@ def newton_raphson(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0
     elapsed_time = end_time - start_time
 
     return {
-        'method_name': 'Newton-Raphson' if not f_constr else 'Newton-Raphson with Penalty',
+        'method_name': 'Newton-Raphson' if not f_cons else 'Newton-Raphson with Penalty',
+        'x0': x0,
         'xopt': x,
-        'fmin': f_obj(x),
+        'fmin': f_obj(x, *args),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),

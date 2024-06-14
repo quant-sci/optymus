@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objs as go
 import plotly.subplots as sp
+import plotly.express as px
 import seaborn as sns
 from sklearn.decomposition import PCA
 
@@ -59,7 +60,7 @@ def plot_alphas(alphas, template='seaborn'):
 
     return fig
 
-def plot_optim(f_obj=None, f_constr=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=False, template='seaborn', min=-10, max=10, n=100):
+def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=False, template='seaborn', min=-10, max=10, n=100):
     """
     Plot the optimization path and the function surface using Plotly.
 
@@ -108,23 +109,6 @@ def plot_optim(f_obj=None, f_constr=None, x0=None, method=None, path=True, compa
         name='Objective Function'
     )
 
-    if f_constr is not None:
-        contour_constr = go.Contour(
-            x=x, y=y,
-            z=f_constr([X, Y]),
-            contours_coloring='lines',
-            colorscale='gray_r',
-            showscale=True,
-            contours={
-                'start': 0, 'end': 0, 'size': 1,
-                'showlabels': False,
-            },
-            line={'dash': 'dash', 'color': 'red', 'width': 2, 'smoothing': 0.85},
-            name='Constraint', showlegend=True
-        )
-    else:
-        contour_constr = None
-
     # Initial and optimal points
     initial_point = go.Scatter(
         x=[x0[0]], y=[x0[1]], mode='markers', marker={'color': 'green', 'size': 10},
@@ -160,8 +144,23 @@ def plot_optim(f_obj=None, f_constr=None, x0=None, method=None, path=True, compa
         fig.add_trace(optimization_path, row=1, col=2)
         fig.add_trace(optimal_point, row=1, col=2)
 
-    if f_constr is not None:
-        fig.add_trace(contour_constr, row=1, col=2)
+    if f_cons is not None:
+        colors_map = px.colors.named_colorscales()
+        for c, colors, i in zip(f_cons, colors_map, range(len(f_cons))):
+            contour_constr = go.Contour(
+                x=x, y=y,
+                z=c([X, Y]),
+                contours_coloring='lines',
+                colorscale=colors,
+                showscale=True,
+                contours={
+                    'start': 0, 'end': 0, 'size': 1,
+                    'showlabels': False,
+                },
+                line={'dash': 'dash', 'color': 'red', 'width': 2, 'smoothing': 0.85},
+                name=f'Constraint {i+1}', showlegend=True
+            )
+            fig.add_trace(contour_constr, row=1, col=2)
 
     if print_opt:
         fig.add_annotation(

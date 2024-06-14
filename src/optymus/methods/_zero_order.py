@@ -7,15 +7,19 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def univariant(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """Univariant Search Method
 
     Parameters
     ----------
     f_obj : callable
         Objective function to minimize
-    f_constr : callable
+    f_cons : callable
         Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
     x0 : ndarray
         Initial guess
     tol : float
@@ -47,11 +51,12 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01,
     x = x0.astype(float)
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     n = len(x)
     u = jnp.identity(n)
@@ -74,7 +79,7 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01,
     end_time = time.time()
     elapsed_time = end_time - start_time
     return {
-            'method_name': 'Univariant' if not f_constr else 'Univariant with Penalty',
+            'method_name': 'Univariant' if not f_cons else 'Univariant with Penalty',
             'xopt': x,
             'fmin': f_obj(x),
             'num_iter': num_iter,
@@ -83,15 +88,19 @@ def univariant(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01,
             'time': elapsed_time,
             }
 
-def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def powell(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
     """Powell's Method
 
     Parameters
     ----------
     f_obj : callable
         Objective function to minimize
-    f_constr : callable
+    f_cons : callable
         Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
     x0 : ndarray
         Initial guess
     tol : float
@@ -123,11 +132,12 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max
     x = x0.astype(float)
     def penalized_obj(x):
         penalty = 0.0
-        if f_constr is not None:
-            penalty = jnp.sum(jnp.maximum(0, f_constr(x)) ** 2)
+        if f_cons is not None:
+            for f_con in f_cons:
+                penalty += jnp.sum(jnp.maximum(0, f_con(x, *args_cons)) ** 2)
         if maximize:
-            return -f_obj(x) + penalty
-        return f_obj(x) + penalty
+            return -f_obj(x, *args) + penalty
+        return f_obj(x, *args) + penalty
 
     # Define gradient function using JAX's automatic differentiation
     grad = jax.grad(f_obj)
@@ -175,9 +185,9 @@ def powell(f_obj=None, f_constr=None, x0=None, tol=1e-5, learning_rate=0.01, max
     end_time = time.time()
     elapsed_time = end_time - start_time
     return {
-        'method_name': 'Powell' if not f_constr else 'Powell with Penalty',
+        'method_name': 'Powell' if not f_cons else 'Powell with Penalty',
         'xopt': x,
-        'fmin': f_obj(x),
+        'fmin': f_obj(x, *args),
         'num_iter': num_iter,
         'path': jnp.array(path),
         'alphas': jnp.array(alphas),

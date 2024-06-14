@@ -39,7 +39,7 @@ METHODS = {
 
 
 class Optimizer:
-    def __init__(self, f_obj=None, f_constr=None, x0=None, method='gradient_descent', tol=1e-5, max_iter=1000, **kwargs):
+    def __init__(self, f_obj=None, f_cons=None, x0=None, method='gradient_descent', **kwargs):
         """
         Initializes the Optimizer class.
 
@@ -47,15 +47,11 @@ class Optimizer:
             f_obj (function): The objective function to be minimized.
             x0 (np.ndarray): The initial guess for the minimum.
             method (str, optional): The optimization method to use. Defaults to 'gradient_descent'.
-            tol (float, optional): The tolerance for convergence. Defaults to 1e-5.
-            max_iter (int, optional): The maximum number of iterations. Defaults to 100.
         """
         self.f_obj = f_obj
-        self.f_constr = f_constr
+        self.f_cons = f_cons
         self.x0 = x0
         self.method = method
-        self.tol = tol
-        self.max_iter = max_iter
 
         if self.method not in METHODS:
             msg = f"Method '{method}' not available. Available methods: {list(METHODS.keys())}"
@@ -70,12 +66,7 @@ class Optimizer:
             raise ValueError(msg)
 
         # Run the optimization and store results
-        self.opt = METHODS[self.method](f_obj=self.f_obj,
-                                        f_constr=self.f_constr,
-                                        x0=self.x0,
-                                        tol=self.tol,
-                                        max_iter=self.max_iter,
-                                        **kwargs)
+        self.opt = METHODS[self.method](f_obj=self.f_obj,f_cons=self.f_cons, x0=self.x0,**kwargs)
 
     def check_dimension(self):
         """Returns the dimension of the problem."""
@@ -89,7 +80,7 @@ class Optimizer:
         """Prints a formatted summary of the optimization results."""
         table_data = {
             "Method": [self.method],
-            "Initial Guess": [self.x0],
+            "Initial Guess": [self.opt.get('x0', 'N/A')],
             "Optimal Solution": [self.opt.get('xopt', 'N/A')],
             "Objective Function Value": [self.opt.get('fmin', 'N/A')],
             "Number of Iterations": [self.opt.get('num_iter', 'N/A')],
@@ -100,7 +91,7 @@ class Optimizer:
 
     def plot_results(self, **kwargs):
         """Plots the optimization path and function surface."""
-        plot_optim(self.f_obj, self.f_constr, self.x0, self.opt, **kwargs)
+        plot_optim(f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, method=self.opt, **kwargs)
 
     def create_dashboard(self, port=8050, **kwargs):
         """Generates a Dash dashboard with optimization results."""
@@ -110,7 +101,7 @@ class Optimizer:
         theme_switch = ThemeSwitchAIO(
             aio_id="theme", themes=[dbc.themes.FLATLY, dbc.themes.SLATE]
         )
-        if self.f_constr is not None:
+        if self.f_cons is not None:
             self.method = f"{self.method} with constraints"
 
         self.path = self.opt.get('path', None)
@@ -212,7 +203,7 @@ class Optimizer:
         def update_theme(toggle):
             theme = "flatly" if toggle else "slate"
             load_figure_template(theme)
-            return plot_optim(self.f_obj, self.f_constr, self.x0, self.opt, path=True, template=theme, **kwargs), \
+            return plot_optim(f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, method=self.opt, path=True, template=theme, **kwargs), \
                    plot_alphas(self.opt.get('alphas', None), template=theme)
 
 
