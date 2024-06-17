@@ -81,11 +81,22 @@ dependencies = [
   "ipython"
 ]
 
+<<<<<<< HEAD
 [tool.hatch.envs.docs.scripts]
 foo = ["which sphinx-build"]
 build = ["bash docs/source/build.sh"]
+=======
+[tool.poetry]
+name = "optymus"
+version = "0.1.2"
+description = "Optimization Methods Library"
+authors = ["Kleyton da Costa", "Ivan Menezes"]
+maintainers = ["Kleyton da Costa <kleyton.vsc@gmail.com>", "Ivan Menezes <ivan@puc-rio.br >"]
+readme = "README.md"
+>>>>>>> main
 
 
+<<<<<<< HEAD
 [tool.hatch.envs.testing]
 dependencies = [
   "dash>=2.17.0",
@@ -101,6 +112,13 @@ dependencies = [
   "scikit-learn>=1.5.0",
 ]
 paths = ["./src"]
+=======
+tqdm = {version=">=4.64.1",  optional = true}
+seaborn = {version=">=0.11.2",  optional = true}
+autograd = {version=">=1.6.2", optional=false}
+jax = {version=">=0.4.26", optional=false}
+jaxlib = {version=">=0.4.26", optional=false}
+>>>>>>> main
 
 [tool.hatch.envs.testing.scripts]
 run = ["python -m pytest"]

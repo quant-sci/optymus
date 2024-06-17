@@ -20,13 +20,23 @@ To begin using `optymus`, follow these steps:
 
 2. **Get Started:**
    ```python
+<<<<<<< HEAD
    from optymus import Optimizer
    from optymus.benchmark import MccormickFunction
+=======
+   from optymus.optim import Optimizer
+   from optymus.utils import sphere_function
+>>>>>>> main
    
-   import numpy as np
+   import jax.numpy as jnp
 
+<<<<<<< HEAD
    f = MccormickFunction()
    initial_point = np.array([2, 2])
+=======
+   f = sphere_function()
+   initial_point = jnp.array([2., 2.])
+>>>>>>> main
 
    opt = Optimizer(f_obj=f,
                    x0=initial_point,
