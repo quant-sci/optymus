@@ -46,22 +46,13 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update version and changelog"
-          git push --follow-tags
+      - name: Install Hatch
+        run: pipx install hatch
 
-      - name: Bump version and create tag
-        run: |
-          hatch version ${{ inputs.version }}
-          hatch build
+      - name: Build package
+        run: hatch build
 
       - name: Publish to PyPI
-        env:
-          HATCH_INDEX_USER: __token__
-          HATCH_INDEX_AUTH: ${{ secrets.TEST_PASS_PYPI }}
-        run: |
-          hatch publish
+        uses: pypa/gh-action-pypi-publish@v1
+        with:
+          password: ${{ secrets.TEST_PASS_PYPI }} 
