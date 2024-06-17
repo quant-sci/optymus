@@ -6,8 +6,6 @@
 [![GitHub](https://img.shields.io/github/license/kleyt0n/optymus)](https://github.com/kleyt0n/optymus/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 
-> optymus is part of [quantsci](https://quantsci.org) project.
-
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
 
@@ -34,7 +32,7 @@ To begin using `optymus`, follow these steps:
                    x0=initial_point,
                    method='bfgs')
 
-   opt.report()
+   opt.print_report()
    ```
 
 3. **Explore the Documentation:**
@@ -46,7 +44,7 @@ Refer to the documentation for detailed information on each method and its appli
 
 Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the [contribution guidelines](CONTRIBUTING.md).
 
-## Cite
+## How to cite
 
 If you use `optymus` in your research, please consider citing the library using the following BibTeX entry:
 
@@ -59,3 +57,6 @@ If you use `optymus` in your research, please consider citing the library using 
   url = {https://github.com/quant-sci/optymus}
 }
 ```
+
+
+> optymus is part of [quantsci](https://quantsci.org) project.

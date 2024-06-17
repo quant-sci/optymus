@@ -45,6 +45,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "sphinx_togglebutton",
+    "IPython.sphinxext.ipython_console_highlighting",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -66,24 +67,6 @@ autodoc_default_options = {"members": True, "inherited-members": True}
 # Turn on autosummary
 autosummary_generate = True
 
-"""
-import shutil
-
-#sys.path.insert(0, os.path.abspath(".."))
-NOTEBOOKS_DIR = os.path.abspath("examples")
-if os.path.exists(NOTEBOOKS_DIR):
-    import warnings
-
-    warnings.warn("tutorials directory exists, replacing...")
-    shutil.rmtree(NOTEBOOKS_DIR)
-shutil.copytree(
-    os.path.abspath("examples"),
-    NOTEBOOKS_DIR,
-)
-if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
-    shutil.rmtree(NOTEBOOKS_DIR + "/local_scratch")
-"""
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -93,6 +76,17 @@ html_theme = 'pydata_sphinx_theme'
 html_logo = '../logo.svg'
 html_favicon = '../logo.svg'
 
+# add github link to sidebar
+html_theme_options = {
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/quant-sci/optymus",
+            "icon": "fab fa-github",
+        },
+    ],
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -100,4 +94,9 @@ html_static_path = ['_static']
 
 html_css_files = [
     "css/custom_style.css",
+]
+
+html_js_files = [
+    "require.min.js",
+    "custom.js",
 ]

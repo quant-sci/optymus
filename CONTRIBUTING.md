@@ -1,4 +1,4 @@
-# Contributing to OptimusPy
+# Contributing to optymus
 
 Thank you for considering contributing to OptimusPy! By contributing to this project, you help make it a more powerful and versatile optimization methods library for the Python community.
 
@@ -8,15 +8,15 @@ If you're interested in contributing to OptimusPy, please follow these guideline
 
 ### 1. Fork the Repository
 
-Click on the "Fork" button on the top right corner of the [OptimusPy repository](https://github.com/your-username/optimuspy) to create your own fork.
+Click on the "Fork" button on the top right corner of the [OptimusPy repository](https://github.com/quant-sci/optymus) to create your own fork.
 
 ### 2. Clone your Fork
 
 Clone the repository to your local machine using the following command (replace `your-username` with your GitHub username):
 
 ```bash
-git clone https://github.com/your-username/optimuspy.git
-cd optimuspy
+git clone https://github.com/quant-sci/optymus.git
+cd optymus
 ```
 
 ### 3. Create a Branch
@@ -65,7 +65,7 @@ If your contribution includes new features or modifications, it is encouraged to
 
 ## Issue Tracker
 
-Before starting work on a new feature or bug fix, check the [issue tracker](https://github.com/kleyt0n/optimuspy/issues) for existing issues. If you plan to address an existing issue, please comment on it to let others know you are working on it.
+Before starting work on a new feature or bug fix, check the [issue tracker](https://github.com/quant-sci/optymus/issues) for existing issues. If you plan to address an existing issue, please comment on it to let others know you are working on it.
 
 ## Thank You!
 

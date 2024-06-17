@@ -60,7 +60,7 @@ def plot_alphas(alphas, template='seaborn'):
 
     return fig
 
-def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=False, template='seaborn', min=-10, max=10, n=100):
+def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=False, notebook=False, template='seaborn', min=-10, max=10, n=100):
     """
     Plot the optimization path and the function surface using Plotly.
 
@@ -195,6 +195,9 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
     )
 
     if show is True:
-        fig.show()
+        if notebook is True:
+            fig.show(renderer='notebook')
+        else:
+            fig.show()
 
     return fig

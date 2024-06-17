@@ -12,5 +12,5 @@ Line Search
     :toctree: .generated/
 
     optymus.search.bracket_minimum
-    optymus.search.golden_section
+    optymus.search.golden
     optymus.search.line_search

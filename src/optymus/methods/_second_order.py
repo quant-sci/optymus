@@ -7,20 +7,20 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    r"""Newton-Raphson method
+def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, h_type='hessian', verbose=True, maximize=False):
+    r"""Newton-Raphson method with different matrix types
 
     The Newton-Raphson method is a second-order optimization algorithm that uses
-    the Hessian matrix to compute the step direction.
+    different matrices (Hessian, Fisher Information, Identity) to compute the step direction.
 
     We can minimize the objective function :math:`f` by solving the following
     equation:
 
     .. math::
-        \nabla^2 f(x) p = -\nabla f(x)
+        M(x) p = -\nabla f(x)
 
-    where :math:`\nabla^2 f(x)` is the Hessian matrix of :math:`f` evaluated at
-    point :math:`x`, :math:`\nabla f(x)` is the gradient of :math:`f` evaluated
+    where :math:`M(x)` is the chosen matrix (Hessian, Fisher Information, Identity) of :math:`f`
+    evaluated at point :math:`x`, :math:`\nabla f(x)` is the gradient of :math:`f` evaluated
     at point :math:`x`, and :math:`p` is the step direction.
 
     Parameters
@@ -37,8 +37,14 @@ def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=
         Initial guess
     tol : float
         Tolerance for stopping criteria
-    maxiter : int
+    learning_rate : float
+        Learning rate for line search
+    max_iter : int
         Maximum number of iterations
+    h_type : str
+        Type of matrix to use ('hessian', 'fisher', 'identity')
+    verbose : bool
+        If True, prints progress
     maximize : bool
         If True, maximize the objective function
     Returns
@@ -80,12 +86,21 @@ def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=
 
     for _ in progres_bar:
         g = grad(x)
-        H = hess(x)
+
+        if h_type == 'hessian':
+            M = hess(x)
+        elif h_type == 'fisher':
+            M = -hess(x)
+        elif h_type == 'identity':
+            M = jnp.eye(len(x))
+        else:
+            msg = f"Unknown h_type: {h_type}"
+            raise ValueError(msg)
 
         if jnp.linalg.norm(g) < tol:
             break
 
-        d = jax.scipy.linalg.solve(H, -g)
+        d = jax.scipy.linalg.solve(M, -g)
 
         r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x = r['xopt']
@@ -107,3 +122,4 @@ def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=
         'alphas': jnp.array(alphas),
         'time': elapsed_time
     }
+

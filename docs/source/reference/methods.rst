@@ -24,7 +24,6 @@ First Order Methods
     optymus.methods.bfgs
     optymus.methods.conjugate_gradient
     optymus.methods.gradient_descent
-    optymus.methods.l_bfgs
 
 Second Order Methods
 --------------------
@@ -44,3 +43,4 @@ Adaptative Methods
     optymus.methods.adam
     optymus.methods.adamax
     optymus.methods.rmsprop
+    optymus.methods.yogi

@@ -15,44 +15,57 @@ optymus documentation
 
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
-
 Getting Started
 ---------------
 
 To begin using `optymus`, follow these steps:
 
-**Installation**
+1. **Install the package:**
+
 
 .. code-block:: bash
 
-  pip install optymus
+   pip install optymus
 
-**Implementation**
+2. **Create an optimization problem:**
 
 .. code-block:: python
 
-  from optymus import Optimizer
-  from optymus.benchmark import MccormickFunction
-  import numpy as np
-  f = MccormickFunction()
-  initial_point = np.array([2, 2])  
-  opt = Optimizer(f_obj=f,
-                  x0=initial_point,
-                  method='bfgs'
-                  )
-  opt.report()
+   from optymus import Optimizer
+   from optymus.benchmark import MccormickFunction
+   
+   import numpy as np
 
-**Explore the Documentation**
-   Visit the `official documentation <https://optymus-docs.readthedocs.com>`_ to understand the available optimization methods and how to use them effectively.
+   f = MccormickFunction()
+   initial_point = np.array([2, 2])
 
-   Refer to the documentation for detailed information on each method and its application.
+3. **Optimize the problem:**
+
+.. code-block:: python
+
+   opt = Optimizer(f_obj=f,
+                   x0=initial_point,
+                   method='bfgs')
+
+4. **Print the optimization report:**
+
+.. code-block:: python
+
+   opt.print_report()
+
+
+Explore the Documentation
+-------------------------
+Visit the `official documentation <https://optymus.readthedocs.io/en/latest/?badge=latest>`_ to understand the available optimization methods and how to use them effectively.
+
+Refer to the documentation for detailed information on each method and its application.
 
 Contributions
 -------------
 
 Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the [contribution guidelines](CONTRIBUTING.md).
 
-Cite
+How to cite
 ----
 
 If you use `optymus` in your research, please consider citing the library using the following BibTeX entry:
