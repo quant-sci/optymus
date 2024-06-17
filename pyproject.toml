@@ -1,10 +1,91 @@
-[tool.commitizen]
-version = "0.7.2"
-changelog_incremental = true
-version_files = [
-    "pyproject.toml:version"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "optymus"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [{ name = "kcosta", email = "kleyton.vsc@gmail.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "dash>=2.17.0",
+  "dash_bootstrap_components>=1.6.0",
+  "dash_bootstrap_templates>=1.1.2",
+  "nbformat>=4.2.0",
+  "jax>=0.4.28",
+  "jaxlib>=0.4.28",
+  "tqdm>=4.66.4",
+  "pandas>=2.2.2",
+  "matplotlib>=3.9.0",
+  "seaborn>=0.13.2",
+  "scikit-learn>=1.5.0",
+  ]
+
+
+[project.urls]
+Documentation = "https://github.com/quant-sci/optymus#readme"
+Issues = "https://github.com/quant-sci/optymus/issues"
+Source = "https://github.com/quant-sci/optymus"
+
+[tool.hatch.version]
+path = "src/optymus/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = ["mypy>=1.0.0"]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/optymus tests}"
+
+[tool.coverage.run]
+source_pkgs = ["optymus", "tests"]
+branch = true
+parallel = true
+omit = ["src/optymus/__about__.py"]
+
+[tool.coverage.paths]
+optymus = ["src/optymus", "*/optymus/src/optymus"]
+tests = ["tests", "*/optymus/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.ruff]
+extend = "ruff_default.toml"
+exclude = ["docs/**", "tests/**", "tutorials/**"]
+
+[tool.hatch.envs.docs]
+dependencies = [
+  "pydata-sphinx-theme==0.15.2",
+  "sphinx_design==0.5.0",
+  "sphinx_togglebutton==0.3.2",
+  "sphinxcontrib.youtube==1.4.1",
+  "dash>=2.17.0",
+  "dash_bootstrap_components>=1.6.0",
+  "dash_bootstrap_templates>=1.1.2",
+  "jax>=0.4.28",
+  "jaxlib>=0.4.28",
+  "ipython"
 ]
 
+<<<<<<< HEAD
+[tool.hatch.envs.docs.scripts]
+foo = ["which sphinx-build"]
+build = ["bash docs/source/build.sh"]
+=======
 [tool.poetry]
 name = "optymus"
 version = "0.1.2"
@@ -12,23 +93,41 @@ description = "Optimization Methods Library"
 authors = ["Kleyton da Costa", "Ivan Menezes"]
 maintainers = ["Kleyton da Costa <kleyton.vsc@gmail.com>", "Ivan Menezes <ivan@puc-rio.br >"]
 readme = "README.md"
+>>>>>>> main
 
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0.0"
 
+<<<<<<< HEAD
+[tool.hatch.envs.testing]
+dependencies = [
+  "dash>=2.17.0",
+  "dash_bootstrap_components>=1.6.0",
+  "dash_bootstrap_templates>=1.1.2",
+  "nbformat>=4.2.0",
+  "jax>=0.4.28",
+  "jaxlib>=0.4.28",
+  "tqdm>=4.66.4",
+  "pandas>=2.2.2",
+  "matplotlib>=3.9.0",
+  "seaborn>=0.13.2",
+  "scikit-learn>=1.5.0",
+]
+paths = ["./src"]
+=======
 tqdm = {version=">=4.64.1",  optional = true}
 seaborn = {version=">=0.11.2",  optional = true}
 autograd = {version=">=1.6.2", optional=false}
 jax = {version=">=0.4.26", optional=false}
 jaxlib = {version=">=0.4.26", optional=false}
+>>>>>>> main
 
-[tool.poetry.group.dev.dependencies]
-flake8 = "^5.0.4"
-pre-commit = "^2.20.0"
-pytest = "^7.1.3"
-commitizen = "^2.40.0"
-ipykernel = "^6.25.2"
+[tool.hatch.envs.testing.scripts]
+run = ["python -m pytest"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/docs",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/optymus"]

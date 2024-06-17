@@ -10,3 +10,8 @@ sphinxcontrib-jquery==4.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
+sphinx-togglebutton
+myst_parser
+nbsphinx
+pydata_sphinx_theme
+optymus==0.1.2
