@@ -35,25 +35,14 @@ jobs:
         run: |
           git cliff -o CHANGELOG.md
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.APP_SECRET }}
-      #   with:
-      #     tag_name: ${{ inputs.version }}
-      #     release_name: Release ${{ inputs.version }}
-      #     draft: false
-      #     prerelease: false
-
-      - name: Build package
-        run: hatch build
+      - name: Bump version and create tag
+        run: |
+          hatch version ${{ inputs.version }}
+          hatch build
 
       - name: Publish to PyPI
-        run: |
-          export PYPI_USERNAME=__token__
-          export PYPI_PASSWORD=${{ secrets.TEST_PASS_PYPI }}
-          hatch publish
         env:
-          PYPI_USERNAME: __token__
-          PYPI_PASSWORD: ${{ secrets.TEST_PASS_PYPI }}
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ secrets.TEST_PASS_PYPI }}
+        run: |
+          hatch publish
