@@ -50,6 +50,10 @@ jobs:
         run: hatch build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@v1
-        with:
-          password: ${{ secrets.TEST_PASS_PYPI }} 
+        run: |
+          export PYPI_USERNAME=__token__
+          export PYPI_PASSWORD=${{ secrets.TEST_PASS_PYPI }}
+          hatch publish
+        env:
+          PYPI_USERNAME: __token__
+          PYPI_PASSWORD: ${{ secrets.TEST_PASS_PYPI }}
