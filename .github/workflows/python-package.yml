@@ -35,16 +35,16 @@ jobs:
         run: |
           git cliff -o CHANGELOG.md
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.APP_SECRET }}
-        with:
-          tag_name: ${{ inputs.version }}
-          release_name: Release ${{ inputs.version }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.APP_SECRET }}
+      #   with:
+      #     tag_name: ${{ inputs.version }}
+      #     release_name: Release ${{ inputs.version }}
+      #     draft: false
+      #     prerelease: false
 
       - name: Build package
         run: hatch build
