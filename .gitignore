@@ -2,3 +2,4 @@ dist/
 old-dist/
 playground/
 build/
+__pycache__/
