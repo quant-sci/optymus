@@ -46,9 +46,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Install Hatch
-        run: pipx install hatch
-
       - name: Build package
         run: hatch build
 
