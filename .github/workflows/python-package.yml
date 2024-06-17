@@ -1,12 +1,11 @@
 name: Start a New Release
 
+
 on:
-  workflow_dispatch:
-    inputs:
-        version:
-          description: 'Version Tag in the form X.Y.Z'
-          required: true
-          type: string
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
 
 jobs:
   build:
