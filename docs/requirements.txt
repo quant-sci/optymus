@@ -14,5 +14,6 @@ sphinx-togglebutton
 myst_parser
 nbsphinx
 sphinx_design==0.5.0
+ipython==8.25.0
 pydata_sphinx_theme
 optymus==0.1.7
