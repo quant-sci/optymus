@@ -14,3 +14,4 @@ sphinx-togglebutton
 pydata_sphinx_theme
 sphinx_design==0.5
 ipython==8.25.0
+optymus==0.1.7
