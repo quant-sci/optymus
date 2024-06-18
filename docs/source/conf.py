@@ -11,8 +11,12 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
 import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent / "../../src"))
+import os
+sys.path.insert(0, os.path.abspath(".."))
+work_dir = '/'.join(os.getcwd().split("/")[:-2])
+src_path = os.path.join(work_dir,'src')
+
+sys.path.insert(0, src_path)
 
 
 # -- Project information -----------------------------------------------------
