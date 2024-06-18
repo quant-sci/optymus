@@ -1,5 +1,9 @@
 import jax
 import pandas as pd
+import dash
+import dash_bootstrap_components as dbc
+from dash import Input, Output, dcc, html
+from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
 from optymus.methods import (
     adagrad,
     adam,
@@ -89,23 +93,6 @@ class Optimizer:
 
     def create_dashboard(self, port=8050, **kwargs):
         """Generates a Dash dashboard with optimization results."""
-
-        # if dash is not installed, install it
-        try:
-            import dash
-            import dash_bootstrap_components as dbc
-            from dash import Input, Output, dcc, html
-            from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
-
-        except ImportError:
-            import os
-            os.system("pip install -q dash")
-            os.system("pip install -q dash-bootstrap-components")
-            os.system("pip install -q dash-bootstrap-templates")
-            import dash
-            import dash_bootstrap_components as dbc
-            from dash import Input, Output, dcc, html
-            from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
 
         dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
         app = dash.Dash(__name__, title="optymus", external_stylesheets=[dbc.themes.FLATLY, dbc_css])

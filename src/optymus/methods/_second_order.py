@@ -47,21 +47,21 @@ def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=
         If True, prints progress
     maximize : bool
         If True, maximize the objective function
+    
     Returns
     -------
-    dict
-        method_name : str
-            Method name
-        xopt : ndarray
-            Optimal point
-        fmin : float
-            Minimum value
-        num_iter : int
-            Number of iterations
-        path : ndarray
-            Path taken
-        alphas : ndarray
-            Step sizes
+    method_name : str
+        Method name
+    xopt : ndarray
+        Optimal point
+    fmin : float
+        Minimum value
+    num_iter : int
+        Number of iterations
+    path : ndarray
+        Path taken
+    alphas : ndarray
+        Step sizes
     """
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type

@@ -53,17 +53,10 @@ To begin using `optymus`, follow these steps:
 
    opt.print_report()
 
-
-Explore the Documentation
--------------------------
-Visit the `official documentation <https://optymus.readthedocs.io/en/latest/?badge=latest>`_ to understand the available optimization methods and how to use them effectively.
-
-Refer to the documentation for detailed information on each method and its application.
-
 Contributions
 -------------
 
-Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the [contribution guidelines](CONTRIBUTING.md).
+Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the CONTRIBUTING.md on GitHub.
 
 How to cite
 ----

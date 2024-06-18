@@ -23,16 +23,18 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
+  "dash==2.17.1",
+  "dash_bootstrap_components==1.6.0",
+  "dash_bootstrap_templates==1.1.2",
   "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
   "tqdm>=4.66.4",
   "pandas==2.0.3",
+  "numpy==1.26.4",
   "matplotlib>=3.9.0",
   "seaborn>=0.13.2",
-  "plotly==5.22.0",
   "scikit-learn>=1.5.0",
-  "numpy==1.26.4"
   ]
 
 
@@ -66,35 +68,39 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 extend = "ruff_default.toml"
 exclude = ["docs/**", "tests/**", "tutorials/**"]
 
-[tool.hatch.envs.docs]
+[tool.hatch.envs.sphinx]
 dependencies = [
   "pydata-sphinx-theme==0.15.2",
   "sphinx_design==0.5.0",
   "sphinx_togglebutton==0.3.2",
   "sphinxcontrib.youtube==1.4.1",
-  "jax>=0.4.28",
-  "jaxlib>=0.4.28",
-  "plotly==5.22.0",
-  "ipython"
+  "sphinx_copybutton==0.5.2",
+  "myst_parser==3.0.1",
+  "nbsphinx==0.9.4",
+  "ipython==8.25.0"
 ]
 
-[tool.hatch.envs.docs.scripts]
+[tool.hatch.envs.sphinx.scripts]
 foo = ["which sphinx-build"]
 build = ["bash docs/source/build.sh"]
 
 
 [tool.hatch.envs.testing]
 dependencies = [
+  "dash==2.17.1",
+  "dash_bootstrap_components==1.6.0",
+  "dash_bootstrap_templates==1.1.2",
   "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
   "tqdm>=4.66.4",
-  "pandas>=2.2.2",
+  "pandas==2.0.3",
+  "numpy==1.26.4",
   "matplotlib>=3.9.0",
-  "plotly==5.22.0",
   "seaborn>=0.13.2",
   "scikit-learn>=1.5.0",
-]
+  ]
+  
 paths = ["./src"]
 
 [tool.hatch.envs.testing.scripts]

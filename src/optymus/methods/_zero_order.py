@@ -8,7 +8,17 @@ from optymus.search import line_search
 
 
 def univariant(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    """Univariant Search Method
+    r"""Univariant Search Method
+
+    The univariant search method is a zero-order optimization method that uses a set of basis vectors to search for the minimum of a function.
+
+    We can describe the method with the equation:
+
+    .. math::
+
+        x_{k+1} = x_k + \alpha_k v_k
+
+    where $x_k$ is the current point, $\alpha_k$ is the learning rate, and $v_k$ is the basis vector.
 
     Parameters
     ----------
@@ -33,19 +43,18 @@ def univariant(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5
 
     Returns
     -------
-    dict
-        method_name : str
-            Method name
-        xopt : ndarray
-            Optimal point
-        fmin : float
-            Minimum value
-        num_iter : int
-            Number of iterations
-        path : ndarray
-            Path taken
-        alphas : ndarray
-            Lerning rate for line searchs
+    method_name : str
+        Method name
+    xopt : ndarray
+        Optimal point
+    fmin : float
+        Minimum value
+    num_iter : int
+        Number of iterations
+    path : ndarray
+        Path taken
+    alphas : ndarray
+        Lerning rate for line searchs
     """
     start_time = time.time()
     x = x0.astype(float)
@@ -89,7 +98,17 @@ def univariant(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5
             }
 
 def powell(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    """Powell's Method
+    r"""Powell's Method
+
+    Powell's method is a zero-order optimization method that uses a set of basis vectors to search for the minimum of a function.
+    
+    We can describe the method with the equation:
+
+    .. math::
+    
+        x_{k+1} = x_k + \alpha_1 v_1 + \alpha_2 v_2 + \cdots + \alpha_n v_n
+
+    where $x_k$ is the current point, $\alpha_i$ is the learning rate, and $v_i$ is the basis vector.
 
     Parameters
     ----------

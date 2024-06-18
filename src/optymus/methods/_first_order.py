@@ -46,19 +46,18 @@ def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, to
 
     Returns
     -------
-    dict
-        method_name : str
-            Method name
-        xopt : ndarray
-            Optimal point
-        fmin : float
-            Minimum value
-        num_iter : int
-            Number of iterations
-        path : ndarray
-            Path taken
-        alphas : ndarray
-            Step sizes
+    method_name : str
+        Method name
+    xopt : ndarray
+        Optimal point
+    fmin : float
+        Minimum value
+    num_iter : int
+        Number of iterations
+    path : ndarray
+        Path taken
+    alphas : ndarray
+        Step sizes
     """
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
@@ -161,19 +160,18 @@ def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, 
 
     Returns
     -------
-    dict
-        method_name : str
-            Method name
-        xopt : ndarray
-            Optimal point
-        fmin : float
-            Minimum value
-        num_iter : int
-            Number of iterations
-        path : ndarray
-            Path taken
-        alphas : ndarray
-            Step sizes
+    method_name : str
+        Method name
+    xopt : ndarray
+        Optimal point
+    fmin : float
+        Minimum value
+    num_iter : int
+        Number of iterations
+    path : ndarray
+        Path taken
+    alphas : ndarray
+        Step sizes
     """  # noqa: E501
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
@@ -238,7 +236,71 @@ def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, 
 
 
 def bfgs(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    """BFGS with JAX"""
+    r"""BFGS
+
+    BFGS is a first-order optimization algorithm that uses the gradient of the
+    objective function to compute the step direction.
+
+    We can minimize the objective function :math:`f` by solving the following
+    equation:
+
+    .. math::
+        x_{k+1} = x_k - \alpha_k d_k
+
+    where :math:`x_k` is the current point, :math:`\alpha_k` is the step size,
+    and :math:`d_k` is the search direction.
+
+    The search direction :math:`d_k` is computed as follows:
+
+    .. math::
+        d_k = -B_k^{-1} \nabla f(x_k)
+
+    where :math:`B_k` is an approximation of the inverse Hessian matrix.
+
+    The inverse Hessian matrix :math:`B_k` is updated using the BFGS formula:
+
+    .. math::
+        B_{k+1} = B_k - \frac{B_k s_k s_k^T B_k}{s_k^T B_k s_k} + \frac{\delta_k \delta_k^T}{s_k^T \delta_k}
+
+    where :math:`s_k = x_{k+1} - x_k`, :math:`\delta_k = \nabla f(x_{k+1}) - \nabla f(x_k)`.
+    The step size :math:`\alpha_k` is computed using a line search algorithm.
+
+    Parameters
+    ----------
+    f_obj : callable
+        Objective function to minimize
+    f_cons : callable
+        Constraint function
+    args : tuple
+        Arguments for the objective function
+    args_cons : tuple
+        Arguments for the constraint function
+    x0 : ndarray
+        Initial guess
+    tol : float
+        Tolerance for stopping criteria
+    learning_rate : float
+        Step size
+    max_iter : int
+        Maximum number of iterations
+    maximize : bool
+        If True, maximize the objective function
+
+    Returns
+    -------
+    method_name : str
+        Method name
+    xopt : ndarray
+        Optimal point
+    fmin : float
+        Minimum value
+    num_iter : int
+        Number of iterations
+    path : ndarray
+        Path taken
+    alphas : ndarray
+        Step sizes
+    """
     start_time = time.time()
     x = x0.astype(float)  # Ensure x0 is of a floating-point type
 
