@@ -59,7 +59,7 @@ Contributions
 Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the CONTRIBUTING.md on GitHub.
 
 How to cite
-----
+-------------
 
 If you use `optymus` in your research, please consider citing the library using the following BibTeX entry:
 

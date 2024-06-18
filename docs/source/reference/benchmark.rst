@@ -16,7 +16,7 @@ Custom Function
 
 
 Benchmark Functions
-------------------
+--------------------
 
 .. autosummary::
     :toctree: .generated/
