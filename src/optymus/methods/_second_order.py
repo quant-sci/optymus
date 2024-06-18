@@ -100,7 +100,7 @@ def newton_raphson(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=
         if jnp.linalg.norm(g) < tol:
             break
 
-        d = jax.scipy.linalg.solve(M, -g)
+        d = jnp.linalg.solve(M, -g)
 
         r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
         x = r['xopt']
