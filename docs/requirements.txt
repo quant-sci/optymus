@@ -13,5 +13,6 @@ sphinxcontrib-serializinghtml==1.1.5
 sphinx-togglebutton
 myst_parser
 nbsphinx
+sphinx_design==0.5.0
 pydata_sphinx_theme
 optymus==0.1.7
