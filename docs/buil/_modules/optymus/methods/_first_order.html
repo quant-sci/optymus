@@ -1,0 +1,820 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>optymus.methods._first_order &#8212; optymus 0.1.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_style.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../_static/documentation_options.js?v=360bc84d"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../_static/design-tabs.js?v=36754332"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/optymus/methods/_first_order';</script>
+    <script src="../../../_static/require.min.js?v=8a87acde"></script>
+    <script src="../../../_static/custom.js?v=4aebe6e6"></script>
+    <link rel="icon" href="../../../_static/logo.svg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.svg" class="logo__image only-light" alt="optymus 0.1.3 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.svg" class="logo__image only-dark" alt="optymus 0.1.3 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../quickstart/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../reference/index.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/quant-sci/optymus" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../quickstart/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../reference/index.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/quant-sci/optymus" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">optymus.meth...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for optymus.methods._first_order</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">optymus.search</span> <span class="kn">import</span> <span class="n">line_search</span>
+
+
+<div class="viewcode-block" id="gradient_descent">
+<a class="viewcode-back" href="../../../reference/.generated/optymus.methods.gradient_descent.html#optymus.methods.gradient_descent">[docs]</a>
+<span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">f_obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f_cons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">args_cons</span><span class="o">=</span><span class="p">(),</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Gradient Descent</span>
+
+<span class="sd">    Gradient Descent is a first-order optimization algorithm that uses the</span>
+<span class="sd">    gradient of the objective function to compute the step direction.</span>
+
+<span class="sd">    We can minimize the objective function :math:`f` by solving the following</span>
+<span class="sd">    equation:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        x_{k+1} = x_k - \alpha \nabla f(x_k)</span>
+
+<span class="sd">    where :math:`x_k` is the current point, :math:`\alpha` is the step size,</span>
+<span class="sd">    and :math:`\nabla f(x_k)` is the gradient of :math:`f` evaluated at point</span>
+<span class="sd">    :math:`x_k`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f_obj : callable</span>
+<span class="sd">        Objective function to minimize</span>
+<span class="sd">    f_cons : callable</span>
+<span class="sd">        Constraint function</span>
+<span class="sd">    args : tuple</span>
+<span class="sd">        Arguments for the objective function</span>
+<span class="sd">    args_cons : tuple</span>
+<span class="sd">        Arguments for the constraint function</span>
+<span class="sd">    x0 : ndarray</span>
+<span class="sd">        Initial guess</span>
+<span class="sd">    tol : float</span>
+<span class="sd">        Tolerance for stopping criteria</span>
+<span class="sd">    learning_rate : float</span>
+<span class="sd">        Step size</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">        Maximum number of iterations</span>
+<span class="sd">    maximize : bool</span>
+<span class="sd">        If True, maximize the objective function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    method_name : str</span>
+<span class="sd">        Method name</span>
+<span class="sd">    xopt : ndarray</span>
+<span class="sd">        Optimal point</span>
+<span class="sd">    fmin : float</span>
+<span class="sd">        Minimum value</span>
+<span class="sd">    num_iter : int</span>
+<span class="sd">        Number of iterations</span>
+<span class="sd">    path : ndarray</span>
+<span class="sd">        Path taken</span>
+<span class="sd">    alphas : ndarray</span>
+<span class="sd">        Step sizes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># Ensure x0 is of a floating-point type</span>
+
+    <span class="k">def</span> <span class="nf">penalized_obj</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">f_cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f_con</span> <span class="ow">in</span> <span class="n">f_cons</span><span class="p">:</span>
+                <span class="n">penalty</span> <span class="o">+=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">f_con</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args_cons</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximize</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+        <span class="k">return</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">grad</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_iter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">progres_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Gradient Descent </span><span class="si">{</span><span class="n">num_iter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,)</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">progres_bar</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">line_search</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">penalized_obj</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;xopt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># Ensure xopt is of a floating-point type</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">grad</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">alphas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+        <span class="n">num_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;method_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Gradient Descent&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f_cons</span> <span class="k">else</span> <span class="s1">&#39;Gradient Descent with Penalty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0</span><span class="p">,</span>
+        <span class="s1">&#39;xopt&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;num_iter&#39;</span><span class="p">:</span> <span class="n">num_iter</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+        <span class="s1">&#39;alphas&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">elapsed_time</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="conjugate_gradient">
+<a class="viewcode-back" href="../../../reference/.generated/optymus.methods.conjugate_gradient.html#optymus.methods.conjugate_gradient">[docs]</a>
+<span class="k">def</span> <span class="nf">conjugate_gradient</span><span class="p">(</span><span class="n">f_obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f_cons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">args_cons</span><span class="o">=</span><span class="p">(),</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient_type</span><span class="o">=</span><span class="s1">&#39;fletcher_reeves&#39;</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conjugate Gradient</span>
+
+<span class="sd">    Conjugate Gradient is a first-order optimization algorithm that uses the</span>
+<span class="sd">    gradient of the objective function to compute the step direction.</span>
+
+<span class="sd">    We can minimize the objective function :math:`f` by solving the following</span>
+<span class="sd">    equation:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        x_{k+1} = x_k - \alpha_k d_k</span>
+
+<span class="sd">    where :math:`x_k` is the current point, :math:`\alpha_k` is the step size,</span>
+<span class="sd">    and :math:`d_k` is the search direction.</span>
+
+<span class="sd">    The search direction :math:`d_k` is computed as follows:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        d_k = -\nabla f(x_k) + \beta_k d_{k-1}</span>
+
+<span class="sd">    where :math:`\nabla f(x_k)` is the gradient of :math:`f` evaluated at point</span>
+<span class="sd">    :math:`x_k`, and :math:`\beta_k` is the conjugate gradient coefficient.</span>
+
+<span class="sd">    We can compute beta using different formulas:</span>
+
+<span class="sd">    - Fletcher-Reeves: :math:`\beta_k = \frac{\nabla x_k^{T} \nabla x_k}{\nabla x_{k-1}^{T} \nabla x_{k-1}}`</span>
+<span class="sd">    - Polak-Ribiere: :math:`\beta_k = \frac{\nabla x_k^{T} (\nabla x_k - \nabla x_{k-1})}{\nabla x_{k-1}^T \nabla x_{k-1}}`</span>
+<span class="sd">    - Hestnes-Stiefel: :math:`\beta_k = \frac{\nabla x_k^{T} (\nabla x_k - \nabla x_{k-1})}{\nabla s_{k-1}^{T}(\nabla x_{k} - \nabla x_{k-1})}` </span>
+<span class="sd">    - Dai-Yuan: :math:`\beta_k = \frac{\nabla x_{k}^{T} \nabla x_{k}}{\nabla s_{k-1}^{T}(\nabla x_{k} - \nabla x_{k-1})}`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f_obj : callable</span>
+<span class="sd">        Objective function to minimize</span>
+<span class="sd">    f_cons : callable</span>
+<span class="sd">        Constraint function</span>
+<span class="sd">    args : tuple</span>
+<span class="sd">        Arguments for the objective function</span>
+<span class="sd">    args_cons : tuple</span>
+<span class="sd">        Arguments for the constraint function</span>
+<span class="sd">    x0 : ndarray</span>
+<span class="sd">        Initial guess</span>
+<span class="sd">    tol : float</span>
+<span class="sd">        Tolerance for stopping criteria</span>
+<span class="sd">    learning_rate : float</span>
+<span class="sd">        Step size</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">        Maximum number of iterations</span>
+<span class="sd">    gradien_type: str</span>
+<span class="sd">        &#39;fletcher_reeves&#39;, &#39;polak_ribiere&#39;, &#39;hestnes_stiefel&#39;, &#39;dai_yuan&#39;</span>
+<span class="sd">    maximize : bool</span>
+<span class="sd">        If True, maximize the objective function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    method_name : str</span>
+<span class="sd">        Method name</span>
+<span class="sd">    xopt : ndarray</span>
+<span class="sd">        Optimal point</span>
+<span class="sd">    fmin : float</span>
+<span class="sd">        Minimum value</span>
+<span class="sd">    num_iter : int</span>
+<span class="sd">        Number of iterations</span>
+<span class="sd">    path : ndarray</span>
+<span class="sd">        Path taken</span>
+<span class="sd">    alphas : ndarray</span>
+<span class="sd">        Step sizes</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># Ensure x0 is of a floating-point type</span>
+
+    <span class="k">def</span> <span class="nf">penalized_obj</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">f_cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f_con</span> <span class="ow">in</span> <span class="n">f_cons</span><span class="p">:</span>
+                <span class="n">penalty</span> <span class="o">+=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">f_con</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args_cons</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximize</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+        <span class="k">return</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">grad</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_iter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">progres_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Conjugate Gradient </span><span class="si">{</span><span class="n">num_iter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,)</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">progres_bar</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">line_search</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">penalized_obj</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;xopt&#39;</span><span class="p">]</span>
+        <span class="n">new_grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">new_grad</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">gradient_type</span> <span class="o">==</span> <span class="s1">&#39;fletcher_reeves&#39;</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">new_grad</span><span class="p">,</span> <span class="n">new_grad</span><span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">grad</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">gradient_type</span> <span class="o">==</span> <span class="s1">&#39;polak_ribiere&#39;</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">new_grad</span><span class="p">,</span> <span class="n">new_grad</span> <span class="o">-</span> <span class="n">grad</span><span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">grad</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">gradient_type</span> <span class="o">==</span> <span class="s1">&#39;hestnes_stiefel&#39;</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">new_grad</span><span class="p">,</span> <span class="n">new_grad</span><span class="o">-</span><span class="n">grad</span><span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">new_grad</span><span class="o">-</span><span class="n">grad</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">gradient_type</span> <span class="o">==</span> <span class="s1">&#39;dai_yuan&#39;</span><span class="p">:</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">new_grad</span><span class="p">,</span> <span class="n">new_grad</span><span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">new_grad</span><span class="o">-</span><span class="n">grad</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">new_grad</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">d</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">line_search</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">penalized_obj</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;xopt&#39;</span><span class="p">]</span>
+        <span class="n">alphas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">num_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;method_name&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Conjugate Gradients (</span><span class="si">{</span><span class="n">gradient_type</span><span class="si">}</span><span class="s1">)&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f_cons</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;Conjugate Gradients (</span><span class="si">{</span><span class="n">gradient_type</span><span class="si">}</span><span class="s1">) with Penalty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0</span><span class="p">,</span>
+        <span class="s1">&#39;xopt&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;num_iter&#39;</span><span class="p">:</span> <span class="n">num_iter</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+        <span class="s1">&#39;alphas&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">elapsed_time</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="bfgs">
+<a class="viewcode-back" href="../../../reference/.generated/optymus.methods.bfgs.html#optymus.methods.bfgs">[docs]</a>
+<span class="k">def</span> <span class="nf">bfgs</span><span class="p">(</span><span class="n">f_obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f_cons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">args_cons</span><span class="o">=</span><span class="p">(),</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;BFGS</span>
+
+<span class="sd">    BFGS is a first-order optimization algorithm that uses the gradient of the</span>
+<span class="sd">    objective function to compute the step direction.</span>
+
+<span class="sd">    We can minimize the objective function :math:`f` by solving the following</span>
+<span class="sd">    equation:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        x_{k+1} = x_k - \alpha_k d_k</span>
+
+<span class="sd">    where :math:`x_k` is the current point, :math:`\alpha_k` is the step size,</span>
+<span class="sd">    and :math:`d_k` is the search direction.</span>
+
+<span class="sd">    The search direction :math:`d_k` is computed as follows:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        d_k = -B_k^{-1} \nabla f(x_k)</span>
+
+<span class="sd">    where :math:`B_k` is an approximation of the inverse Hessian matrix.</span>
+
+<span class="sd">    The inverse Hessian matrix :math:`B_k` is updated using the BFGS formula:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        B_{k+1} = B_k - \frac{B_k s_k s_k^T B_k}{s_k^T B_k s_k} + \frac{\delta_k \delta_k^T}{s_k^T \delta_k}</span>
+
+<span class="sd">    where :math:`s_k = x_{k+1} - x_k`, :math:`\delta_k = \nabla f(x_{k+1}) - \nabla f(x_k)`.</span>
+<span class="sd">    The step size :math:`\alpha_k` is computed using a line search algorithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f_obj : callable</span>
+<span class="sd">        Objective function to minimize</span>
+<span class="sd">    f_cons : callable</span>
+<span class="sd">        Constraint function</span>
+<span class="sd">    args : tuple</span>
+<span class="sd">        Arguments for the objective function</span>
+<span class="sd">    args_cons : tuple</span>
+<span class="sd">        Arguments for the constraint function</span>
+<span class="sd">    x0 : ndarray</span>
+<span class="sd">        Initial guess</span>
+<span class="sd">    tol : float</span>
+<span class="sd">        Tolerance for stopping criteria</span>
+<span class="sd">    learning_rate : float</span>
+<span class="sd">        Step size</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">        Maximum number of iterations</span>
+<span class="sd">    maximize : bool</span>
+<span class="sd">        If True, maximize the objective function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    method_name : str</span>
+<span class="sd">        Method name</span>
+<span class="sd">    xopt : ndarray</span>
+<span class="sd">        Optimal point</span>
+<span class="sd">    fmin : float</span>
+<span class="sd">        Minimum value</span>
+<span class="sd">    num_iter : int</span>
+<span class="sd">        Number of iterations</span>
+<span class="sd">    path : ndarray</span>
+<span class="sd">        Path taken</span>
+<span class="sd">    alphas : ndarray</span>
+<span class="sd">        Step sizes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># Ensure x0 is of a floating-point type</span>
+
+    <span class="k">def</span> <span class="nf">penalized_obj</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">f_cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f_con</span> <span class="ow">in</span> <span class="n">f_cons</span><span class="p">:</span>
+                <span class="n">penalty</span> <span class="o">+=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">f_con</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args_cons</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximize</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+        <span class="k">return</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_iter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># Initial approximation of the inverse Hessian</span>
+
+    <span class="n">progres_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;BFGS </span><span class="si">{</span><span class="n">num_iter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,)</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">progres_bar</span><span class="p">:</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">grad</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">line_search</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">penalized_obj</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">x_new</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;xopt&#39;</span><span class="p">]</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">x_new</span> <span class="o">-</span> <span class="n">x</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">penalized_obj</span><span class="p">)(</span><span class="n">x_new</span><span class="p">)</span> <span class="o">-</span> <span class="n">grad</span>
+
+        <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">-</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">))</span> <span class="o">@</span> <span class="n">q</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">@</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">-</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>  <span class="c1"># BFGS update</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x_new</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">alphas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+        <span class="n">num_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;method_name&#39;</span><span class="p">:</span> <span class="s1">&#39;BFGS&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f_cons</span> <span class="k">else</span> <span class="s1">&#39;BFGS with Penalty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0</span><span class="p">,</span>
+        <span class="s1">&#39;xopt&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="n">f_obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;num_iter&#39;</span><span class="p">:</span> <span class="n">num_iter</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+        <span class="s1">&#39;alphas&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">elapsed_time</span>
+    <span class="p">}</span></div>
+
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, quantsci.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
