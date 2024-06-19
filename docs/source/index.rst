@@ -15,6 +15,62 @@ optymus documentation
 
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
+Features
+--------
+
+.. dropdown:: Optimization Methods
+   :icon: rocket
+
+   **Zero-order**
+      - Univariant
+      - Powell's method
+
+   **First-order**
+      - Gradient Descent
+      - Conjugate Gradient
+      - BFGS
+
+   **Second-order**
+      - Newton's method
+   
+   **Adaptative learning**
+      - Adam
+      - Adamax
+      - RMSprop
+      - Adagrad
+      - Yogi
+
+
+.. dropdown:: Benchmark Functions
+   :icon: ellipsis
+
+   We provide a set of benchmark functions to test the optimization methods. The following functions are available:
+
+      - Ackley
+      - Beale
+      - Booth
+      - CrossInTray
+      - Easom
+      - Eggholder
+      - GoldsteinPrice
+      - Mccormick
+      - Rastrigin
+      - Rosenbrock
+      - StyblinskiTang
+
+   **Obs.:** You can also create your own benchmark function by inheriting the `CustomFunction` class.
+
+.. dropdown:: Visualization
+   :icon: eye
+
+   **Plotting**
+      - Plot the optimization path
+      - Counter plot of the function
+
+   **Reports**
+      - Create a report with the optimization results
+
+
 Getting Started
 ---------------
 

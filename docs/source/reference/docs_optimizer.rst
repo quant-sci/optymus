@@ -13,6 +13,6 @@ Optimizer
 ------------------
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: .generated/
 
     optymus.Optimizer
