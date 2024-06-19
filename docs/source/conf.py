@@ -18,9 +18,6 @@ sys.path.insert(0, rootdir)
 print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
 [print(p) for p in sys.path]
 print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
-import optymus  # noqa: E402
-
-print(optymus.__version__)
 print("================================")
 
 
