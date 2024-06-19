@@ -19,8 +19,6 @@ Custom Function
 Benchmark Functions
 --------------------
 
-.. currentmodule:: optymus
-
 .. autosummary::
     :toctree: .generated/
 

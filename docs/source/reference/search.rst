@@ -1,4 +1,3 @@
-
 Search Methods
 ====================
 
@@ -7,8 +6,6 @@ This module contains the search methods for the optimization of the mathematical
 
 Line Search
 ------------------
-
-.. currentmodule:: optymus
 
 .. autosummary::
     :toctree: .generated/
