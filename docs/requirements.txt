@@ -1,6 +1,6 @@
 myst_parser==3.0.1
 nbsphinx==0.9.2
-sphinx==6.2.1
+sphinx==7.3.7
 sphinxcontrib-applehelp==1.0.4
 sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==2.0.1
@@ -13,3 +13,4 @@ sphinx_copybutton==0.5.2
 pydata-sphinx-theme==0.15.2
 sphinx_design==0.5
 ipython==8.25.0
+optymus==0.1.7
