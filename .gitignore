@@ -4,10 +4,11 @@ playground/
 build/
 __pycache__/
 
-docs/html
 docs/_build
 docs/.generated
-docs/source/.generated
+docs/source/reference/.generated
 
 **/.generated/
 .generated/
+
+docs/source/reference/
