@@ -3,3 +3,11 @@ old-dist/
 playground/
 build/
 __pycache__/
+
+docs/html
+docs/_build
+docs/.generated
+docs/source/.generated
+
+**/.generated/
+.generated/

@@ -52,9 +52,6 @@ project = 'optymus'
 copyright = '2024, quantsci'
 author = 'Kleyton da Costa'
 
-# The full version, including alpha/beta/rc tags
-release = '0.1.7'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -75,8 +72,8 @@ extensions = [
     "IPython.sphinxext.ipython_console_highlighting",
 ]
 
-nbsphinx_allow_errors = True 
-nbsphinx_execute = 'never'
+nbsphinx_allow_errors = True  # Permitir errores en los notebooks
+nbsphinx_execute = 'never'  # Puede ser 'auto', 'always', o 'never'
 
 html_show_sourcelink = False
 # autodoc options
@@ -84,7 +81,6 @@ autodoc_default_options = {"members": True, "inherited-members": True}
 
 # Turn on autosummary
 autosummary_generate = True
-numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -99,6 +95,7 @@ exclude_patterns = [
     "generated/*",
     ".ipynb_checkpoints",
 ]
+
 
 # -- Options for HTML output -------------------------------------------------
 

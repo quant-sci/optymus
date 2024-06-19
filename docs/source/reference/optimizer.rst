@@ -5,3 +5,11 @@ optymus provides a class to optimize a function using a selected optimization al
 
 This function can be called using `from optymus import Optimizer` class.
 
+
+
+Optimizer
+------------------
+
+.. autosummary::
+
+    optymus.Optimizer
