@@ -18,7 +18,6 @@ import shutil
 sys.path.insert(0, os.path.abspath('../src'))
 print(sys.path)
 
-import optymus
 # notebooks_path = os.path.join(work_dir, 'notebooks')
 
 # def copy_folder(origen, destino):
