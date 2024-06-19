@@ -9,14 +9,17 @@ You also have the possibility to create your own custom function by inheriting f
 Custom Function
 ------------------
 
+.. currentmodule:: optymus
+
 .. autosummary::
-    :toctree: .generated/
 
     optymus.benchmark.CustomFunction
 
 
 Benchmark Functions
 --------------------
+
+.. currentmodule:: optymus
 
 .. autosummary::
     :toctree: .generated/

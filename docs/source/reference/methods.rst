@@ -9,6 +9,8 @@ The methods are divided into four categories:
 Zero Order Methods
 ------------------
 
+.. currentmodule:: optymus
+
 .. autosummary::
     :toctree: .generated/
 
@@ -17,6 +19,8 @@ Zero Order Methods
 
 First Order Methods
 -------------------
+
+.. currentmodule:: optymus
 
 .. autosummary::
     :toctree: .generated/
@@ -28,6 +32,8 @@ First Order Methods
 Second Order Methods
 --------------------
 
+.. currentmodule:: optymus
+
 .. autosummary::
     :toctree: .generated/
 
@@ -36,6 +42,8 @@ Second Order Methods
 Adaptative Methods
 ------------------
 
+.. currentmodule:: optymus
+    
 .. autosummary::
     :toctree: .generated/
 

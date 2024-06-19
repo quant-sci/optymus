@@ -8,6 +8,8 @@ This function can be called using `from optymus import Optimizer` class.
 Optimizer
 ---------
 
+.. currentmodule:: optymus
+
 .. autosummary::
     :toctree: .generated/
 

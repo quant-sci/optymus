@@ -8,6 +8,8 @@ This module contains the fucntions to plot the results of the optimization.
 Plots
 ----------------
 
+.. currentmodule:: optymus
+
 .. autosummary::
     :toctree: .generated/
 

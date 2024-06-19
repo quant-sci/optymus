@@ -3,5 +3,3 @@ old-dist/
 playground/
 build/
 __pycache__/
-
-.generated/
