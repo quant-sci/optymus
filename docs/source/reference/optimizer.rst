@@ -5,12 +5,3 @@ optymus provides a class to optimize a function using a selected optimization al
 
 This function can be called using `from optymus import Optimizer` class.
 
-.. currentmodule:: optymus
-
-Optimizer
----------
-
-.. autosummary::
-    :toctree: .generated/
-
-    Optimizer

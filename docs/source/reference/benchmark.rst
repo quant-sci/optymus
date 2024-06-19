@@ -5,14 +5,14 @@ This module contains the implementation of several benchmark functions that are 
 
 You also have the possibility to create your own custom function by inheriting from the `CustomFunction` class.
 
-.. currentmodule:: optymus
+.. currentmodule:: optymus.benchmark
 
 Custom Function
 ------------------
 
 .. autosummary::
 
-    optymus.benchmark.CustomFunction
+    CustomFunction
 
 
 Benchmark Functions
@@ -21,8 +21,8 @@ Benchmark Functions
 .. autosummary::
     :toctree: .generated/
 
-    optymus.benchmark.AckleyFunction
-    optymus.benchmark.BealeFunction
+    AckleyFunction
+    BealeFunction
     optymus.benchmark.BoothFunction
     optymus.benchmark.CrossintrayFunction
     optymus.benchmark.EggholderFunction
