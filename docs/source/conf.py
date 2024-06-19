@@ -14,12 +14,9 @@ import sys
 import os
 import shutil
 
-sys.path.insert(0, os.path.abspath(".."))
-work_dir = '/'.join(os.getcwd().split("/")[:-2])
-src_path = os.path.join(work_dir,'src')
-print(src_path)
-
-sys.path.insert(0, src_path)
+	
+sys.path.insert(0, os.path.abspath('../'))
+print(sys.path)
 
 # notebooks_path = os.path.join(work_dir, 'notebooks')
 
