@@ -10,13 +10,15 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-import os
 import sys
+import os
 import shutil
 
 sys.path.insert(0, os.path.abspath(".."))
 work_dir = '/'.join(os.getcwd().split("/")[:-2])
 src_path = os.path.join(work_dir,'src')
+print(src_path)
+
 sys.path.insert(0, src_path)
 
 notebooks_path = os.path.join(work_dir, 'notebooks')
@@ -34,6 +36,19 @@ dirname = os.path.basename(notebooks_path)
 copy_folder(notebooks_path, os.path.join(os.getcwd(), 'examples', dirname))
 
 
+# Configuration file for the Sphinx documentation builder.
+#
+# This file only contains a selection of the most common options. For a full
+# list see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Path setup --------------------------------------------------------------
+
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+
+
 # -- Project information -----------------------------------------------------
 
 project = 'optymus'
@@ -41,7 +56,7 @@ copyright = '2024, quantsci'
 author = 'Kleyton da Costa'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.7'
+release = '0.1.3'
 
 
 # -- General configuration ---------------------------------------------------
