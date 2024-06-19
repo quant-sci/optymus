@@ -13,4 +13,3 @@ sphinx_copybutton==0.5.2
 pydata-sphinx-theme==0.15.2
 sphinx_design==0.5
 ipython==8.25.0
-optymus==0.1.7
