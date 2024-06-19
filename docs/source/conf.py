@@ -70,6 +70,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
+    'sphinx.ext.viewcode',
     "nbsphinx",
     "sphinx_copybutton",
     "sphinx_design",
@@ -77,8 +78,18 @@ extensions = [
     "IPython.sphinxext.ipython_console_highlighting",
 ]
 
+nbsphinx_allow_errors = True 
+nbsphinx_execute = 'never'
+
+html_show_sourcelink = False
+# autodoc options
+autodoc_default_options = {"members": True, "inherited-members": True}
+
+# Turn on autosummary
+autosummary_generate = True
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -90,11 +101,6 @@ exclude_patterns = [
     "generated/*",
     ".ipynb_checkpoints",
 ]
-# autodoc options
-autodoc_default_options = {"members": True, "inherited-members": True}
-
-# Turn on autosummary
-autosummary_generate = True
 
 # -- Options for HTML output -------------------------------------------------
 
