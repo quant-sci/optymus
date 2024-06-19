@@ -12,12 +12,12 @@
 
 import sys
 import os
-import shutil
 
 	
-sys.path.insert(0, os.path.abspath('../src'))
-print(sys.path)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+
+# import shutil
 # notebooks_path = os.path.join(work_dir, 'notebooks')
 
 # def copy_folder(origen, destino):
@@ -84,6 +84,7 @@ autodoc_default_options = {"members": True, "inherited-members": True}
 
 # Turn on autosummary
 autosummary_generate = True
+numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

@@ -43,21 +43,21 @@ Issues = "https://github.com/quant-sci/optymus/issues"
 Source = "https://github.com/quant-sci/optymus"
 
 [tool.hatch.version]
-path = "src/optymus/__about__.py"
+path = "optymus/__about__.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/optymus tests}"
+check = "mypy --install-types --non-interactive {args:optymus tests}"
 
 [tool.coverage.run]
 source_pkgs = ["optymus", "tests"]
 branch = true
 parallel = true
-omit = ["src/optymus/__about__.py"]
+omit = ["optymus/__about__.py"]
 
 [tool.coverage.paths]
-optymus = ["src/optymus", "*/optymus/src/optymus"]
+optymus = ["optymus", "*/optymus/optymus"]
 tests = ["tests", "*/optymus/tests"]
 
 [tool.coverage.report]
@@ -81,7 +81,7 @@ dependencies = [
 
 [tool.hatch.envs.sphinx.scripts]
 foo = ["which sphinx-build"]
-build = ["PYTHONPATH=./src sphinx-build -b html docs/source docs/build"]
+build = ["sphinx-build -b html docs/source docs/build"]
 
 
 [tool.hatch.envs.testing]
@@ -98,8 +98,6 @@ dependencies = [
   "seaborn>=0.13.2",
   "scikit-learn>=1.5.0",
   ]
-  
-paths = ["./src"]
 
 [tool.hatch.envs.testing.scripts]
 run = ["python -m pytest"]
@@ -111,4 +109,4 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/optymus"]
+packages = ["optymus"]
