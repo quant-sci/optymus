@@ -12,25 +12,26 @@
 
 import sys
 import os
-
+import shutil
 	
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.insert(0, os.path.abspath(".."))
+work_dir = '/'.join(os.getcwd().split("/")[:-2])
+src_path = os.path.join(work_dir,'src')
+sys.path.insert(0, src_path)
 
+notebooks_path = os.path.join(work_dir, 'notebooks')
 
-# import shutil
-# notebooks_path = os.path.join(work_dir, 'notebooks')
+def copy_folder(origen, destino):
+    try:
+        if not os.path.exists(destino):
+           os.makedirs(destino)
+        shutil.copytree(origen, destino, dirs_exist_ok=True)
+        print(f"Folder copied from {origen} to {destino} sucessfully.")
+    except Exception as e:
+       print(f"Error when trying to copy folder: {e}")
 
-# def copy_folder(origen, destino):
-#     try:
-#         if not os.path.exists(destino):
-#             os.makedirs(destino)
-#         shutil.copytree(origen, destino, dirs_exist_ok=True)
-#         print(f"Folder copied from {origen} to {destino} sucessfully.")
-#     except Exception as e:
-#         print(f"Error when trying to copy folder: {e}")
-
-# dirname = os.path.basename(notebooks_path)
-# copy_folder(notebooks_path, os.path.join(os.getcwd(), 'examples', dirname))
+dirname = os.path.basename(notebooks_path)
+copy_folder(notebooks_path, os.path.join(os.getcwd(), 'examples', dirname))
 
 
 # Configuration file for the Sphinx documentation builder.

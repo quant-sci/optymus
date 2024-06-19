@@ -79,6 +79,7 @@ If you use `optymus` in your research, please consider citing the library using 
    :titlesonly:
 
    quickstart/index
+   reference/index
    examples/index
 
 .. note::

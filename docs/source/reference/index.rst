@@ -6,8 +6,8 @@ This section contains the API reference for the `optymus` library. The library i
 .. toctree::
     :maxdepth: 2
     
-    optimizer
-    methods
-    search
-    benchmark
-    plots
+    docs_optimizer
+    docs_methods
+    docs_search
+    docs_benchmark
+    docs_plots

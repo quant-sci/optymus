@@ -1,3 +1,5 @@
+.. _benchmark
+
 Benchmark Functions
 ====================
 
@@ -10,6 +12,7 @@ Custom Function
 ------------------
 
 .. autosummary::
+    :toctree: .generated/
 
     optymus.benchmark.CustomFunction
 
