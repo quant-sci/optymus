@@ -12,11 +12,16 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.abspath(".."))
-work_dir = '/'.join(os.getcwd().split("/")[:-2])
-src_path = os.path.join(work_dir,'src')
 
-sys.path.insert(0, src_path)
+rootdir = os.path.join(os.getcwd(), "..")
+sys.path.insert(0, rootdir)
+print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+[print(p) for p in sys.path]
+print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+import optymus  # noqa: E402
+
+print(optymus.__version__)
+print("================================")
 
 
 # -- Project information -----------------------------------------------------
@@ -46,6 +51,8 @@ extensions = [
     "sphinx_togglebutton",
     "IPython.sphinxext.ipython_console_highlighting",
 ]
+
+source_suffix = [".rst"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
