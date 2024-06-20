@@ -104,7 +104,8 @@ def adam(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, bet
     progress_bar = tqdm(range(1, max_iter+1), desc=f'Adam {num_iter}',) if verbose else range(1, max_iter+1)
 
     for t in progress_bar:
-        if jnp.linalg.norm(grad(x)) < tol:
+        g = grad(x)
+        if jnp.linalg.norm(g) < tol:
             break
         g = grad(x)  # Compute gradients
         m = beta1 * m + (1 - beta1) * g
@@ -216,7 +217,8 @@ def adagrad(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, eps=1e-8, t
     progress_bar = tqdm(range(1, max_iter+1), desc=f'Adagrad {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
-        if jnp.linalg.norm(grad(x)) < tol:
+        g = grad(x)
+        if jnp.linalg.norm(g) < tol:
             break
         g = grad(x)
         g_sq_sum += g**2
@@ -324,7 +326,8 @@ def rmsprop(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta=0.9, e
     progress_bar = tqdm(range(1, max_iter+1), desc=f'RMSProp {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
-        if jnp.linalg.norm(grad(x)) < tol:
+        g = grad(x)
+        if jnp.linalg.norm(g) < tol:
             break
         g = grad(x)
         if jnp.linalg.norm(g) < tol:
@@ -439,7 +442,8 @@ def adamax(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, b
     progress_bar = tqdm(range(1, max_iter+1), desc=f'Adamax {num_iter}',) if verbose else range(1, max_iter+1)
 
     for _ in progress_bar:
-        if jnp.linalg.norm(grad(x)) < tol:
+        g = grad(x)
+        if jnp.linalg.norm(g) < tol:
             break
         g = grad(x)
         m = beta1 * m + (1 - beta1) * g
@@ -557,7 +561,8 @@ def yogi(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, beta1=0.9, bet
     progress_bar = tqdm(range(1, max_iter + 1), desc=f'Yogi {num_iter}',) if verbose else range(1, max_iter + 1)
 
     for t in progress_bar:
-        if jnp.linalg.norm(grad(x)) < tol:
+        g = grad(x)
+        if jnp.linalg.norm(g) < tol:
             break
         g = grad(x)
         m = beta1 * m + (1 - beta1) * g
