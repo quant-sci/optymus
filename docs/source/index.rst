@@ -26,7 +26,7 @@ Features
       - Powell's method
 
    **First-order**
-      - Gradient Descent
+      - Steepest Descent
       - Conjugate Gradient
       - BFGS
 

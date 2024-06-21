@@ -1,7 +1,7 @@
+import dash  # noqa: INP001
+import dash_bootstrap_components as dbc
 import jax
 import pandas as pd
-import dash
-import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
 from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
 from optymus.methods import (
@@ -10,10 +10,10 @@ from optymus.methods import (
     adamax,
     bfgs,
     conjugate_gradient,
-    gradient_descent,
     newton_raphson,
     powell,
     rmsprop,
+    steepest_descent,
     univariant,
     yogi,
 )
@@ -24,7 +24,7 @@ jax.config.update("jax_enable_x64", True)
 METHODS = {
     "univariant": univariant,
     "powell": powell,
-    "gradient_descent": gradient_descent,
+    "steepest_descent": steepest_descent,
     "conjugate_gradient": conjugate_gradient,
     "bfgs": bfgs,
     "newton_raphson": newton_raphson,
@@ -37,14 +37,14 @@ METHODS = {
 
 
 class Optimizer:
-    def __init__(self, f_obj=None, f_cons=None, x0=None, method='gradient_descent', **kwargs):
+    def __init__(self, f_obj=None, f_cons=None, x0=None, method='steepest_descent', **kwargs):
         """
         Initializes the Optimizer class.
 
         Args:
             f_obj (function): The objective function to be minimized.
             x0 (np.ndarray): The initial guess for the minimum.
-            method (str, optional): The optimization method to use. Defaults to 'gradient_descent'.
+            method (str, optional): The optimization method to use. Defaults to 'steepest_descent'.
         """
         self.f_obj = f_obj
         self.f_cons = f_cons
@@ -158,8 +158,8 @@ class Optimizer:
                                         html.Tr([html.Th("Parameter"), html.Th("Value")]),
                                         html.Tr([html.Td("Method"), html.Td(str(self.method))]),
                                         html.Tr([html.Td("Final Solution"), html.Td(str(self.opt.get('xopt', 'N/A')))]),
-                                        html.Tr([html.Td("Objective Function Value"), html.Td(str(self.opt.get('fmin', 'N/A')))]),
-                                        html.Tr([html.Td("Number of Iterations"), html.Td(str(self.opt.get('num_iter', 'N/A')))]),
+                                        html.Tr([html.Td("Objective Function Value"), html.Td(str(self.opt.get('fmin', 'N/A')))]),  # noqa: E501
+                                        html.Tr([html.Td("Number of Iterations"), html.Td(str(self.opt.get('num_iter', 'N/A')))]),  # noqa: E501
                                         html.Tr([html.Td("Initial Guess"), html.Td(str(self.x0))]),
                                         html.Tr([html.Td("Time Elapsed"), html.Td(str(self.opt.get('time', 'N/A')))]),
                                     ],
@@ -203,7 +203,7 @@ class Optimizer:
             theme = "flatly" if toggle else "slate"
             load_figure_template(theme)
             return plot_optim(f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, method=self.opt, path=True, template=theme, **kwargs), \
-                   plot_alphas(self.opt.get('alphas', None), template=theme)
+                   plot_alphas(self.opt.get('alphas', None), template=theme)  # noqa: E501
 
 
         # Run the Dash app

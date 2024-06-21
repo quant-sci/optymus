@@ -7,10 +7,11 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-4, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    r"""Gradient Descent
+def steepest_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-4, learning_rate=0.01,
+                     max_iter=100, verbose=True, maximize=False):  # noqa: FBT002
+    r"""Steepest Descent
 
-    Gradient Descent is a first-order optimization algorithm that uses the
+    Steepest Descent is a first-order optimization algorithm that uses the
     gradient of the objective function to compute the step direction.
 
     We can minimize the objective function :math:`f` by solving the following
@@ -77,13 +78,13 @@ def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, to
     alphas = []
     num_iter = 0
 
-    progres_bar = tqdm(range(max_iter), desc=f'Gradient Descent {num_iter}',) if verbose else range(max_iter)
+    progres_bar = tqdm(range(max_iter), desc=f'Steepest Descent {num_iter}',) if verbose else range(max_iter)
 
     for _ in progres_bar:
         if jnp.linalg.norm(grad) < tol:
             break
         r = line_search(f=penalized_obj, x=x, d=d, learning_rate=learning_rate)
-        x = r['xopt'].astype(float)  # Ensure xopt is of a floating-point type
+        x = r['xopt'].astype(float)
         grad = jax.grad(penalized_obj)(x)
         d = grad
         path.append(x)
@@ -94,7 +95,7 @@ def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, to
     elapsed_time = end_time - start_time
 
     return {
-        'method_name': 'Gradient Descent' if not f_cons else 'Gradient Descent with Penalty',
+        'method_name': 'Steepest Descent' if not f_cons else 'Steepest Descent with Penalty',
         'x0':x0,
         'xopt': x,
         'fmin': f_obj(x, *args),
@@ -105,7 +106,8 @@ def gradient_descent(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, to
     }
 
 
-def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):
+def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01,
+                       max_iter=100, verbose=True, gradient_type='fletcher_reeves', maximize=False):  # noqa: FBT002
     r"""Conjugate Gradient
 
     Conjugate Gradient is a first-order optimization algorithm that uses the
@@ -132,7 +134,7 @@ def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, 
 
     - Fletcher-Reeves: :math:`\beta_k = \frac{\nabla x_k^{T} \nabla x_k}{\nabla x_{k-1}^{T} \nabla x_{k-1}}`
     - Polak-Ribiere: :math:`\beta_k = \frac{\nabla x_k^{T} (\nabla x_k - \nabla x_{k-1})}{\nabla x_{k-1}^T \nabla x_{k-1}}`
-    - Hestnes-Stiefel: :math:`\beta_k = \frac{\nabla x_k^{T} (\nabla x_k - \nabla x_{k-1})}{\nabla s_{k-1}^{T}(\nabla x_{k} - \nabla x_{k-1})}` 
+    - Hestnes-Stiefel: :math:`\beta_k = \frac{\nabla x_k^{T} (\nabla x_k - \nabla x_{k-1})}{\nabla s_{k-1}^{T}(\nabla x_{k} - \nabla x_{k-1})}`
     - Dai-Yuan: :math:`\beta_k = \frac{\nabla x_{k}^{T} \nabla x_{k}}{\nabla s_{k-1}^{T}(\nabla x_{k} - \nabla x_{k-1})}`
 
     Parameters
@@ -224,7 +226,8 @@ def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, 
     elapsed_time = end_time - start_time
 
     return {
-        'method_name': f'Conjugate Gradients ({gradient_type})' if not f_cons else f'Conjugate Gradients ({gradient_type}) with Penalty',
+        'method_name': f'Conjugate Gradients ({gradient_type})' if not f_cons else \
+            f'Conjugate Gradients ({gradient_type}) with Penalty',
         'x0':x0,
         'xopt': x,
         'fmin': f_obj(x, *args),
@@ -235,7 +238,8 @@ def conjugate_gradient(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, 
         }
 
 
-def bfgs(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+def bfgs(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100,
+         verbose=True, maximize=False):  # noqa: FBT002
     r"""BFGS
 
     BFGS is a first-order optimization algorithm that uses the gradient of the

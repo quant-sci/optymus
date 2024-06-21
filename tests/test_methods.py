@@ -1,7 +1,7 @@
 import pytest
 import jax.numpy as jnp
 from optymus.methods import (
-    gradient_descent, 
+    steepest_descent, 
     conjugate_gradient, 
     bfgs, 
     newton_raphson, 
@@ -21,8 +21,8 @@ tol = 1e-5
 learning_rate = 0.1
 max_iter = 1000
 
-def test_gradient_descent():
-    result = gradient_descent(f_obj=f_obj, x0=x0, tol=tol,
+def test_steepest_descent():
+    result = steepest_descent(f_obj=f_obj, x0=x0, tol=tol,
                               learning_rate=learning_rate, max_iter=max_iter, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < tol
     assert result['num_iter'] <= max_iter

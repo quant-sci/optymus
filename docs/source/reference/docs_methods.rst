@@ -26,7 +26,7 @@ First Order Methods
 
     optymus.methods.bfgs
     optymus.methods.conjugate_gradient
-    optymus.methods.gradient_descent
+    optymus.methods.steepest_descent
 
 .. _second_order
 
