@@ -51,7 +51,7 @@ If you use `optymus` in your research, please consider citing the library using 
 ```bibtex
 @misc{optymus2024,
   author = {da Costa, Kleyton and Menezes, Ivan and Lopes, Helio},
-  title = {Optymus: Optimization Methods Library for Python},
+  title = {Optymus: Optimization Methods in Python},
   year = {2024},
   note = {GitHub Repository},
   url = {https://github.com/quant-sci/optymus}

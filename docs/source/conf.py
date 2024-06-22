@@ -76,6 +76,7 @@ extensions = [
 nbsphinx_allow_errors = True  # Permitir errores en los notebooks
 nbsphinx_execute = 'never'  # Puede ser 'auto', 'always', o 'never'
 
+
 html_show_sourcelink = False
 # autodoc options
 autodoc_default_options = {"members": True, "inherited-members": True}
@@ -105,7 +106,11 @@ exclude_patterns = [
 #
 html_theme = 'pydata_sphinx_theme'
 html_logo = '../logo.svg'
-html_favicon = '../logo.svg'
+html_favicon = '../favicon.png'
+
+html_context = {
+   "default_mode": "light"
+}
 
 # add github link to sidebar
 html_theme_options = {

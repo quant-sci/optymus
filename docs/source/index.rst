@@ -3,15 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-optymus documentation
-===================================
 
+.. image:: ../logo.svg
+   :alt: optymus logo
+   :align: center
 
 .. image:: https://img.shields.io/pypi/v/optymus
 .. image:: https://img.shields.io/github/license/quant-sci/optymus
 .. image:: https://readthedocs.org/projects/optymus/badge/?version=latest
 .. image:: https://img.shields.io/pypi/dm/optymus.svg?label=PyPI%20downloads
-
 
 This library provides a comprehensive collection of optimization methods, both with and without constraints. The main goal is provide a simple structure to improve research and development in optimization problems.
 
@@ -123,7 +123,7 @@ If you use `optymus` in your research, please consider citing the library using 
    
    @misc{optymus2024,
    author = {da Costa, Kleyton and Menezes, Ivan and Lopes, Helio},
-   title = {Optymus: Optimization Methods Library for Python},
+   title = {Optymus: Optimization Methods in Python},
    year = {2024},
    note = {GitHub Repository},
    url = {https://github.com/quant-sci/optymus}
