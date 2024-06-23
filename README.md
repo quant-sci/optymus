@@ -7,7 +7,7 @@
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 ![jax_badge][jax_badge_link]
 
-`optymus` is a Python library designed to address both unconstrained and constrained optimization challenges in science and engineering. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html), allowing automatic differentiation for efficient computation of gradients and Hessians. The library emphasizes ease of use and flexibility, enabling users to solve optimization problems with minimal setup. optymus also provides robust capabilities for visualization and benchmarking, allowing users to gain insights into method behavior and compare performance effectively.
+`optymus` is a Python library designed to address optimization problems in science and engineering. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html), allowing automatic differentiation for efficient computation of gradients and Hessians. The library emphasizes ease of use and flexibility, enabling users to solve optimization problems with minimal setup. optymus also provides robust capabilities for visualization and benchmarking, allowing users to gain insights into method behavior and compare performance effectively.
 
 ## Getting Started
 
