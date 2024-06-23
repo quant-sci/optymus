@@ -96,10 +96,10 @@ To begin using `optymus`, follow these steps:
    from optymus import Optimizer
    from optymus.benchmark import MccormickFunction
    
-   import numpy as np
+   import jax.numpy as jnp
 
    f = MccormickFunction()
-   initial_point = np.array([2, 2])
+   initial_point = jnp.array([2, 2])
 
 3. **Optimize the problem:**
 

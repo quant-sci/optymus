@@ -26,7 +26,7 @@ To begin using `optymus`, follow these steps:
    import jax.numpy as jnp
 
    f = MccormickFunction()
-   initial_point = np.array([2, 2])
+   initial_point = jnp.array([2, 2])
 
    opt = Optimizer(f_obj=f,
                    x0=initial_point,
