@@ -5,7 +5,6 @@ This module contains the optimization methods for the optimization of the mathem
 
 The methods are divided into four categories:
 
-.. _zero_order
 
 Zero Order Methods
 ------------------
@@ -16,7 +15,6 @@ Zero Order Methods
     optymus.methods.powell
     optymus.methods.univariant
 
-.. _first_order
 
 First Order Methods
 -------------------
@@ -28,8 +26,6 @@ First Order Methods
     optymus.methods.conjugate_gradient
     optymus.methods.gradient_descent
 
-.. _second_order
-
 Second Order Methods
 --------------------
 
@@ -37,8 +33,6 @@ Second Order Methods
     :toctree: .generated/
 
     optymus.methods.newton_raphson
-
-.. _adaptative
 
 Adaptative Methods
 ------------------

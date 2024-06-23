@@ -1,4 +1,3 @@
-.. _search
 
 Search Methods
 ====================
