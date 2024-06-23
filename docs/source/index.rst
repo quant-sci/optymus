@@ -22,7 +22,7 @@ Features
    :icon: rocket
 
    **Zero-order**
-      - Univariant
+      - Univariate
       - Powell's method
 
    **First-order**
@@ -137,6 +137,7 @@ If you use `optymus` in your research, please consider citing the library using 
    quickstart/index
    reference/index
    examples/index
+   guides/index
 
 .. note::
    

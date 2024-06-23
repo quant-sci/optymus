@@ -1,4 +1,3 @@
-.. _benchmark
 
 Benchmark Functions
 ====================
