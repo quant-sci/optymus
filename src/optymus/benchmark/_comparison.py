@@ -6,7 +6,7 @@ from optymus import Optimizer
 
 
 def methods_comparison(f_obj=None, initial_point=None, **kwargs):
-    METHODS = ['gradient_descent', 'newton_raphson', 'bfgs', 'conjugate_gradient', 'univariant', 'powell',
+    METHODS = ['steepest_descent', 'newton_raphson', 'bfgs', 'conjugate_gradient', 'univariant', 'powell',
                'adam', 'adamax', 'adagrad', 'rmsprop', 'yogi']
 
     results = pd.DataFrame(columns=['method', 'x_opt', 'f_min', 'n_iter', 'time'])

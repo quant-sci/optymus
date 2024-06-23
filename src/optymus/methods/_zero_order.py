@@ -172,7 +172,7 @@ def powell(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, le
     alphas = []
     num_iter = 0
 
-    progres_bar = tqdm(range(max_iter), desc=f'Gradient Descent {num_iter}',) if verbose else range(max_iter)
+    progres_bar = tqdm(range(max_iter), desc=f'Powell {num_iter}',) if verbose else range(max_iter)
 
     for _ in progres_bar:
         # Perform line search along the basis vectors
