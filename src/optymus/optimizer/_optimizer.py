@@ -14,7 +14,7 @@ from optymus.methods import (
     powell,
     rmsprop,
     steepest_descent,
-    univariant,
+    univariate,
     yogi,
 )
 from optymus.plots import plot_alphas, plot_optim
@@ -22,7 +22,7 @@ from optymus.plots import plot_alphas, plot_optim
 jax.config.update("jax_enable_x64", True)
 
 METHODS = {
-    "univariant": univariant,
+    "univariate": univariate,
     "powell": powell,
     "steepest_descent": steepest_descent,
     "conjugate_gradient": conjugate_gradient,

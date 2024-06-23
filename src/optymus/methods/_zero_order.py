@@ -7,18 +7,15 @@ from tqdm import tqdm
 from optymus.search import line_search
 
 
-def univariant(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
-    r"""Univariant Search Method
+def univariate(f_obj=None, f_cons=None, args=(), args_cons=(), x0=None, tol=1e-5, learning_rate=0.01, max_iter=100, verbose=True, maximize=False):
+    r"""Univariate Search Method
 
-    The univariant search method is a zero-order optimization method that uses a set of basis vectors to search for the minimum of a function.
-
-    We can describe the method with the equation:
+    In the Univariate Method, the search direction at iteration :math:`k` is defined by:
 
     .. math::
+        \mathbf{d}_k = \mathbf{e}_k, \quad k = 1, \ldots, n
 
-        x_{k+1} = x_k + \alpha_k v_k
-
-    where $x_k$ is the current point, $\alpha_k$ is the learning rate, and $v_k$ is the basis vector.
+    where :math:`\mathbf{e}_k` is a vector with zero elements except at position :math:`k`, where the element is 1.
 
     Parameters
     ----------

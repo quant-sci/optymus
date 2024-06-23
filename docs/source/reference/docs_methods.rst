@@ -13,7 +13,7 @@ Zero Order Methods
     :toctree: .generated/
 
     optymus.methods.powell
-    optymus.methods.univariant
+    optymus.methods.univariate
 
 
 First Order Methods

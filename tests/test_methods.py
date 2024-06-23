@@ -5,7 +5,7 @@ from optymus.methods import (
     conjugate_gradient, 
     bfgs, 
     newton_raphson, 
-    univariant,
+    univariate,
     powell,
     adam, 
     adamax,
@@ -75,8 +75,8 @@ def test_yogi():
     assert jnp.linalg.norm(result['xopt']) < tol
     assert result['num_iter'] <= max_iter
 
-def test_univariant():
-    result = univariant(f_obj=f_obj, x0=x0, tol=tol,
+def test_univariate():
+    result = univariate(f_obj=f_obj, x0=x0, tol=tol,
                         learning_rate=learning_rate, max_iter=max_iter, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < tol
     assert result['num_iter'] <= max_iter

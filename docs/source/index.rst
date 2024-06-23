@@ -21,24 +21,26 @@ Features
 .. dropdown:: Optimization Methods
    :icon: rocket
 
-   **Zero-order**
-      - Univariate
-      - Powell's method
+   **Continuous optimization**
 
-   **First-order**
-      - Steepest Descent
-      - Conjugate Gradient
-      - BFGS
+      **Zero-order**
+         - Univariate
+         - Powell's method
 
-   **Second-order**
-      - Newton's method
-   
-   **Adaptative learning**
-      - Adam
-      - Adamax
-      - RMSprop
-      - Adagrad
-      - Yogi
+      **First-order**
+         - Steepest Descent
+         - Conjugate Gradient
+         - BFGS
+
+      **Second-order**
+         - Newton's method
+      
+      **Adaptative learning**
+         - Adam
+         - Adamax
+         - RMSprop
+         - Adagrad
+         - Yogi
 
 
 .. dropdown:: Benchmark Functions

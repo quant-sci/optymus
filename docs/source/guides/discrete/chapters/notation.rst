@@ -1,0 +1,3 @@
+
+Notation and Common Definitions
+================================
