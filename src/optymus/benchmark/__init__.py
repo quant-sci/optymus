@@ -14,6 +14,7 @@ from optymus.benchmark._obj_functions import (
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
+    SemionescuFunction,
 )
 
 __all__ = [
@@ -28,6 +29,7 @@ __all__ = [
     'GoldsteinPriceFunction',
     'BoothFunction',
     'StyblinskiTangFunction',
+    'SemionescuFunction',
     'CustomFunction',
     'HimmeblauFunction',
     'methods_comparison',

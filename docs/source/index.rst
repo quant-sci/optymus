@@ -66,17 +66,6 @@ Features
 
    **Obs.:** You can also create your own benchmark function by inheriting the `CustomFunction` class.
 
-.. dropdown:: Visualization
-   :icon: eye
-
-   **Plotting**
-      - Plot the optimization path
-      - Counter plot of the function
-
-   **Reports**
-      - Create a report with the optimization results
-
-
 Getting Started
 ---------------
 

@@ -2,7 +2,6 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objs as go
 import plotly.subplots as sp
@@ -13,7 +12,7 @@ from sklearn.decomposition import PCA
 sns.set_style('whitegrid')
 
 
-def plot_function(f, title=None, min=-10, max=10, n=100):
+def plot_function(f_obj, min=-10, max=10, n=100, n_levels=50, show=True, notebook=True):
     """
     Plot the function surface.
 
@@ -29,38 +28,58 @@ def plot_function(f, title=None, min=-10, max=10, n=100):
     x = np.linspace(min, max, n)
     y = np.linspace(min, max, n)
     X, Y = np.meshgrid(x, y)
-    Z = f([X, Y])
+    Z = f_obj([X, Y])
 
-    fig, ax = plt.subplots(ncols=2, nrows=1, figsize=(12, 5))
+    # 3D Surface plot
+    surface = go.Surface(z=Z, x=X, y=Y, colorscale='PuBuGn_r', showscale=False)
 
-    fig.delaxes(ax[0])
-    ax[0] = fig.add_subplot(121, projection='3d')
-    ax[0].view_init(40, 20)
-    ax[0].plot_surface(X, Y, Z, cmap='YlGnBu_r', linewidth =0)
-    ax[0].set_xlabel('x1')
-    ax[0].set_ylabel('x2')
-    ax[0].set_zlabel("f(x_1, x2)")
-    ax[0].set_title(f'{title} surface f(x1, x2)')
+    # Contour plot for objective function
+    contour_obj = go.Contour(
+        z=Z, x=x, y=y, 
+        colorscale='PuBuGn_r',
+        ncontours=n_levels,
+        contours={'showlabels': False},
+        showscale=False,
+        line={'color': 'white'},
+        line_smoothing=0.85,
+        name='Objective Function'
+    )
 
-    countour = ax[1].contour(X, Y, Z, 200, cmap='YlGnBu_r')
-    ax[1].set_xlabel('x1')
-    ax[1].set_ylabel('x2')
-    if title is not None:
-        ax[1].set_title(f'{title} contour f(x1, x2)')
-    else:
-        ax[1].set_title("Function contour f(x1, x2)")
-    plt.tight_layout()
-    plt.show()
+    fig = sp.make_subplots(rows=1, cols=2, specs=[[{'type': 'surface'}, {'type': 'xy'}]],
+                           subplot_titles=("Function Surface f(x1, x2)", "Contour Plot f(x1, x2)"))
 
-def plot_alphas(alphas, template='seaborn'):
-    #in plotly
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=np.arange(len(alphas)), y=alphas, mode='lines+markers', name='Alphas', line={'color':'steelblue'}))
-    fig.update_layout(title='Alphas-values computed during optimization', xaxis_title='Iteration', yaxis_title='Alpha', template=template)
+    fig.add_trace(surface, row=1, col=1)
+    fig.add_trace(contour_obj, row=1, col=2)
 
-    return fig
+    fig.update_layout(
+        scene={
+            'xaxis_title': 'x1', 'yaxis_title': 'x2', 'zaxis_title': 'f(x1, x2)',
+            'camera': {'eye': {'x': 1.87, 'y': 0.88, 'z': 1.00}}
+        },
+        xaxis_title='x1',
+        yaxis_title='x2',
+        width=800,
+        height=300,
+        legend={
+            'orientation': 'h',
+            'x': 0.5, 'xanchor': 'center',
+            'y': -0.25, 'yanchor': 'top'
+        },
+        margin={
+            'l': 5,
+            'r': 5,
+            't': 50,
+            'b': 0},
+        template='seaborn'
+    )
 
-def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=False, notebook=False, template='seaborn', min=-10, max=10, n=100):
+    if show:
+        if notebook:
+            fig.show(renderer='notebook')
+        else:
+            fig.show()
+
+def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=True, notebook=True, template='seaborn', min=-10, max=10, n=100, n_levels=50):
     """
     Plot the optimization path and the function surface using Plotly.
 
@@ -98,32 +117,34 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
                 Z[i, j] = f_obj(pca.inverse_transform([X[i, j], Y[i, j]]))
 
     # 3D Surface plot
-    surface = go.Surface(z=Z, x=X, y=Y, colorscale='YlGnBu_r', showscale=False)
+    surface = go.Surface(z=Z, x=X, y=Y, colorscale='PuBuGn_r', showscale=False)
 
     # Contour plot for objective function
     contour_obj = go.Contour(
-        z=Z, x=x, y=y, colorscale='YlGnBu_r',
-        contours={'showlabels': True},
-        showscale=True,
+        z=Z, x=x, y=y, colorscale='PuBuGn_r',
+        contours={'showlabels': False},
+        ncontours=n_levels,
+        line={'color': 'white'},
+        showscale=False,
         line_smoothing=0.85,
         name='Objective Function'
     )
 
     # Initial and optimal points
     initial_point = go.Scatter(
-        x=[x0[0]], y=[x0[1]], mode='markers', marker={'color': 'green', 'size': 10},
+        x=[x0[0]], y=[x0[1]], mode='markers', marker={'color': 'black', 'size': 10, 'symbol': 'diamond-open'},
         name=f'Initial Point - {x0}'
     )
 
     if method is not None:
         optimal_point = go.Scatter(
-            x=[method['xopt'][0]], y=[method['xopt'][1]], mode='markers', marker={'color': 'red', 'size': 10},
+            x=[method['xopt'][0]], y=[method['xopt'][1]], mode='markers', marker={'color': 'tomato', 'size': 10, 'symbol': 'x'},
             name=f'Optimal Point ({method["num_iter"]} iter.)'
         )
 
         # Optimization path
         optimization_path = go.Scatter(
-            x=method['path'][:, 0], y=method['path'][:, 1], mode='lines+markers', line={'color': 'red', },
+            x=method['path'][:, 0], y=method['path'][:, 1], mode='lines+markers', line={'color': 'black'},
             name='Optimization Path',
         )
 
@@ -157,6 +178,7 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
                     'start': 0, 'end': 0, 'size': 1,
                     'showlabels': False,
                 },
+                ncontours=n_levels,
                 line={'dash': 'dash', 'color': 'red', 'width': 2, 'smoothing': 0.85},
                 name=f'Constraint {i+1}', showlegend=True
             )
@@ -179,7 +201,7 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
         },
         xaxis_title='x1',
         yaxis_title='x2',
-        width=900,
+        width=800,
         height=400,
         legend={
             'orientation': 'h',
@@ -199,5 +221,3 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
             fig.show(renderer='notebook')
         else:
             fig.show()
-
-    return fig
