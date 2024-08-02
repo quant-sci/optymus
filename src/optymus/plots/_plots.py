@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 sns.set_style('whitegrid')
 
 
-def plot_function(f_obj, min=-10, max=10, n=100, n_levels=50, show=True, notebook=True):
+def plot_function(f_obj, min=-10, max=10, n=100, n_levels=50, show=True):
     """
     Plot the function surface.
 
@@ -74,12 +74,9 @@ def plot_function(f_obj, min=-10, max=10, n=100, n_levels=50, show=True, noteboo
     )
 
     if show:
-        if notebook:
-            fig.show(renderer='notebook')
-        else:
-            fig.show()
+        fig.show()
 
-def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=True, notebook=True, template='seaborn', min=-10, max=10, n=100, n_levels=50):
+def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=True, template='seaborn', min=-10, max=10, n=100, n_levels=50):
     """
     Plot the optimization path and the function surface using Plotly.
 
@@ -217,7 +214,4 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
     )
 
     if show is True:
-        if notebook is True:
-            fig.show(renderer='notebook')
-        else:
-            fig.show()
+        fig.show()
