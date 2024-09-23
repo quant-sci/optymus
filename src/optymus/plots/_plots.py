@@ -6,6 +6,7 @@ import numpy as np
 import plotly.graph_objs as go
 import plotly.subplots as sp
 import plotly.express as px
+import plotly.io as pio
 import seaborn as sns
 from sklearn.decomposition import PCA
 
@@ -76,7 +77,7 @@ def plot_function(f_obj, min=-10, max=10, n=100, n_levels=50, show=True):
     if show:
         fig.show()
 
-def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, show=True, template='seaborn', min=-10, max=10, n=100, n_levels=50):
+def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, comparison=None, print_opt=False, renderer='notebook', show=True, template='seaborn', min=-10, max=10, n=100, n_levels=50):
     """
     Plot the optimization path and the function surface using Plotly.
 
@@ -214,4 +215,4 @@ def plot_optim(f_obj=None, f_cons=None, x0=None, method=None, path=True, compari
     )
 
     if show is True:
-        fig.show()
+        fig.show(renderer=renderer)

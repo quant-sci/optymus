@@ -14,6 +14,7 @@ from optymus.methods import (
     yogi,
 )
 from optymus.plots import plot_optim
+from optymus.optimizer.utils.report import Report
 
 jax.config.update("jax_enable_x64", True)
 
@@ -32,7 +33,7 @@ METHODS = {
 }
 
 
-class Optimizer:
+class Optimizer(Report):
     def __init__(self, f_obj=None, f_cons=None, x0=None, method='steepest_descent', **kwargs):
         """
         Initializes the Optimizer class.
@@ -70,20 +71,23 @@ class Optimizer:
         """Returns the optimization results dictionary."""
         return self.opt
 
-    def print_report(self):
-        """Prints a formatted summary of the optimization results."""
-        table_data = {
-            "Method": [self.method],
-            "Initial Guess": [self.opt.get('x0', 'N/A')],
-            "Optimal Solution": [self.opt.get('xopt', 'N/A')],
-            "Objective Function Value": [self.opt.get('fmin', 'N/A')],
-            "Number of Iterations": [self.opt.get('num_iter', 'N/A')],
-            "Time Elapsed": [self.opt.get('time', 'N/A')],
+    def repr_info(self):
+        return {
+            "method_name": self.method,  # Ensure this is a string or valid method name
+            "attributes": {
+                "Initial Guess": self.x0,
+                "Optimal Solution": self.opt.get('xopt', 'N/A'),
+                "Objective Function Value": self.opt.get('fmin', 'N/A'),
+                "Number of Iterations": self.opt.get('num_iter', 'N/A'),
+                "Time Elapsed": round(self.opt.get('time', 'N/A'), 4),
+            }
         }
-
-        return pd.DataFrame(table_data, index=['Optimization Results'])
-
-    def plot_results(self, **kwargs):
+    
+    def report(self):
+        """Generates a report of the optimization results."""
+        return self.repr_html()
+    
+    def plot(self, **kwargs):
         """Plots the optimization path and function surface."""
         plot_optim(f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, method=self.opt, **kwargs)
 
