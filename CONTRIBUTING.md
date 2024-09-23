@@ -1,25 +1,35 @@
 # Contributing to optymus
 
-Thank you for considering contributing to OptimusPy! By contributing to this project, you help make it a more powerful and versatile optimization methods library for the Python community.
+Thank you for considering contributing to `optymus`! By contributing to this project, you help make it a more powerful and versatile optimization methods library for the Python community.
 
 ## How to Contribute
 
-If you're interested in contributing to OptimusPy, please follow these guidelines:
+If you're interested in contributing to `optymus`, please follow these guidelines:
 
 ### 1. Fork the Repository
 
-Click on the "Fork" button on the top right corner of the [OptimusPy repository](https://github.com/quant-sci/optymus) to create your own fork.
+Click on the "Fork" button on the top right corner of the [optymus repository](https://github.com/quant-sci/optymus) to create your own fork.
 
 ### 2. Clone your Fork
 
 Clone the repository to your local machine using the following command (replace `your-username` with your GitHub username):
 
 ```bash
-git clone https://github.com/quant-sci/optymus.git
+git clone https://github.com/your-username/optymus.git
 cd optymus
 ```
 
-### 3. Create a Branch
+### 3. Create a conda environment (recommended) and install hatch 
+
+```bash
+conda create -n "optymus-env"
+conda activate optymus-env
+
+pip install hatch
+hatch shell
+```
+
+### 4. Create a Branch
 
 Create a new branch for your contribution:
 
@@ -27,23 +37,26 @@ Create a new branch for your contribution:
 git checkout -b feature/your-contribution
 ```
 
-### 4. Make Changes
+### 5. Make Changes
 
 Make your changes and additions to the codebase. Ensure that your code follows the project's coding standards.
 
-### 5. Run Tests
+### 6. Run Tests
 
-If applicable, run any tests associated with your changes to ensure they do not introduce new issues.
+```bash
+hatch run testing:run
+```
 
-### 6. Commit Changes
+### 7. Commit Changes
 
 Commit your changes with a clear and descriptive commit message:
 
 ```bash
+git add .
 git commit -m "add feature: your contribution"
 ```
 
-### 7. Push Changes
+### 8. Push Changes
 
 Push your changes to your forked repository on GitHub:
 
@@ -51,9 +64,9 @@ Push your changes to your forked repository on GitHub:
 git push origin feature/your-contribution
 ```
 
-### 8. Submit a Pull Request
+### 9. Submit a Pull Request
 
-Open a pull request (PR) on the main OptimusPy repository. Provide a detailed description of your changes and why they are valuable. Reference any related issues in your PR description.
+Open a pull request (PR) on the main `optymus` repository. Provide a detailed description of your changes and why they are valuable. Reference any related issues in your PR description.
 
 ## Code Style
 
@@ -69,4 +82,4 @@ Before starting work on a new feature or bug fix, check the [issue tracker](http
 
 ## Thank You!
 
-Your contributions help make OptimusPy a valuable resource for the Python community. Thank you for your time and effort!
+Your contributions help make `optymus` a valuable resource for the Python community. Thank you for your time and effort!

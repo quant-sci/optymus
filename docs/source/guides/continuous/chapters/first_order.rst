@@ -32,7 +32,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='steepest_descent')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Conjugate Gradient Methods
 --------------------------
@@ -68,7 +68,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='conjugate_gradient', gradient_type='fletcher_reeves')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Hestenes–Stiefel Method
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +96,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='conjugate_gradient', gradient_type='hestenes_stiefel')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Polak–Ribiére Method
 ~~~~~~~~~~~~~~~~~~~~~
@@ -124,7 +124,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='conjugate_gradient', gradient_type='polak_ribiere')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Dai-Yuan Method
 ~~~~~~~~~~~~~~~
@@ -152,7 +152,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='conjugate_gradient', gradient_type='dai_yuan')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Quasi-Newton Methods
 --------------------
@@ -184,7 +184,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='bfgs')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Limited-Memory BFGS (L-BFGS) Method
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

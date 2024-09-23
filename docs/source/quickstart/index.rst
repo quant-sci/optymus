@@ -37,13 +37,13 @@ To begin using `optymus`, follow these steps:
 
 .. code-block:: python
 
-   opt.print_report()
+   opt.report()
 
 5. **Visualize the optimization process:**
 
 .. code-block:: python
 
-   opt.plot_results()
+   opt.plot()
 
 .. toctree::
    :maxdepth: 3

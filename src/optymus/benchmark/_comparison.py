@@ -19,6 +19,7 @@ def methods_comparison(f_obj=None, initial_point=None, **kwargs):
                 f_obj=f_obj,
                 x0=initial_point,
                 method=method,
+                verbose=False,
                 **kwargs
             )
             time_mean.append(opt.get_results().get('time', 'N/A'))

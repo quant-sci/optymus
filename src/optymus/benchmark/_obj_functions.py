@@ -30,7 +30,7 @@ class MccormickFunction:
         return jnp.sin(x[0] + x[1]) + (x[0] - x[1])**2 - 1.5*x[0] + 2.5*x[1] + 1
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 class MccormickFunction:
     r"""McCormick Function
@@ -55,7 +55,7 @@ class MccormickFunction:
         return jnp.sin(x[0] + x[1]) + (x[0] - x[1])**2 - 1.5*x[0] + 2.5*x[1] + 1
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 
 class RastriginFunction:
@@ -78,7 +78,7 @@ class RastriginFunction:
         return 20 + x[0]**2 + x[1]**2 - 10*(jnp.cos(2*jnp.pi*x[0]) + jnp.cos(2*jnp.pi*x[1]))
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 class AckleyFunction:
     r"""Ackley Function
@@ -100,7 +100,7 @@ class AckleyFunction:
         return -20*jnp.exp(-0.2*jnp.sqrt(0.5*(x[0]**2 + x[1]**2))) - jnp.exp(0.5*(jnp.cos(2*jnp.pi*x[0]) + jnp.cos(2*jnp.pi*x[1]))) + jnp.exp(1) + 20  # noqa: E501
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 class EggholderFunction:
     r"""Eggholder Function
@@ -124,7 +124,7 @@ class EggholderFunction:
             - x[0]*jnp.sin(jnp.sqrt(jnp.abs(x[0] - x[1] - 47)))
 
     def plot(self):
-        plot_function(self, title=self.name, min=-512, max=512)
+        plot_function(self, min=-512, max=512)
 
 class CrossintrayFunction:
     r"""Crossintray Function
@@ -149,7 +149,7 @@ class CrossintrayFunction:
         ) ** 0.1
 
     def plot(self):
-        plot_function(self, title=self.name, min=-10, max=10)
+        plot_function(self, min=-10, max=10)
 
 class SphereFunction:
     r"""Sphere Function
@@ -171,7 +171,7 @@ class SphereFunction:
         return x[0]**2+x[1]**2
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 class RosenbrockFunction:
     r"""Rosenbrock Function
@@ -190,10 +190,10 @@ class RosenbrockFunction:
 
     def __call__(self, x):
         x = jnp.array(x)
-        return jnp.sum(100*(x[1:] - x[:-1]**2)**2 + (1 - x[:-1])**2)
+        return 100*(x[1] - x[0]**2)**2 + (1 - x[0])**2
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)
 
 class BealeFunction:
     r"""Beale Function
@@ -215,7 +215,29 @@ class BealeFunction:
         return (1.5 - x[0] + x[0]*x[1])**2 + (2.25 - x[0] + x[0]*x[1]**2)**2 + (2.625 - x[0] + x[0]*x[1]**3)**2
 
     def plot(self):
-        plot_function(self, title=self.name, min=-4.5, max=4.5)
+        plot_function(self, min=-4.5, max=4.5)
+
+class SemionescuFunction:
+    r"""Semionescu Function
+
+    The Semionescu function is a non-convex function used as a performance test problem for optimization algorithms.
+    It is defined as:
+
+    .. math::
+        f(x) = 0.1(x_0^2 + x_1^2) - 0.3cos(3\pi x_0)cos(4\pi x_1) + 0.3
+
+    Reference:
+        https://www.sfu.ca/~ssurjano/semion.html
+    """
+    def __init__(self):
+        self.name = 'Semionescu Function'
+
+    def __call__(self, x):
+        x = jnp.array(x)
+        return 0.1*(x[0]**2 + x[1]**2) - 0.3*jnp.cos(3*jnp.pi*x[0])*jnp.cos(4*jnp.pi*x[1]) + 0.3
+
+    def plot(self):
+        plot_function(self, min=-5, max=5)
 
 class GoldsteinPriceFunction:
     r"""Goldstein Price Function
@@ -241,7 +263,7 @@ class GoldsteinPriceFunction:
         )
 
     def plot(self):
-        plot_function(self, title=self.name, min=-2, max=2)
+        plot_function(self, min=-2, max=2)
 
 class BoothFunction:
     r"""Booth Function
@@ -263,7 +285,7 @@ class BoothFunction:
         return (x[0] + 2*x[1] - 7)**2 + (2*x[0] + x[1] - 5)**2
 
     def plot(self):
-        plot_function(self, title=self.name, min=-10, max=10)
+        plot_function(self, min=-10, max=10)
 
 class StyblinskiTangFunction:
     r"""Styblinski-Tang Function
@@ -285,7 +307,7 @@ class StyblinskiTangFunction:
         return 0.5*((x[0]**4 - 16*x[0]**2 + 5*x[0])+(x[1]**4 - 16*x[1]**2 + 5*x[1]))
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5, max=5)
+        plot_function(self, min=-5, max=5)
 
 class HimmeblauFunction:
     r"""Himmeblau Function
@@ -304,7 +326,7 @@ class HimmeblauFunction:
         return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
 
     def plot(self, **kwargs):
-        plot_function(self, title=self.name, **kwargs)
+        plot_function(self, **kwargs)
 
 class CustomFunction:
     """Custom Function
@@ -323,4 +345,4 @@ class CustomFunction:
         return self.f(x)
 
     def plot(self):
-        plot_function(self, title=self.name, min=-5.12, max=5.12)
+        plot_function(self, min=-5.12, max=5.12)

@@ -32,7 +32,7 @@ To begin using `optymus`, follow these steps:
                    x0=initial_point,
                    method='bfgs')
 
-   opt.print_report()
+   opt.report()
    ```
 
 3. **Explore the Documentation:**

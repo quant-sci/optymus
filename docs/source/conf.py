@@ -19,7 +19,7 @@ work_dir = '/'.join(os.getcwd().split("/")[:-2])
 src_path = os.path.join(work_dir,'src')
 sys.path.insert(0, src_path)
 
-notebooks_path = os.path.join(work_dir, 'notebooks')
+notebooks_path = os.path.join(work_dir, 'examples')
 
 def copy_folder(origen, destino):
     try:

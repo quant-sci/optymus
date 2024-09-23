@@ -19,64 +19,6 @@ optymus documentation
 
 `optymus` is a Python library designed to address optimization problems in science and engineering. Built on `JAX <https://jax.readthedocs.io/en/latest/index.html>`_, allowing automatic differentiation for efficient computation of gradients and Hessians. The library emphasizes ease of use and flexibility, enabling users to solve optimization problems with minimal setup. optymus also provides robust capabilities for visualization and benchmarking, allowing users to gain insights into method behavior and compare performance effectively.
 
-Features
---------
-
-.. dropdown:: Optimization Methods
-   :icon: rocket
-
-   **Continuous optimization**
-
-      **Zero-order**
-         - Univariate
-         - Powell's method
-
-      **First-order**
-         - Steepest Descent
-         - Conjugate Gradient
-         - BFGS
-
-      **Second-order**
-         - Newton's method
-      
-      **Adaptative learning**
-         - Adam
-         - Adamax
-         - RMSprop
-         - Adagrad
-         - Yogi
-
-
-.. dropdown:: Benchmark Functions
-   :icon: ellipsis
-
-   We provide a set of benchmark functions to test the optimization methods. The following functions are available:
-
-      - Ackley
-      - Beale
-      - Booth
-      - CrossInTray
-      - Easom
-      - Eggholder
-      - GoldsteinPrice
-      - Mccormick
-      - Rastrigin
-      - Rosenbrock
-      - StyblinskiTang
-
-   **Obs.:** You can also create your own benchmark function by inheriting the `CustomFunction` class.
-
-.. dropdown:: Visualization
-   :icon: eye
-
-   **Plotting**
-      - Plot the optimization path
-      - Counter plot of the function
-
-   **Reports**
-      - Create a report with the optimization results
-
-
 Getting Started
 ---------------
 
@@ -113,7 +55,13 @@ To begin using `optymus`, follow these steps:
 
 .. code-block:: python
 
-   opt.print_report()
+   opt.report()
+
+5. **Plot the optimization path:**
+
+.. code-block:: python
+
+   opt.plot()
 
 Contributions
 -------------

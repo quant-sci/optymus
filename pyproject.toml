@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "optymus"
 dynamic = ["version"]
-description = ''
+description = ""
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
@@ -23,14 +23,13 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "dash==2.17.1",
-  "dash_bootstrap_components==1.6.0",
-  "dash_bootstrap_templates==1.1.2",
+  "plotly==5.24.1",
   "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
   "tqdm>=4.66.4",
   "pandas==2.0.3",
+  "numpy==1.26.4",
   "matplotlib>=3.9.0",
   "seaborn>=0.13.2",
   "scikit-learn>=1.5.0",
@@ -43,8 +42,8 @@ Issues = "https://github.com/quant-sci/optymus/issues"
 Source = "https://github.com/quant-sci/optymus"
 
 [tool.hatch.version]
-path = "src/optymus/__about__.py"
 
+path = "src/optymus/__about__.py"
 [tool.hatch.envs.types]
 extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
@@ -86,19 +85,17 @@ build = ["PYTHONPATH=./src sphinx-build -b html docs/source docs/build"]
 
 [tool.hatch.envs.testing]
 dependencies = [
-  "dash==2.17.1",
-  "dash_bootstrap_components==1.6.0",
-  "dash_bootstrap_templates==1.1.2",
-  "nbformat>=4.2.0",
+  "plotly",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
   "tqdm>=4.66.4",
   "pandas==2.0.3",
+  "numpy==1.26.4",
   "matplotlib>=3.9.0",
   "seaborn>=0.13.2",
   "scikit-learn>=1.5.0",
-  "pytest"
-  ]
+  "pytest==8.2.2"
+]
 
 paths = ["./src"]
 

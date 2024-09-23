@@ -27,7 +27,7 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='univariate')
 
     # Print the solution
-    results.print_report()
+    results.report()
 
 Powell's Method
 ---------------
@@ -55,4 +55,4 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='powell')
 
     # Print the solution
-    results.print_report()
+    results.report()

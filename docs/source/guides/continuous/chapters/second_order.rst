@@ -28,4 +28,4 @@ The implementation with `optymus`:
     results = Optimizer(f_obj=f, x0=x0, method='newton_raphson')
 
     # Print the solution
-    results.print_report()
+    results.report()
