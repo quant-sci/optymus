@@ -8,18 +8,46 @@ import time
 plt.rcParams.update({'font.size': 12, 'font.family': 'serif'})
 
 def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False):
-    """
-    Perform polygon mesh generation using Lloyd's algorithm.
+    """PolyMesher
+    
+    Generate a polygon mesh using the polymesher algorithm.
 
-    Args:
-        domain (function): The domain in which the mesh is generated.
-        n_elements (int): The desired number of elements in the mesh.
-        mx_uiter (int): The maximum number of iterations for mesh generation.
-        initial_points (numpy.ndarray): The initial point set (optional).
-        anim (bool): Whether to animate the mesh generation.
+    Parameters
+    ----------
+    domain : function
+        The domain in which the mesh is generated.
+    n_elements : int
+        The number of elements in the mesh.
+    max_iter : int
+        The maximum number of iterations.
+    initial_points : numpy.ndarray, optional
+        Initial points for the mesh generation.
+    anim : bool, optional
+        If True, display an animation of the mesh generation.
 
-    Returns:
-        tuple: A tuple containing Node, Element, Supp, Load, and P.
+    Returns
+    -------
+    dict
+        A dictionary containing the following keys:
+        - "node": Node coordinates
+        - "element": Element vertices
+        - "boundary_supp": Boundary support conditions
+        - "boundary_load": Boundary load conditions
+        - "initial_points": Initial points used for mesh generation
+
+    Examples
+    --------
+    >>> from optymus.benchmark import MbbDomain
+    >>> from optymus.methods.topological import polymesher
+    >>> mesh = polymesher(MbbDomain, n_elements=1000, max_iter=1000)
+
+    Notes
+    -----
+    The PolyMesher algorithm generates a polygon mesh using a Voronoi diagram.
+
+    References
+    ----------
+    [1] - Talischi, C., Paulino, G. H., Pereira, A., & Menezes, I. F. (2012). "PolyMesher: a general-purpose mesh generator for polygonal elements written in Matlab". Structural and Multidisciplinary Optimization, 45, 309-328.
     """
     if initial_points is None:
         initial_points = poly_random_point_set(n_elements, domain)

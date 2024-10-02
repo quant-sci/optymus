@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 from optymus.benchmark.utils._domain_functions import dCircle, dDiff, dIntersect, dLine, dRectangle, dUnion
 
+plt.rcParams.update({'font.size': 12, 'font.family': 'serif'})
+
 class TopologicalDomain:
     """
     Represents a mathematically defined domain for polygonal mesh.
@@ -98,13 +100,14 @@ class TopologicalDomain:
             inner.reshape((n, n)),
             extent=(self.domain_bounding_box[0], self.domain_bounding_box[1], self.domain_bounding_box[2], self.domain_bounding_box[3]),
             origin="lower",
-            cmap="Purples",
+            cmap="Blues",
             alpha=0.8,
         )
-        ax.contour(x, y, signed_distance_function.reshape((n, n)), levels=[0], colors="gold", linewidths=2)
-        ax.set_xlabel("X", fontweight="bold")
-        ax.set_ylabel("Y", fontweight="bold")
-        ax.set_title("Domain Visualization", fontweight="bold", fontsize=16)
+        ax.grid(linewidth=0.5, linestyle="--", color="gray", alpha=0.5)
+        ax.contour(x, y, signed_distance_function.reshape((n, n)), levels=[0], colors="gray", linewidths=1)
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_title("Domain Visualization", fontsize=14)
         ax.set_aspect("equal")
 
         plt.show()

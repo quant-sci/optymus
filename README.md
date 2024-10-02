@@ -15,7 +15,9 @@ To begin using `optymus`, follow these steps:
 
 1. **Install optymus:**
    ```bash
-   pip install optymus
+   pip install optymus --upgrade # update version
+   pip install optymus[all] # all dependencies
+   pip install optymus[methods] # without plot dependencies
    ```
 
 2. **Get Started:**
