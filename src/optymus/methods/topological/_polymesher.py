@@ -7,7 +7,7 @@ import time
 
 plt.rcParams.update({'font.size': 12, 'font.family': 'serif'})
 
-def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False):
+def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, plot=True):
     """PolyMesher
     
     Generate a polygon mesh using the polymesher algorithm.
@@ -62,7 +62,7 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False):
     area = (domain_bounding_box[1] - domain_bounding_box[0]) * (domain_bounding_box[3] - domain_bounding_box[2])
     initial_points_copy = initial_points.copy()
     time_acc = 0
-    if anim:
+    if anim and plot is True:
         fig, ax = plt.subplots(figsize=(8, 5))
 
     pbar = tqdm(total=max_iter, desc="Iterations", unit="step")
@@ -92,11 +92,11 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False):
         pbar.update(1)
         pbar.set_postfix({"Error": error, "Iteration": pointer, "Time": time_acc})
 
-        if anim and n_elements <= 2000:
+        if anim and n_elements <= 2000 and plot is True:
             ax.clear()  # Clear the axis for redrawing
             plot_mesh(element, n_elements, node, pointer, error, anim=True, ax=ax)
     
-    if anim:
+    if anim and plot is True:
         plt.show()
     
     node, element = poly_unique_nodes(
@@ -118,7 +118,7 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False):
     boundary_supp = domain_boundary_conditions[0]
     boundary_load = domain_boundary_conditions[1]
 
-    if anim is False:
+    if anim is False and plot is True:
         fig, ax = plt.subplots(figsize=(8, 5))
         plot_mesh(element=element, 
                   n_elements=n_elements, 

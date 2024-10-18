@@ -53,6 +53,9 @@ Machine Learning
    .. grid-item-card:: Training a simple neural network
         :link: examples/machine_learning/simple_neural_network.ipynb
 
+   .. grid-item-card:: Gradient descent to solve OLS
+        :link: examples/machine_learning/ols_estimation.ipynb
+
 Economics and Finance
 -----------------------
 
