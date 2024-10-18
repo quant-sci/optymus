@@ -1,5 +1,4 @@
 import jax
-import pandas as pd
 from optymus.methods import (
     adagrad,
     adam,

@@ -17,6 +17,16 @@ from optymus.benchmark._obj_functions import (
     SemionescuFunction,
 )
 
+from optymus.benchmark._topological_domain import (
+    TopologicalDomain,
+    MbbDomain,
+    HornDomain,
+    CookDomain,
+    WrenchDomain,
+    MichellDomain,
+    SuspensionDomain
+)
+
 __all__ = [
     'MccormickFunction',
     'RastriginFunction',
@@ -33,4 +43,11 @@ __all__ = [
     'CustomFunction',
     'HimmeblauFunction',
     'methods_comparison',
+    'TopologicalDomain',
+    'MbbDomain',
+    'HornDomain',
+    'CookDomain',
+    'WrenchDomain',
+    'MichellDomain',
+    'SuspensionDomain'
 ]

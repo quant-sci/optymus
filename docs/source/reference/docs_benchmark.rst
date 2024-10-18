@@ -14,6 +14,7 @@ Custom Function
     :toctree: .generated/
 
     optymus.benchmark.CustomFunction
+    optymus.benchmark.TopologicalDomain
 
 
 Benchmark Functions
@@ -33,3 +34,17 @@ Benchmark Functions
     optymus.benchmark.RosenbrockFunction
     optymus.benchmark.SphereFunction
     optymus.benchmark.StyblinskiTangFunction
+
+
+Topological Domain
+--------------------
+
+.. autosummary::
+    :toctree: .generated/
+
+    optymus.benchmark.MbbDomain
+    optymus.benchmark.HornDomain
+    optymus.benchmark.CookDomain
+    optymus.benchmark.WrenchDomain
+    optymus.benchmark.MichellDomain
+    optymus.benchmark.SuspensionDomain

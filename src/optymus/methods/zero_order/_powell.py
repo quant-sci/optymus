@@ -74,9 +74,9 @@ class Powell(BaseOptimizer):
         alphas = []
         num_iter = 0
 
-        progres_bar = tqdm(range(self.max_iter), desc=f'Powell {num_iter}',) if self.verbose else range(self.max_iter)
+        progress_bar = tqdm(range(self.max_iter), desc=f'Powell {num_iter}',) if self.verbose else range(self.max_iter)
 
-        for _ in progres_bar:
+        for _ in progress_bar:
             # Perform line search along the basis vectors
             if jnp.linalg.norm(grad(x)) < self.tol:
                 break

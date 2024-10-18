@@ -45,3 +45,11 @@ Adaptative Methods
     optymus.methods.adamax
     optymus.methods.rmsprop
     optymus.methods.yogi
+
+Topological Methods
+------------------
+    
+.. autosummary::
+    :toctree: .generated/
+
+    optymus.methods.polymesher
