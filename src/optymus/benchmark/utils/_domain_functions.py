@@ -1,6 +1,7 @@
-import numpy as np
+import numpy as np  # noqa
 
-def dLine(P, x1, y1, x2, y2):
+
+def dline(P, x1, y1, x2, y2):
     """
     Calculate the signed distance from points P to a line segment defined
     by two endpoints (x1, y1) and (x2, y2).
@@ -23,7 +24,7 @@ def dLine(P, x1, y1, x2, y2):
     return d
 
 
-def dLineExact(P, x1, y1, x2, y2):
+def dlineexact(P, x1, y1, x2, y2):
     """
     Calculate the exact signed distance from points P to a line segment defined
     by two endpoints (x1, y1) and (x2, y2).
@@ -71,7 +72,7 @@ def dLineExact(P, x1, y1, x2, y2):
     return np.column_stack((signed_distances, signed_distances))
 
 
-def dCircle(P, xc, yc, r):
+def dcircle(P, xc, yc, r):
     """
     Calculate the signed distance from points P to a circle defined by
     its center (xc, yc) and radius (r).
@@ -90,7 +91,7 @@ def dCircle(P, xc, yc, r):
     return d
 
 
-def dRectangle(P, x1, x2, y1, y2):
+def drectangle(P, x1, x2, y1, y2):
     """
     Calculate the signed distance from points P to a rectangle defined
     by its bottom-left (x1, y1) and top-right (x2, y2) coordinates.
@@ -146,9 +147,7 @@ def _is_point_in_polygon(P, vertices):
 
     for i in range(n):
         x1, y1 = vertices[i]  # Get the coordinates of the current vertex
-        x2, y2 = vertices[
-            (i + 1) % n
-        ]  # Get the coordinates of the next vertex (wrapping around)
+        x2, y2 = vertices[(i + 1) % n]  # Get the coordinates of the next vertex (wrapping around)
 
         # Check if the point's y-coordinate is between the y-coordinates of the current edge's vertices
         cond1 = (y1 > py) != (y2 > py)
@@ -168,7 +167,7 @@ def _is_point_in_polygon(P, vertices):
     return inside
 
 
-def dPolygon(P, vertices):
+def dpolygon(P, vertices):
     """
     Calculate the signed distance from points P to a polygon defined by its vertices.
 
@@ -185,12 +184,7 @@ def dPolygon(P, vertices):
         vertices.append(vertices[0])
 
     # Calculate distance to each edge
-    distances = np.array(
-        [
-            dLineExact(P, *vertices[i], *vertices[i + 1])[:, -1]
-            for i in range(len(vertices) - 1)
-        ]
-    ).T
+    distances = np.array([dlineexact(P, *vertices[i], *vertices[i + 1])[:, -1] for i in range(len(vertices) - 1)]).T
 
     # Get the minimum distance (considering absolute values for accurate distance calculation)
     min_distances = np.min(np.abs(distances), axis=1)
@@ -207,7 +201,7 @@ def dPolygon(P, vertices):
 # Boolean Operations:
 
 
-def dDiff(d1, d2):
+def ddiff(d1, d2):
     """
     Calculate the signed distance field resulting from the difference of
     two distance fields (d1 and d2).
@@ -224,7 +218,7 @@ def dDiff(d1, d2):
     return d
 
 
-def dIntersect(*ds):
+def dintersect(*ds):
     """
     Calculate the signed distance field resulting from the intersection
     of two or more distance fields.
@@ -242,7 +236,7 @@ def dIntersect(*ds):
     return d
 
 
-def dUnion(*ds):
+def dunion(*ds):
     """
     Calculate the signed distance field resulting from the union
     of two or more distance fields.

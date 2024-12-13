@@ -1,4 +1,4 @@
-import os
+import os  # noqa
 from abc import abstractmethod
 
 
@@ -29,7 +29,7 @@ class Report(ReprObj):
 
 def generate_html_for_generic_object(obj, feature_columns=5, theme="blue"):
     if not isinstance(obj, dict):
-        raise ValueError("Expected a dictionary for 'obj' but got something else.")
+        raise ValueError("Expected a dictionary for 'obj' but got something else.")  # noqa
 
     css_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "report.css")
 
@@ -67,7 +67,7 @@ def generate_html_for_generic_object(obj, feature_columns=5, theme="blue"):
     }}
     </script>
     """
-    
+
     name = obj.get("method_name", "N/A")
     attributes = obj.get("attributes", {})
     metadata = obj.get("metadata", None)
@@ -112,4 +112,5 @@ def generate_html_for_generic_object(obj, feature_columns=5, theme="blue"):
     )
 
     from IPython.core.display import HTML
+
     return HTML(html_output)

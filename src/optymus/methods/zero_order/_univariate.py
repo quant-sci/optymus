@@ -3,8 +3,8 @@ import time
 import jax
 import jax.numpy as jnp
 from tqdm import tqdm
-from optymus.methods.utils import BaseOptimizer
 
+from optymus.methods.utils import BaseOptimizer
 from optymus.search import line_search
 
 
@@ -54,6 +54,7 @@ class Univariate(BaseOptimizer):
     alphas : ndarray
         Lerning rate for line searchs
     """
+
     def optimize(self):
         start_time = time.time()
         x = self.x0.astype(float)
@@ -64,7 +65,14 @@ class Univariate(BaseOptimizer):
         alphas = []
         num_iter = 0
 
-        progres_bar = tqdm(range(self.max_iter), desc=f'Univariant {num_iter}',) if self.verbose else range(self.max_iter)
+        progres_bar = (
+            tqdm(
+                range(self.max_iter),
+                desc=f"Univariant {num_iter}",
+            )
+            if self.verbose
+            else range(self.max_iter)
+        )
 
         for _ in progres_bar:
             if jnp.linalg.norm(jax.grad(self.penalized_obj)(x)) < self.tol:
@@ -72,21 +80,22 @@ class Univariate(BaseOptimizer):
             for i in range(n):
                 v = u[i]
                 r = line_search(f=self.penalized_obj, x=x, d=v, learning_rate=self.learning_rate)
-                x = r['xopt']
-                alphas.append(r['alpha'])
+                x = r["xopt"]
+                alphas.append(r["alpha"])
                 path.append(x)
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
         return {
-                'method_name': 'Univariant' if not self.f_cons else 'Univariant with Penalty',
-                'xopt': x,
-                'fmin': self.f_obj(x),
-                'num_iter': num_iter,
-                'path': jnp.array(path),
-                'alphas': jnp.array(alphas),
-                'time': elapsed_time,
-                }
+            "method_name": "Univariant" if not self.f_cons else "Univariant with Penalty",
+            "xopt": x,
+            "fmin": self.f_obj(x),
+            "num_iter": num_iter,
+            "path": jnp.array(path),
+            "alphas": jnp.array(alphas),
+            "time": elapsed_time,
+        }
+
 
 def univariate(**kwargs):
     optimizer = Univariate(**kwargs)

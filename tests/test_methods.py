@@ -19,7 +19,7 @@ f_obj = lambda x: x[0] ** 2 + x[1] ** 2
 x0 = jnp.array([0.0, 1.0])
 tol = 1e-5
 learning_rate = 0.1
-max_iter = 1000
+max_iter = 100
 
 def test_steepest_descent():
     result = steepest_descent(f_obj=f_obj, x0=x0, tol=tol,

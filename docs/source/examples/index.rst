@@ -2,19 +2,19 @@
 Examples
 ==========
 
-How to ...
+Basic Examples
 --------------
 
 .. grid:: 3
    :gutter: 1
 
-   .. grid-item-card:: How to use benchmark functions
+   .. grid-item-card:: Benchmark functions
         :link: examples/get_started/1.setup_functions.ipynb
 
-   .. grid-item-card:: How to optimize a function
+   .. grid-item-card:: Optimize a function
         :link: examples/get_started/2.optimize_a_function.ipynb
 
-   .. grid-item-card:: How to create plots
+   .. grid-item-card:: Visualization
         :link: examples/get_started/3.optymus_plots.ipynb
 
    .. grid-item-card:: Methods comparison

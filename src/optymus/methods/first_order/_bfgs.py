@@ -4,8 +4,8 @@ import jax
 import jax.numpy as jnp
 from tqdm import tqdm
 
-from optymus.search import line_search
 from optymus.methods.utils import BaseOptimizer
+from optymus.search import line_search
 
 
 class BFGS(BaseOptimizer):
@@ -74,6 +74,7 @@ class BFGS(BaseOptimizer):
     alphas : ndarray
         Step sizes
     """
+
     def optimize(self):
         start_time = time.time()
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
@@ -83,13 +84,20 @@ class BFGS(BaseOptimizer):
         num_iter = 0
         q = jnp.identity(len(x))  # Initial approximation of the inverse Hessian
 
-        progres_bar = tqdm(range(self.max_iter), desc=f'BFGS {num_iter}',) if self.verbose else range(self.max_iter)
+        progres_bar = (
+            tqdm(
+                range(self.max_iter),
+                desc=f"BFGS {num_iter}",
+            )
+            if self.verbose
+            else range(self.max_iter)
+        )
 
         for _ in progres_bar:
             grad = jax.grad(self.penalized_obj)(x)
             d = jnp.dot(q, grad)
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x_new = r['xopt']
+            x_new = r["xopt"]
             delta = x_new - x
             gamma = jax.grad(self.penalized_obj)(x_new) - grad
 
@@ -103,21 +111,22 @@ class BFGS(BaseOptimizer):
 
             x = x_new
             path.append(x)
-            alphas.append(r['alpha'])
+            alphas.append(r["alpha"])
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
         return {
-            'method_name': 'BFGS' if not self.f_cons else 'BFGS with Penalty',
-            'x0':self.x0,
-            'xopt': x,
-            'fmin': self.f_obj(x, *self.args),
-            'num_iter': num_iter,
-            'path': jnp.array(path),
-            'alphas': jnp.array(alphas),
-            'time':elapsed_time
+            "method_name": "BFGS" if not self.f_cons else "BFGS with Penalty",
+            "x0": self.x0,
+            "xopt": x,
+            "fmin": self.f_obj(x, *self.args),
+            "num_iter": num_iter,
+            "path": jnp.array(path),
+            "alphas": jnp.array(alphas),
+            "time": elapsed_time,
         }
-    
+
+
 def bfgs(**kwargs):
     optimizer = BFGS(**kwargs)
     return optimizer.optimize()
