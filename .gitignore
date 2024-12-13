@@ -3,6 +3,7 @@ old-dist/
 playground/
 build/
 __pycache__/
+.pytest_cache/
 
 docs/_build
 docs/.generated
@@ -10,3 +11,7 @@ docs/source/reference/.generated
 
 **/.generated/
 .generated/
+
+.vscode
+.hatch
+.ruff_cache

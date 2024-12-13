@@ -26,23 +26,20 @@ To begin using `optymus`, follow these steps:
 
 1. **Install the package:**
 
-
 .. code-block:: bash
 
    pip install optymus --upgrade # update version
-   pip install optymus[all] # all dependencies
-   pip install optymus[methods] # without plot dependencies
 
 2. **Create an optimization problem:**
 
 .. code-block:: python
 
    from optymus import Optimizer
-   from optymus.benchmark import MccormickFunction
+   from optymus.benchmark import Mccormick
    
    import jax.numpy as jnp
 
-   f = MccormickFunction()
+   f = Mccormick()
    initial_point = jnp.array([2, 2])
 
 3. **Optimize the problem:**

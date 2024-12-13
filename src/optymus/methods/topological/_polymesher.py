@@ -1,15 +1,17 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-from scipy.spatial import Voronoi
-from scipy.sparse import csr_matrix, csgraph
 import time
 
-plt.rcParams.update({'font.size': 12, 'font.family': 'serif'})
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.sparse import csgraph, csr_matrix
+from scipy.spatial import Voronoi
+from tqdm import tqdm
+
+plt.rcParams.update({"font.size": 12, "font.family": "serif"})
+
 
 def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, plot=True):
     """PolyMesher
-    
+
     Generate a polygon mesh using the polymesher algorithm.
 
     Parameters
@@ -82,8 +84,9 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
         initial_points_copy, areas = poly_centroids(element, node, n_elements)
         area = np.sum(np.abs(areas))
         error = (
-            np.sqrt(np.sum((areas**2) * np.sum((initial_points_copy - initial_points)**2, axis=1)))
-            * n_elements / (area**1.5)
+            np.sqrt(np.sum((areas**2) * np.sum((initial_points_copy - initial_points) ** 2, axis=1)))
+            * n_elements
+            / (area**1.5)
         )  # error calculation
         pointer += 1
         end_time = time.time()
@@ -95,24 +98,13 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
         if anim and n_elements <= 2000 and plot is True:
             ax.clear()  # Clear the axis for redrawing
             plot_mesh(element, n_elements, node, pointer, error, anim=True, ax=ax)
-    
+
     if anim and plot is True:
         plt.show()
-    
-    node, element = poly_unique_nodes(
-        node_coordinates=node,
-        element_vertices=element[:n_elements]
-        )
-    node, element = poly_collapse_small_edges(
-        node_coordinates=node,
-        element_vertices=element,
-        eps=0.1
-        )
-    node, element = poly_rearrange_nodes(
-        node_coordinates=node,
-        element_vertices=element,
-        n_elements=n_elements
-        )
+
+    node, element = poly_unique_nodes(node_coordinates=node, element_vertices=element[:n_elements])
+    node, element = poly_collapse_small_edges(node_coordinates=node, element_vertices=element, eps=0.1)
+    node, element = poly_rearrange_nodes(node_coordinates=node, element_vertices=element, n_elements=n_elements)
 
     domain_boundary_conditions = domain.boundary_conditions(node)
     boundary_supp = domain_boundary_conditions[0]
@@ -120,19 +112,14 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
 
     if anim is False and plot is True:
         fig, ax = plt.subplots(figsize=(8, 5))
-        plot_mesh(element=element, 
-                  n_elements=n_elements, 
-                  node=node, 
-                  pointer=pointer, 
-                  error=error, 
-                  ax=ax)
+        plot_mesh(element=element, n_elements=n_elements, node=node, pointer=pointer, error=error, ax=ax)
 
     return {
         "node": node,
         "element": element,
         "boundary_supp": boundary_supp,
         "boundary_load": boundary_load,
-        "initial_points": initial_points
+        "initial_points": initial_points,
     }
 
 
@@ -154,11 +141,12 @@ def plot_mesh(element, n_elements, node, pointer, error, anim=False, ax=None):
     ax.plot(Node_set[:, 0], Node_set[:, 1], color="navy", linestyle="None")
     ax.set_title(f"Iteration: {pointer}, Error: {error:.4f}")
     ax.set_axis_off()
-    
+
     if anim:
         plt.pause(0.0000001)
     else:
         plt.show()
+
 
 def poly_random_point_set(n_elements, domain):
     """
@@ -202,10 +190,19 @@ def poly_fixed_points(original_points, reflected_points, domain_fixed_points):
     """
     stack_original_points = np.vstack((original_points, reflected_points))
     for i in range(domain_fixed_points.shape[0]):
-        B, I = np.sort(
-            np.sqrt((stack_original_points[:, 0] - domain_fixed_points[i, 0]) ** 2 + (stack_original_points[:, 1] - domain_fixed_points[i, 1]) ** 2)
-        ), np.argsort(
-            np.sqrt((stack_original_points[:, 0] - domain_fixed_points[i, 0]) ** 2 + (stack_original_points[:, 1] - domain_fixed_points[i, 1]) ** 2)
+        B, I = (
+            np.sort(
+                np.sqrt(
+                    (stack_original_points[:, 0] - domain_fixed_points[i, 0]) ** 2
+                    + (stack_original_points[:, 1] - domain_fixed_points[i, 1]) ** 2
+                )
+            ),
+            np.argsort(
+                np.sqrt(
+                    (stack_original_points[:, 0] - domain_fixed_points[i, 0]) ** 2
+                    + (stack_original_points[:, 1] - domain_fixed_points[i, 1]) ** 2
+                )
+            ),
         )
         for j in range(1, 4):
             n = stack_original_points[I[j], :] - domain_fixed_points[i, :]
@@ -247,9 +244,7 @@ def poly_reflected_points(original_points, n_elements, domain, alpha):
     P2 = P2[I] - 2 * n2[:, 0:NBdrySegs][I] * d[:, 0:NBdrySegs][I]
     reflected_points = np.vstack((P1, P2)).T
     d_reflected_points = domain.signed_distance(reflected_points)
-    J = (np.abs(d_reflected_points[:, -1]) >= eta * np.abs(d[:, 0:NBdrySegs][I])) & (
-        d_reflected_points[:, -1] > 0
-    )
+    J = (np.abs(d_reflected_points[:, -1]) >= eta * np.abs(d[:, 0:NBdrySegs][I])) & (d_reflected_points[:, -1] > 0)
 
     reflected_points = np.unique(reflected_points[J, :], axis=0)
     return reflected_points
@@ -289,11 +284,7 @@ def poly_centroids(element_vertices, node, n_elements):
             areas.append(area)
 
             # Compute the centroid of the polygon
-            centroid = (
-                1
-                / (6 * area)
-                * np.array([np.sum((vx + vxs) * temp), np.sum((vy + vys) * temp)])
-            )
+            centroid = 1 / (6 * area) * np.array([np.sum((vx + vxs) * temp), np.sum((vy + vys) * temp)])
             centroids.append(centroid)
 
             counter += 1
@@ -340,9 +331,7 @@ def poly_collapse_small_edges(node_coordinates, element_vertices, eps):
             vy = node_coordinates[ele, 1]
             nv = len(vx)
             beta = np.arctan2(vy - np.sum(vy) / nv, vx - np.sum(vx) / nv)
-            beta = np.mod(
-                beta[np.roll(np.arange(len(beta)), shift=-1)] - beta, 2 * np.pi
-            )
+            beta = np.mod(beta[np.roll(np.arange(len(beta)), shift=-1)] - beta, 2 * np.pi)
             beta_ideal = 2 * np.pi / len(ele)
             edge = np.column_stack((ele, np.roll(ele, shift=-1)))
             c_edge.extend(edge[beta < eps * beta_ideal, :])
@@ -358,7 +347,7 @@ def poly_collapse_small_edges(node_coordinates, element_vertices, eps):
     return node_coordinates, element_vertices
 
 
-def poly_rearrange_nodes(node_coordinates, element_vertices, n_elements):
+def poly_rearrange_nodes(node_coordinates, element_vertices, n_elements):  # noqa
     """
     Rearrange nodes to improve mesh quality using (RCM) algorithm.
 
@@ -433,6 +422,7 @@ def poly_rebuild_node_mapping(node_coordinates, element_vertices, c_node):
 
     return node, element
 
+
 def mesh_assessment(Node, Element, domain_area=0, verbose=True):
     """
     Assesses the quality of a mesh based on element aspect ratio and element area.
@@ -498,6 +488,6 @@ def mesh_assessment(Node, Element, domain_area=0, verbose=True):
 
     if verbose:
         for crit, val in assessment.items():
-            print(f"{crit}: {val}")
+            print(f"{crit}: {val}")  # noqa
 
     return assessment

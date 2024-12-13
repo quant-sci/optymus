@@ -3,7 +3,7 @@ Optimization Methods
 
 This module contains the optimization methods for the optimization of the mathematical functions.
 
-The methods are divided into four categories:
+The methods are divided into six categories:
 
 
 Zero Order Methods
@@ -34,7 +34,7 @@ Second Order Methods
 
     optymus.methods.newton_raphson
 
-Adaptative Methods
+Adaptive Methods
 ------------------
     
 .. autosummary::
@@ -45,6 +45,15 @@ Adaptative Methods
     optymus.methods.adamax
     optymus.methods.rmsprop
     optymus.methods.yogi
+
+Population Methods
+------------------
+    
+.. autosummary::
+    :toctree: .generated/
+
+    optymus.methods.particle_swarm
+    optymus.methods.differential_evolution
 
 Topological Methods
 ------------------

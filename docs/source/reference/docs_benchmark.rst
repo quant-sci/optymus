@@ -23,17 +23,19 @@ Benchmark Functions
 .. autosummary::
     :toctree: .generated/
 
-    optymus.benchmark.AckleyFunction
-    optymus.benchmark.BealeFunction
-    optymus.benchmark.BoothFunction
-    optymus.benchmark.CrossintrayFunction
-    optymus.benchmark.EggholderFunction
-    optymus.benchmark.GoldsteinPriceFunction
-    optymus.benchmark.MccormickFunction
-    optymus.benchmark.RastriginFunction
-    optymus.benchmark.RosenbrockFunction
-    optymus.benchmark.SphereFunction
-    optymus.benchmark.StyblinskiTangFunction
+    optymus.benchmark.Ackley
+    optymus.benchmark.Beale
+    optymus.benchmark.Booth
+    optymus.benchmark.Crossintray
+    optymus.benchmark.Eggholder
+    optymus.benchmark.GoldsteinPrice
+    optymus.benchmark.Mccormick
+    optymus.benchmark.Rastrigin
+    optymus.benchmark.Rosenbrock
+    optymus.benchmark.Sphere
+    optymus.benchmark.StyblinskiTang
+    optymus.benchmark.WheelersRidge
+    optymus.benchmark.Levy
 
 
 Topological Domain

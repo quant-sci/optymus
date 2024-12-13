@@ -3,8 +3,8 @@ import time
 import jax
 import jax.numpy as jnp
 from tqdm import tqdm
-from optymus.methods.utils import BaseOptimizer
 
+from optymus.methods.utils import BaseOptimizer
 from optymus.search import line_search
 
 
@@ -48,7 +48,7 @@ class NewtonRaphson(BaseOptimizer):
         If True, prints progress
     maximize : bool
         If True, maximize the objective function
-    
+
     Returns
     -------
     method_name : str
@@ -64,7 +64,8 @@ class NewtonRaphson(BaseOptimizer):
     alphas : ndarray
         Step sizes
     """
-    def optimize(self):
+
+    def optimize(self, h_type="hessian"):
         start_time = time.time()
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
 
@@ -75,19 +76,26 @@ class NewtonRaphson(BaseOptimizer):
         alphas = []
         num_iter = 0
 
-        progres_bar = tqdm(range(self.max_iter), desc=f'Newton-Raphson {num_iter}',) if self.verbose else range(self.max_iter)
+        progres_bar = (
+            tqdm(
+                range(self.max_iter),
+                desc=f"Newton-Raphson {num_iter}",
+            )
+            if self.verbose
+            else range(self.max_iter)
+        )
 
         for _ in progres_bar:
             g = grad(x)
 
-            if self.h_type == 'hessian':
+            if h_type == "hessian":
                 M = hess(x)
-            elif self.h_type == 'fisher':
+            elif h_type == "fisher":
                 M = -hess(x)
-            elif self.h_type == 'identity':
+            elif h_type == "identity":
                 M = jnp.eye(len(x))
             else:
-                msg = f"Unknown h_type: {self.h_type}"
+                msg = f"Unknown h_type: {h_type}"
                 raise ValueError(msg)
 
             if jnp.linalg.norm(g) < self.tol:
@@ -96,9 +104,9 @@ class NewtonRaphson(BaseOptimizer):
             d = jnp.linalg.solve(M, -g)
 
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r['xopt']
+            x = r["xopt"]
 
-            alphas.append(r['alpha'])
+            alphas.append(r["alpha"])
             path.append(x)
             num_iter += 1
 
@@ -106,17 +114,17 @@ class NewtonRaphson(BaseOptimizer):
         elapsed_time = end_time - start_time
 
         return {
-            'method_name': 'Newton-Raphson' if not self.f_cons else 'Newton-Raphson with Penalty',
-            'x0': self.x0,
-            'xopt': x,
-            'fmin': self.f_obj(x, *self.args),
-            'num_iter': num_iter,
-            'path': jnp.array(path),
-            'alphas': jnp.array(alphas),
-            'time': elapsed_time
+            "method_name": "Newton-Raphson" if not self.f_cons else "Newton-Raphson with Penalty",
+            "x0": self.x0,
+            "xopt": x,
+            "fmin": self.f_obj(x, *self.args),
+            "num_iter": num_iter,
+            "path": jnp.array(path),
+            "alphas": jnp.array(alphas),
+            "time": elapsed_time,
         }
-    
 
-def newton_raphson(**kwargs):
+
+def newton_raphson(htype='hessian', **kwargs):
     optimizer = NewtonRaphson(**kwargs)
-    return optimizer.optimize()
+    return optimizer.optimize(htype)

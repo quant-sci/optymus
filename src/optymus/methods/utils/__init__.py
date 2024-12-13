@@ -1,8 +1,7 @@
 from optymus.methods.utils._base import (
-    BaseOptimizer, 
-    BaseMMA
+    BaseOptimizer,
 )
+
 __all__ = [
     "BaseOptimizer",
-    "BaseMMA"
 ]

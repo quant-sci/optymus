@@ -4,8 +4,9 @@ import jax
 import jax.numpy as jnp
 from tqdm import tqdm
 
-from optymus.search import line_search
 from optymus.methods.utils import BaseOptimizer
+from optymus.search import line_search
+
 
 class ConjugateGradient(BaseOptimizer):
     r"""Conjugate Gradient
@@ -74,9 +75,9 @@ class ConjugateGradient(BaseOptimizer):
         Path taken
     alphas : ndarray
         Step sizes
-    """  # noqa: E501
+    """
 
-    def optimize(self):
+    def optimize(self, gradient_type):
         start_time = time.time()
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
 
@@ -86,50 +87,59 @@ class ConjugateGradient(BaseOptimizer):
         alphas = []
         num_iter = 0
 
-        progres_bar = tqdm(range(self.max_iter), desc=f'Conjugate Gradient {num_iter}',) if self.verbose else range(self.max_iter)
+        progres_bar = (
+            tqdm(
+                range(self.max_iter),
+                desc=f"Conjugate Gradient {num_iter}",
+            )
+            if self.verbose
+            else range(self.max_iter)
+        )
 
         for _ in progres_bar:
             if jnp.linalg.norm(grad) <= self.tol:
                 break
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r['xopt']
+            x = r["xopt"]
             new_grad = jax.grad(self.penalized_obj)(x)
             if jnp.linalg.norm(new_grad) <= self.tol:
                 break
 
-            if self.gradient_type == 'fletcher_reeves':
+            if gradient_type == "fletcher_reeves":
                 beta = jnp.dot(new_grad, new_grad) / jnp.dot(grad, grad)
 
-            elif self.gradient_type == 'polak_ribiere':
+            elif gradient_type == "polak_ribiere":
                 beta = jnp.dot(new_grad, new_grad - grad) / jnp.dot(grad, grad)
 
-            elif self.gradient_type == 'hestnes_stiefel':
-                beta = jnp.dot(new_grad, new_grad-grad) / jnp.dot(d, new_grad-grad)
+            elif gradient_type == "hestnes_stiefel":
+                beta = jnp.dot(new_grad, new_grad - grad) / jnp.dot(d, new_grad - grad)
 
-            elif self.gradient_type == 'dai_yuan':
-                beta = jnp.dot(new_grad, new_grad) / jnp.dot(d, new_grad-grad)
+            elif gradient_type == "dai_yuan":
+                beta = jnp.dot(new_grad, new_grad) / jnp.dot(d, new_grad - grad)
 
             d = new_grad + beta * d
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r['xopt']
-            alphas.append(r['alpha'])
+            x = r["xopt"]
+            alphas.append(r["alpha"])
             path.append(x)
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
 
         return {
-            'method_name': f'Conjugate Gradients ({self.gradient_type})' if not self.f_cons else \
-                f'Conjugate Gradients ({self.gradient_type}) with Penalty',
-            'x0':self.x0,
-            'xopt': x,
-            'fmin': self.f_obj(x, *self.args),
-            'num_iter': num_iter,
-            'path': jnp.array(path),
-            'alphas': jnp.array(alphas),
-            'time':elapsed_time
-            }
+            "method_name": f"Conjugate Gradients ({gradient_type})"
+            if not self.f_cons
+            else f"Conjugate Gradients ({gradient_type}) with Penalty",
+            "x0": self.x0,
+            "xopt": x,
+            "fmin": self.f_obj(x, *self.args),
+            "num_iter": num_iter,
+            "path": jnp.array(path),
+            "alphas": jnp.array(alphas),
+            "time": elapsed_time,
+        }
 
-def conjugate_gradient(**kwargs):
+
+def conjugate_gradient(gradient_type="fletcher_reeves", **kwargs):
     optimizer = ConjugateGradient(**kwargs)
-    return optimizer.optimize()
+    return optimizer.optimize(gradient_type)
