@@ -166,7 +166,7 @@ def visualize_pso(particle_paths, gbest_path, bounds, obj):
     plt.ylabel("x2")
     plt.tight_layout()
     plt.close()
-    print("Animation saved as pso_animation.mp4")  # noqa
+    print("Animation saved as pso_animation.gif")  # noqa
 
 
 def plot_diversity(particle_diversity, velocity_diversity, num_iter):
