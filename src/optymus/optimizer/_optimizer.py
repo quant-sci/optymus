@@ -13,6 +13,8 @@ from optymus.methods import (
     steepest_descent,
     univariate,
     yogi,
+    cmaes,
+    simulated_annealing,
 )
 from optymus.optimizer.utils.report import Report
 from optymus.plots import plot_optim
@@ -33,6 +35,8 @@ METHODS = {
     "yogi": yogi,
     "particle_swarm": particle_swarm,
     "differential_evolution": differential_evolution,
+    "cmaes": cmaes,
+    "simulated_annealing": simulated_annealing,
 }
 
 

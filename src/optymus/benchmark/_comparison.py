@@ -7,19 +7,21 @@ from optymus import Optimizer
 
 def methods_comparison(f_obj=None, initial_point=None, **kwargs):
     METHODS = [
-        "steepest_descent",
-        "newton_raphson",
-        "bfgs",
-        "conjugate_gradient",
         "univariate",
         "powell",
-        "adam",
-        "adamax",
+        "steepest_descent",
+        "conjugate_gradient",
+        "bfgs",
+        "newton_raphson",
         "adagrad",
         "rmsprop",
+        "adam",
+        "adamax",
         "yogi",
         "particle_swarm",
         "differential_evolution",
+        "cmaes",
+        "simulated_annealing",
     ]
 
     results = pd.DataFrame(columns=["method", "x_opt", "f_min", "n_iter", "time"])
