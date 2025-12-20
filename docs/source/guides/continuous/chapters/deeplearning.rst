@@ -1,4 +1,0 @@
-
-Applications in Deep Learning
-==============================
-

@@ -14,5 +14,3 @@ Continuous Optimization
     chapters/second_order
     chapters/adaptative_learning
     chapters/engineering
-    chapters/economics
-    chapters/deeplearning
