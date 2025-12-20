@@ -1,27 +1,9 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "optymus"
-dynamic = ["version"]
-description = ""
+version = "0.1.9"
+description = "Optimization methods in Python"
 readme = "README.md"
-requires-python = ">=3.8"
-license = "MIT"
-keywords = []
-authors = [{ name = "kcosta", email = "kleyton.vsc@gmail.com" }]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
-]
+requires-python = ">=3.12"
 dependencies = [
   "plotly==5.24.1",
   "nbformat>=4.2.0",
@@ -35,84 +17,38 @@ dependencies = [
   "scikit-learn>=1.5.0",
   ]
 
+  [project.urls]
+Homepage = "https://github.com/quant-sci/optymus"
+"Bug Tracker" = "https://github.com/quant-sci/optymus/issues"
+
 [project.optional-dependencies]
-
-all = ["plotly==5.24.1", "nbformat>=4.2.0", "jax>=0.4.28", "jaxlib>=0.4.28", "tqdm>=4.66.4", "pandas==2.0.3", "numpy==1.26.4", "matplotlib>=3.9.0", "seaborn>=0.13.2", "scikit-learn>=1.5.0",]
-methods = ["jax>=0.4.28", "jaxlib>=0.4.28", "tqdm>=4.66.4", "pandas==2.0.3", "numpy==1.26.4", "scikit-learn>=1.5.0",]
-
-[project.urls]
-Documentation = "https://github.com/quant-sci/optymus#readme"
-Issues = "https://github.com/quant-sci/optymus/issues"
-Source = "https://github.com/quant-sci/optymus"
-
-[tool.hatch.version]
-
-path = "src/optymus/__about__.py"
-[tool.hatch.envs.types]
-extra-dependencies = ["mypy>=1.0.0"]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:optymus tests}"
-
-[tool.coverage.run]
-source_pkgs = ["optymus", "tests"]
-branch = true
-parallel = true
-omit = ["src/optymus/__about__.py"]
-
-[tool.coverage.paths]
-optymus = ["src/optymus", "*/optymus/src/optymus"]
-tests = ["tests", "*/optymus/tests"]
-
-[tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
-
-[tool.ruff]
-extend = "ruff_default.toml"
-exclude = ["docs/**", "tests/**", "tutorials/**"]
-
-[tool.hatch.envs.sphinx]
-dependencies = [
-  "pydata-sphinx-theme==0.15.2",
-  "sphinx_design==0.5.0",
-  "sphinx_togglebutton==0.3.2",
-  "sphinxcontrib.youtube==1.4.1",
-  "sphinx_copybutton==0.5.2",
-  "myst_parser==3.0.1",
-  "nbsphinx==0.9.4",
-  "ipython==8.25.0"
+dev = [
+    "pytest~=8.2",         # For running tests
+    "black~=24.4",         # For code formatting
+    "ruff~=0.4",           # For lintingent
 ]
 
-[tool.hatch.envs.sphinx.scripts]
-foo = ["which sphinx-build"]
-build = ["PYTHONPATH=./src sphinx-build -b html docs/source docs/build"]
-
-
-[tool.hatch.envs.testing]
-dependencies = [
-  "plotly",
+testing = [
+  "plotly==5.24.1",
+  "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
   "tqdm>=4.66.4",
-  "pandas==2.2",
+  "pandas>=2.2",
   "numpy==1.26.4",
   "matplotlib>=3.9.0",
   "seaborn>=0.13.2",
   "scikit-learn>=1.5.0",
-  "pytest==8.2.2"
+  "ipykernel"
+  ]
+
+docs = [
+    "pydata-sphinx-theme==0.15.2",
+    "sphinx_design==0.5.0",
+    "sphinx_togglebutton==0.3.2",
+    "sphinxcontrib.youtube==1.4.1",
+    "sphinx_copybutton==0.5.2",
+    "myst_parser==3.0.1",
+    "nbsphinx==0.9.4",
+    "ipython==8.25.0"
 ]
-
-paths = ["./src"]
-
-[tool.hatch.envs.testing.scripts]
-run = ["python -m pytest"]
-
-[tool.hatch.build.targets.sdist]
-exclude = [
-  "/.github",
-  "/docs",
-]
-[tool.hatch.envs.default]
-env-vars = { PYTHONPATH = "src" }
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/optymus"]

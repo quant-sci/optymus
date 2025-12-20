@@ -15,3 +15,6 @@ docs/source/reference/.generated
 .vscode
 .hatch
 .ruff_cache
+
+.venv/
+.egg-info
