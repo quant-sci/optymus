@@ -17,7 +17,7 @@ dependencies = [
   "scikit-learn>=1.5.0",
   ]
 
-  [project.urls]
+[project.urls]
 Homepage = "https://github.com/quant-sci/optymus"
 "Bug Tracker" = "https://github.com/quant-sci/optymus/issues"
 
