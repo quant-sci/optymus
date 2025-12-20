@@ -11,6 +11,7 @@ docs/source/reference/.generated
 
 **/.generated/
 .generated/
+paper/
 
 .vscode
 .hatch
