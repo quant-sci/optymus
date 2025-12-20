@@ -7,7 +7,7 @@
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 ![jax_badge][jax_badge_link]
 
-**Optimization for Mechanical Engineering and Scientific Computing**
+**Structural Optimization and Scientific Computing**
 
 `optymus` is a Python library for solving optimization problems in mechanical engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library is designed for structural optimization, topology optimization, and general-purpose numerical optimization.
 
