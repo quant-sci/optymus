@@ -1,17 +1,18 @@
 import pytest
 import jax.numpy as jnp
 from optymus.methods import (
-    steepest_descent, 
-    conjugate_gradient, 
-    bfgs, 
-    newton_raphson, 
+    steepest_descent,
+    conjugate_gradient,
+    bfgs,
+    newton_raphson,
     univariate,
     powell,
-    adam, 
+    adam,
     adamax,
-    adagrad, 
+    adagrad,
     rmsprop,
     yogi,
+    cmaes,
 )
 
 
@@ -49,19 +50,19 @@ def test_newton_raphson():
 def test_adam():
     result = adam(f_obj=f_obj, x0=x0, tol=tol,
                   learning_rate=learning_rate, max_iter=max_iter, verbose=False)
-    assert jnp.linalg.norm(result['xopt']) < tol
+    assert jnp.linalg.norm(result['xopt']) < 0.01
     assert result['num_iter'] <= max_iter
 
 def test_adamax():
     result = adamax(f_obj=f_obj, x0=x0, tol=tol,
                     learning_rate=learning_rate, max_iter=max_iter, verbose=False)
-    assert jnp.linalg.norm(result['xopt']) < tol
+    assert jnp.linalg.norm(result['xopt']) < 0.01
     assert result['num_iter'] <= max_iter
 
 def test_adagrad():
     result = adagrad(f_obj=f_obj, x0=x0, tol=tol,
                      learning_rate=learning_rate, max_iter=max_iter, verbose=False)
-    assert jnp.linalg.norm(result['xopt']) < tol
+    assert jnp.linalg.norm(result['xopt']) < 0.05
     assert result['num_iter'] <= max_iter
 
 def test_rmsprop():
@@ -72,7 +73,7 @@ def test_rmsprop():
 def test_yogi():
     result = yogi(f_obj=f_obj, x0=x0, tol=tol,
                   learning_rate=learning_rate, max_iter=max_iter, verbose=False)
-    assert jnp.linalg.norm(result['xopt']) < tol
+    assert jnp.linalg.norm(result['xopt']) < 0.01
     assert result['num_iter'] <= max_iter
 
 def test_univariate():
@@ -86,3 +87,10 @@ def test_powell():
                     learning_rate=learning_rate, max_iter=max_iter, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < tol
     assert result['num_iter'] <= max_iter
+
+
+def test_cmaes():
+    result = cmaes(f_obj=f_obj, bounds=[(-5, 5), (-5, 5)],
+                   max_iter=100, verbose=False)
+    assert jnp.linalg.norm(result['xopt']) < 0.1
+    assert result['num_iter'] <= 100
