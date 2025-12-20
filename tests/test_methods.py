@@ -13,6 +13,7 @@ from optymus.methods import (
     rmsprop,
     yogi,
     cmaes,
+    simulated_annealing,
 )
 
 
@@ -94,3 +95,10 @@ def test_cmaes():
                    max_iter=100, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < 0.1
     assert result['num_iter'] <= 100
+
+
+def test_simulated_annealing():
+    result = simulated_annealing(f_obj=f_obj, bounds=[(-5, 5), (-5, 5)],
+                                  max_iter=500, verbose=False)
+    assert jnp.linalg.norm(result['xopt']) < 0.1
+    assert result['num_iter'] <= 500
