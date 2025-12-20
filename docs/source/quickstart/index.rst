@@ -11,7 +11,7 @@ To begin using `optymus`, follow these steps:
 
 .. code-block:: bash
 
-   pip install optymus
+   uv add optymus
 
 2. **Create an optimization problem:**
 

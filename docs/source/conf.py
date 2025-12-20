@@ -50,7 +50,7 @@ copy_folder(notebooks_path, os.path.join(os.getcwd(), 'examples', dirname))
 # -- Project information -----------------------------------------------------
 
 project = 'optymus'
-copyright = '2024, quantsci'
+copyright = '2025, quantsci'
 author = 'Kleyton da Costa'
 
 
@@ -65,13 +65,22 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
-    'sphinx.ext.viewcode',
+    "sphinx.ext.viewcode",
+    "sphinx.ext.mathjax",
     "nbsphinx",
     "sphinx_copybutton",
     "sphinx_design",
     "sphinx_togglebutton",
     "IPython.sphinxext.ipython_console_highlighting",
 ]
+
+# MathJax configuration for LaTeX rendering
+mathjax3_config = {
+    'tex': {
+        'inlineMath': [['$', '$'], ['\\(', '\\)']],
+        'displayMath': [['$$', '$$'], ['\\[', '\\]']],
+    },
+}
 
 nbsphinx_allow_errors = True  # Permitir errores en los notebooks
 nbsphinx_execute = 'never'  # Puede ser 'auto', 'always', o 'never'
@@ -104,23 +113,22 @@ exclude_patterns = [
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'pydata_sphinx_theme'
-html_logo = '../logo.svg'
+html_theme = 'alabaster'
+#html_logo = '../logo.svg'
 html_favicon = '../favicon.png'
 
-html_context = {
-   "default_mode": "light"
-}
-
-# add github link to sidebar
+# Alabaster theme options
 html_theme_options = {
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/quant-sci/optymus",
-            "icon": "fab fa-github",
-        },
-    ],
+    "github_user": "quant-sci",
+    "github_repo": "optymus",
+    "github_button": True,
+    "github_type": "star",
+    "description": "Optimization Methods in Python",
+    "fixed_sidebar": True,
+    "sidebar_collapse": True,
+    "show_powered_by": False,
+    "page_width": "960px",
+    "sidebar_width": "220px",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

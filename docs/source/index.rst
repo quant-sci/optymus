@@ -3,11 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-
-.. image:: ../logo.svg
-   :alt: optymus logo
-   :align: center
-
 optymus documentation
 ======================
 
@@ -28,7 +23,7 @@ To begin using `optymus`, follow these steps:
 
 .. code-block:: bash
 
-   pip install optymus --upgrade # update version
+   uv add optymus
 
 2. **Create an optimization problem:**
 
@@ -62,24 +57,16 @@ To begin using `optymus`, follow these steps:
 
    opt.plot()
 
-Contributions
--------------
-
-Contributions to Optymus are highly appreciated. If you have additional optimization methods, improvements, or bug fixes, please submit a pull request following the CONTRIBUTING.md on GitHub.
-
-How to cite
--------------
-
 If you use `optymus` in your research, please consider citing the library using the following BibTeX entry:
 
 .. code-block:: bibtex
-   
-   @misc{optymus2024,
-   author = {da Costa, Kleyton and Menezes, Ivan and Lopes, Helio},
-   title = {Optymus: Optimization Methods in Python},
-   year = {2024},
-   note = {GitHub Repository},
-   url = {https://github.com/quant-sci/optymus}
+
+   @software{optymus2025,
+     author = {da Costa, Kleyton and Menezes, Ivan and Lopes, Helio},
+     title = {Optymus: Optimization Methods in Python},
+     year = {2025},
+     url = {https://github.com/quant-sci/optymus},
+     note = {Python library for optimization built on JAX}
    }
 
 .. toctree::
@@ -91,8 +78,3 @@ If you use `optymus` in your research, please consider citing the library using 
    reference/index
    examples/index
    guides/index
-
-.. note::
-   
-   optymus is part of `quantsci <https://quantsci.org>`_ project.
-
