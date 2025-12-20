@@ -13,6 +13,7 @@ from optymus.methods import (
     rmsprop,
     yogi,
     cmaes,
+    cross_entropy,
     simulated_annealing,
 )
 
@@ -93,6 +94,13 @@ def test_powell():
 def test_cmaes():
     result = cmaes(f_obj=f_obj, bounds=[(-5, 5), (-5, 5)],
                    max_iter=100, verbose=False)
+    assert jnp.linalg.norm(result['xopt']) < 0.1
+    assert result['num_iter'] <= 100
+
+
+def test_cross_entropy():
+    result = cross_entropy(f_obj=f_obj, bounds=[(-5, 5), (-5, 5)],
+                           max_iter=100, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < 0.1
     assert result['num_iter'] <= 100
 

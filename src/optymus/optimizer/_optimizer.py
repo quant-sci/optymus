@@ -15,6 +15,7 @@ from optymus.methods import (
     yogi,
     cmaes,
     simulated_annealing,
+    cross_entropy,
 )
 from optymus.optimizer.utils.report import Report
 from optymus.plots import plot_optim
@@ -37,6 +38,7 @@ METHODS = {
     "differential_evolution": differential_evolution,
     "cmaes": cmaes,
     "simulated_annealing": simulated_annealing,
+    "cross_entropy": cross_entropy,
 }
 
 
