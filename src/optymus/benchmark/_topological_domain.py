@@ -287,19 +287,59 @@ def _mbbsdf(P):
 
 
 def _mbbbc(Node, bdbox):
+    """
+    MBB beam boundary conditions.
+
+    Classic setup:
+    - Load: Downward force at top-center
+    - Left edge: Roller supports (Y fixed, X free)
+    - Right-bottom: Pin support (both X and Y fixed)
+    """
     eps = 0.1 * np.sqrt((bdbox[1] - bdbox[0]) * (bdbox[3] - bdbox[2]) / Node.shape[0])
+
+    # Left edge nodes - roller supports (Y fixed, X free)
     LeftEdgeNodes = np.where(np.abs(Node[:, 0] - 0) < eps)[0]
-    LeftUpperNode = np.where(np.logical_and(np.abs(Node[:, 0] - 0) < eps, np.abs(Node[:, 1] - 1) < eps))[0]
-    RightBottomNode = np.where(np.logical_and(np.abs(Node[:, 0] - 3) < eps, np.abs(Node[:, 1] - 0) < eps))[0]
-    FixedNodes = np.concatenate((LeftEdgeNodes, RightBottomNode))
-    Supp = np.zeros((len(FixedNodes), 3), dtype=int)
-    Supp[:, 0] = FixedNodes
-    Supp[:-1, 1] = 1
-    Supp[-1, 2] = 1
+
+    # Top center node - load application point (x ≈ 1.5, y ≈ 1)
+    TopCenterNode = np.where(np.logical_and(
+        np.abs(Node[:, 0] - 1.5) < eps,
+        np.abs(Node[:, 1] - 1) < eps
+    ))[0]
+
+    # Right bottom node - pin support (x ≈ 3, y ≈ 0)
+    RightBottomNode = np.where(np.logical_and(
+        np.abs(Node[:, 0] - 3) < eps,
+        np.abs(Node[:, 1] - 0) < eps
+    ))[0]
+
+    # Support conditions
+    n_left = len(LeftEdgeNodes)
+    n_supp = n_left + 1  # left edge + right-bottom pin
+    Supp = np.zeros((n_supp, 3), dtype=int)
+
+    # Left edge: roller supports (Y fixed only)
+    Supp[:n_left, 0] = LeftEdgeNodes
+    Supp[:n_left, 2] = 1  # Fix Y displacement
+
+    # Right-bottom: pin support (both X and Y fixed)
+    Supp[n_left, 0] = RightBottomNode[0]
+    Supp[n_left, 1] = 1  # Fix X
+    Supp[n_left, 2] = 1  # Fix Y
+
+    # Load at top center
     Load = np.zeros((1, 3))
-    Load[0, 0], Load[0, 1], Load[0, 2] = LeftUpperNode[0], 0, -0.5
-    x = [Supp, Load]
-    return x
+    if len(TopCenterNode) > 0:
+        Load[0, 0] = TopCenterNode[0]
+    else:
+        # Fallback: find closest node to top-center
+        top_nodes = np.where(np.abs(Node[:, 1] - 1) < eps)[0]
+        if len(top_nodes) > 0:
+            center_distances = np.abs(Node[top_nodes, 0] - 1.5)
+            Load[0, 0] = top_nodes[np.argmin(center_distances)]
+    Load[0, 1] = 0      # Fx = 0
+    Load[0, 2] = -0.5   # Fy = -0.5 (downward)
+
+    return [Supp, Load]
 
 
 MbbDomain = TopologicalDomain("Mbb Domain", [-0.5, 3.5, -0.5, 1.5], _mbbsdf, _mbbbc)
