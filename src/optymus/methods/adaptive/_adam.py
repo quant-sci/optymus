@@ -136,5 +136,5 @@ class Adam(BaseOptimizer):
 
 
 def adam(**kwargs):
-    optmizer = Adam(**kwargs)
-    return optmizer.optimize()
+    optimizer = Adam(**kwargs)
+    return optimizer.optimize()
