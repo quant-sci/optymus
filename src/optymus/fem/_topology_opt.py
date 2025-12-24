@@ -131,6 +131,11 @@ def topology_optimization(mesh, method="bfgs", volume_fraction=0.5,
 
     f_cons.defvjp(f_cons_fwd, f_cons_bwd)
 
+    # Filter kwargs: only pass htype for newton_raphson method
+    optimizer_kwargs = kwargs.copy()
+    if method != 'newton_raphson' and 'htype' in optimizer_kwargs:
+        optimizer_kwargs.pop('htype')
+
     # Run optimization
     opt = Optimizer(
         f_obj=f_obj,
@@ -141,7 +146,7 @@ def topology_optimization(mesh, method="bfgs", volume_fraction=0.5,
         max_iter=max_iter,
         learning_rate=learning_rate,
         verbose=verbose,
-        **kwargs
+        **optimizer_kwargs
     )
 
     results = opt.get_results()
