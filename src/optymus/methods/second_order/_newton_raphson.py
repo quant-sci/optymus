@@ -43,7 +43,8 @@ class NewtonRaphson(BaseOptimizer):
     max_iter : int
         Maximum number of iterations
     h_type : str
-        Type of matrix to use ('hessian', 'fisher', 'identity')
+        Type of matrix to use ('hessian', 'fisher', 'identity', 'bfgs').
+        Use 'bfgs' for functions with custom_vjp (e.g., topology optimization).
     verbose : bool
         If True, prints progress
     maximize : bool
@@ -70,7 +71,16 @@ class NewtonRaphson(BaseOptimizer):
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
 
         grad = jax.grad(self.penalized_obj)
-        hess = jax.hessian(self.penalized_obj)
+
+        # Only compute exact Hessian if needed (avoids error with custom_vjp functions)
+        hess = None
+        if h_type in ("hessian", "fisher"):
+            hess = jax.hessian(self.penalized_obj)
+
+        # Initialize inverse Hessian approximation for BFGS
+        B_inv = None
+        if h_type == "bfgs":
+            B_inv = jnp.eye(len(x))
 
         path = [x]
         alphas = []
@@ -88,23 +98,42 @@ class NewtonRaphson(BaseOptimizer):
         for _ in progres_bar:
             g = grad(x)
 
+            if jnp.linalg.norm(g) < self.tol:
+                break
+
+            # Compute search direction based on h_type
             if h_type == "hessian":
                 M = hess(x)
+                d = jnp.linalg.solve(M, -g)
             elif h_type == "fisher":
                 M = -hess(x)
+                d = jnp.linalg.solve(M, -g)
             elif h_type == "identity":
-                M = jnp.eye(len(x))
+                d = -g  # No solve needed with identity matrix
+            elif h_type == "bfgs":
+                d = -jnp.dot(B_inv, g)  # No solve needed with inverse Hessian
             else:
                 msg = f"Unknown h_type: {h_type}"
                 raise ValueError(msg)
 
-            if jnp.linalg.norm(g) < self.tol:
-                break
-
-            d = jnp.linalg.solve(M, -g)
-
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r["xopt"]
+            x_new = r["xopt"]
+
+            # BFGS inverse Hessian update
+            if h_type == "bfgs":
+                delta = x_new - x
+                g_new = grad(x_new)
+                gamma = g_new - g
+
+                denom = jnp.dot(delta, gamma)
+                if denom > 1e-10:  # Curvature condition check
+                    rho = 1.0 / denom
+                    I = jnp.eye(len(x))
+                    B_inv = (I - rho * jnp.outer(delta, gamma)) @ B_inv
+                    B_inv = B_inv @ (I - rho * jnp.outer(gamma, delta))
+                    B_inv = B_inv + rho * jnp.outer(delta, delta)
+
+            x = x_new
 
             alphas.append(r["alpha"])
             path.append(x)
@@ -113,8 +142,10 @@ class NewtonRaphson(BaseOptimizer):
         end_time = time.time()
         elapsed_time = end_time - start_time
 
+        method_suffix = f" ({h_type})" if h_type != "hessian" else ""
+        penalty_suffix = " with Penalty" if self.f_cons else ""
         return {
-            "method_name": "Newton-Raphson" if not self.f_cons else "Newton-Raphson with Penalty",
+            "method_name": f"Newton-Raphson{method_suffix}{penalty_suffix}",
             "x0": self.x0,
             "xopt": x,
             "fmin": self.f_obj(x, *self.args),
