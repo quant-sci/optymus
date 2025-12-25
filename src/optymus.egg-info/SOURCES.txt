@@ -13,6 +13,10 @@ src/optymus/benchmark/_comparison.py
 src/optymus/benchmark/_obj_functions.py
 src/optymus/benchmark/_topological_domain.py
 src/optymus/benchmark/utils/_domain_functions.py
+src/optymus/fem/__init__.py
+src/optymus/fem/_compliance.py
+src/optymus/fem/_polygonal_fem.py
+src/optymus/fem/_topology_opt.py
 src/optymus/methods/__init__.py
 src/optymus/methods/adaptive/__init__.py
 src/optymus/methods/adaptive/_adagrad.py
