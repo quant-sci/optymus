@@ -116,7 +116,11 @@ class NewtonRaphson(BaseOptimizer):
                 msg = f"Unknown h_type: {h_type}"
                 raise ValueError(msg)
 
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            try:
+                r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            except RuntimeError:
+                # Fall back to a descent direction when line search cannot bracket a minimum.
+                r = line_search(f=self.penalized_obj, x=x, d=-g, learning_rate=self.learning_rate)
             x_new = r["xopt"]
 
             # BFGS inverse Hessian update
