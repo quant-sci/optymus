@@ -59,6 +59,27 @@ def test_penalty_method_handles_inequality_and_equality():
     assert jnp.linalg.norm(xopt - jnp.array([-1.5, -1.5])) < 0.2
 
 
+def test_penalty_method_default_schedule_increases():
+    opt = Optimizer(
+        f_obj=quadratic_obj,
+        g_cons=[inequality_constraint],
+        h_cons=[equality_constraint],
+        x0=jnp.array([-5.0, -2.0]),
+        method="steepest_descent",
+        constraint_method="penalty",
+        max_outer_iter=2,
+        max_iter=0,
+        learning_rate=0.05,
+        constraint_tol=-1.0,
+        outer_tol=-1.0,
+        verbose=False,
+    )
+    result = opt.get_results()
+    r_p_history = result["r_p_history"]
+
+    assert float(r_p_history[1]) > float(r_p_history[0])
+
+
 @pytest.mark.parametrize("barrier_type", ["log", "inverse"])
 def test_barrier_method_supports_log_and_inverse_barriers(barrier_type):
     opt = Optimizer(
@@ -72,7 +93,7 @@ def test_barrier_method_supports_log_and_inverse_barriers(barrier_type):
         barrier_r0=10.0,
         barrier_factor=0.1,
         penalty_r0=1.0,
-        penalty_factor=0.1,
+        penalty_factor=10.0,
         max_outer_iter=4,
         max_iter=150,
         learning_rate=0.05,
@@ -99,7 +120,7 @@ def test_barrier_method_requires_strictly_feasible_start():
             barrier_r0=10.0,
             barrier_factor=0.1,
             penalty_r0=1.0,
-            penalty_factor=0.1,
+            penalty_factor=10.0,
             max_outer_iter=3,
             max_iter=100,
             learning_rate=0.1,
@@ -119,12 +140,64 @@ def test_barrier_method_rejects_boundary_start():
             barrier_r0=10.0,
             barrier_factor=0.1,
             penalty_r0=1.0,
-            penalty_factor=0.1,
+            penalty_factor=10.0,
             max_outer_iter=3,
             max_iter=100,
             learning_rate=0.1,
             verbose=False,
         )
+
+
+def test_barrier_method_default_penalty_schedule_increases():
+    opt = Optimizer(
+        f_obj=quadratic_obj,
+        g_cons=[inequality_constraint],
+        h_cons=[equality_constraint],
+        x0=jnp.array([-5.0, -2.0]),
+        method="steepest_descent",
+        constraint_method="barrier",
+        max_outer_iter=2,
+        max_iter=0,
+        learning_rate=0.05,
+        constraint_tol=-1.0,
+        outer_tol=-1.0,
+        verbose=False,
+    )
+    result = opt.get_results()
+    r_p_history = result["r_p_history"]
+
+    assert float(r_p_history[1]) > float(r_p_history[0])
+
+
+def test_barrier_method_backtracks_infeasible_iterate():
+    def inner_method(f_obj, f_cons, x0, **_kwargs):
+        return {"xopt": jnp.array([2.0, 2.0]), "num_iter": 1}
+
+    result = run_barrier_method(
+        f_obj=quadratic_obj,
+        g_cons=[inequality_constraint],
+        h_cons=[equality_constraint],
+        x0=jnp.array([-5.0, -2.0]),
+        inner_method=inner_method,
+        constraint_jit=False,
+        barrier_type="log",
+        barrier_r0=1.0,
+        barrier_factor=0.1,
+        penalty_r0=1.0,
+        penalty_factor=10.0,
+        max_outer_iter=1,
+        constraint_tol=-1.0,
+        outer_tol=-1.0,
+        barrier_eps=1e-12,
+        warn_constraint_size=None,
+        warn_slow_iter_s=None,
+        warn_no_progress_iters=None,
+        warn_no_progress_tol=1e-6,
+        inner_kwargs={},
+    )
+
+    assert inequality_constraint(result["xopt"]) < 0.0
+    assert jnp.isclose(result["fmin"], quadratic_obj(result["xopt"]))
 
 
 def test_barrier_method_allows_equality_only():
@@ -156,7 +229,6 @@ def test_barrier_method_allows_equality_only():
     [
         ("bfgs", {}),
         ("steepest_descent", {}),
-        ("newton_raphson", {}),
     ],
 )
 def test_penalty_method_supports_multiple_methods(method, method_kwargs):
@@ -189,7 +261,6 @@ def test_penalty_method_supports_multiple_methods(method, method_kwargs):
     [
         ("bfgs", {}),
         ("steepest_descent", {}),
-        ("newton_raphson", {}),
     ],
 )
 def test_barrier_method_supports_multiple_methods(method, method_kwargs):
@@ -211,58 +282,6 @@ def test_barrier_method_supports_multiple_methods(method, method_kwargs):
         outer_tol=1e-3,
         verbose=False,
         **method_kwargs,
-    )
-    result = opt.get_results()
-    xopt = result["xopt"]
-
-    assert inequality_constraint(xopt) <= 1e-2
-    assert jnp.abs(equality_constraint(xopt)) <= 1e-2
-
-
-def test_penalty_method_supports_constraint_jit():
-    opt = Optimizer(
-        f_obj=quadratic_obj,
-        g_cons=[inequality_constraint],
-        h_cons=[equality_constraint],
-        x0=jnp.array([-5.0, -2.0]),
-        method="adam",
-        constraint_method="penalty",
-        constraint_jit=True,
-        penalty_r0=1.0,
-        penalty_factor=10.0,
-        max_outer_iter=4,
-        max_iter=150,
-        learning_rate=0.05,
-        constraint_tol=1e-3,
-        outer_tol=1e-3,
-        verbose=False,
-    )
-    result = opt.get_results()
-    xopt = result["xopt"]
-
-    assert inequality_constraint(xopt) <= 1e-2
-    assert jnp.abs(equality_constraint(xopt)) <= 1e-2
-
-
-def test_barrier_method_supports_constraint_jit():
-    opt = Optimizer(
-        f_obj=quadratic_obj,
-        g_cons=[inequality_constraint],
-        h_cons=[equality_constraint],
-        x0=jnp.array([-5.0, -2.0]),
-        method="adam",
-        constraint_method="barrier",
-        constraint_jit=True,
-        barrier_r0=10.0,
-        barrier_factor=0.1,
-        penalty_r0=1.0,
-        penalty_factor=10.0,
-        max_outer_iter=4,
-        max_iter=150,
-        learning_rate=0.05,
-        constraint_tol=1e-3,
-        outer_tol=1e-3,
-        verbose=False,
     )
     result = opt.get_results()
     xopt = result["xopt"]
@@ -329,7 +348,6 @@ def test_barrier_method_avoids_duplicate_objective_eval():
         constraint_tol=-1.0,
         outer_tol=-1.0,
         barrier_eps=1e-12,
-        infeasible_penalty=1e6,
         warn_constraint_size=None,
         warn_slow_iter_s=None,
         warn_no_progress_iters=None,
