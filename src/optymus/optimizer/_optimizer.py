@@ -103,7 +103,7 @@ class Optimizer(Report):
 
             inner_kwargs = kwargs.copy()
             penalty_r0 = inner_kwargs.pop("penalty_r0", 1.0)
-            penalty_factor = inner_kwargs.pop("penalty_factor", 0.1)
+            penalty_factor = inner_kwargs.pop("penalty_factor", 10.0)
             barrier_r0 = inner_kwargs.pop("barrier_r0", 1.0)
             barrier_factor = inner_kwargs.pop("barrier_factor", 0.1)
             max_outer_iter = inner_kwargs.pop("max_outer_iter", 10)
@@ -111,7 +111,6 @@ class Optimizer(Report):
             outer_tol = inner_kwargs.pop("outer_tol", 1e-6)
             barrier_type = inner_kwargs.pop("barrier_type", "log")
             barrier_eps = inner_kwargs.pop("barrier_eps", 1e-12)
-            infeasible_penalty = inner_kwargs.pop("infeasible_penalty", 1e6)
             constraint_jit = inner_kwargs.pop("constraint_jit", False)
             warn_constraint_size = inner_kwargs.pop("warn_constraint_size", 10000)
             warn_slow_iter_s = inner_kwargs.pop("warn_slow_iter_s", None)
@@ -154,7 +153,6 @@ class Optimizer(Report):
                     constraint_tol=constraint_tol,
                     outer_tol=outer_tol,
                     barrier_eps=barrier_eps,
-                    infeasible_penalty=infeasible_penalty,
                     warn_constraint_size=warn_constraint_size,
                     warn_slow_iter_s=warn_slow_iter_s,
                     warn_no_progress_iters=warn_no_progress_iters,
