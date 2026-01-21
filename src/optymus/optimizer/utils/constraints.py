@@ -81,7 +81,6 @@ def _barrier_value_from_values(
     ineq_values: jnp.ndarray,
     barrier_type: str,
     barrier_eps: float,
-    infeasible_penalty: float,
 ) -> jnp.ndarray:
     if not ineq_values.size:
         return jnp.array(0.0)
@@ -95,10 +94,66 @@ def _barrier_value_from_values(
         msg = f"Barrier type '{barrier_type}' is not available. Use 'log' or 'inverse'."
         raise ConstraintMethodError(msg)
 
-    infeasible = jnp.maximum(ineq_values, 0.0)
-    penalty = infeasible_penalty * (infeasible**2)
+    infeasible = jnp.any(ineq_values >= 0.0)
+    barrier_value = jnp.sum(base)
+    return jnp.where(infeasible, jnp.array(jnp.inf), barrier_value)
 
-    return jnp.sum(jnp.where(ineq_values < 0.0, base, penalty))
+
+def _prepare_constraint_functions(
+    g_cons: list[Callable],
+    h_cons: list[Callable],
+    constraint_jit: bool,
+) -> tuple[Callable, Callable, Callable, Callable]:
+    check_finite_obj = not constraint_jit
+    g_fun_obj = combine_constraints(g_cons, check_finite=check_finite_obj)
+    h_fun_obj = combine_constraints(h_cons, check_finite=check_finite_obj)
+    g_fun_checked = g_fun_obj if check_finite_obj else combine_constraints(g_cons, check_finite=True)
+    h_fun_checked = h_fun_obj if check_finite_obj else combine_constraints(h_cons, check_finite=True)
+    return g_fun_obj, h_fun_obj, g_fun_checked, h_fun_checked
+
+
+def _maybe_warn_constraint_size(
+    g_fun_checked: Callable,
+    h_fun_checked: Callable,
+    x0,
+    warn_constraint_size: int | None,
+    warnings: list[str],
+) -> None:
+    if warn_constraint_size is None:
+        return
+    g_vals, h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, x0)
+    if g_vals.size > warn_constraint_size or h_vals.size > warn_constraint_size:
+        warnings.append("constraint_size_warning")
+
+
+def _maybe_warn_slow_iter(
+    iter_time: float,
+    warn_slow_iter_s: float | None,
+    warnings: list[str],
+) -> None:
+    if warn_slow_iter_s is not None and iter_time > warn_slow_iter_s:
+        if "slow_iteration_warning" not in warnings:
+            warnings.append("slow_iteration_warning")
+
+
+def _update_no_progress(
+    no_progress_count: int,
+    violation_history: list[jnp.ndarray],
+    warn_no_progress_iters: int | None,
+    warn_no_progress_tol: float,
+    warnings: list[str],
+) -> int:
+    if warn_no_progress_iters is None or len(violation_history) < 2:
+        return no_progress_count
+    prev = violation_history[-2]
+    curr = violation_history[-1]
+    if jnp.abs(prev - curr) <= warn_no_progress_tol:
+        no_progress_count += 1
+    else:
+        no_progress_count = 0
+    if no_progress_count >= warn_no_progress_iters and "no_progress_warning" not in warnings:
+        warnings.append("no_progress_warning")
+    return no_progress_count
 
 
 def _constraint_violation(g_cons: list[Callable], h_cons: list[Callable], x) -> jnp.ndarray:
@@ -118,14 +173,12 @@ def _barrier_value(
     x,
     barrier_type: str,
     barrier_eps: float,
-    infeasible_penalty: float,
 ) -> jnp.ndarray:
     ineq_values = _stack_constraint_values(g_cons, x)
     return _barrier_value_from_values(
         ineq_values,
         barrier_type=barrier_type,
         barrier_eps=barrier_eps,
-        infeasible_penalty=infeasible_penalty,
     )
 
 
@@ -147,11 +200,18 @@ def run_penalty_method(
     warn_no_progress_tol: float,
     inner_kwargs: dict,
 ) -> dict:
-    check_finite_obj = not constraint_jit
-    g_fun_obj = combine_constraints(g_cons, check_finite=check_finite_obj)
-    h_fun_obj = combine_constraints(h_cons, check_finite=check_finite_obj)
-    g_fun_checked = g_fun_obj if check_finite_obj else combine_constraints(g_cons, check_finite=True)
-    h_fun_checked = h_fun_obj if check_finite_obj else combine_constraints(h_cons, check_finite=True)
+    g_fun_obj, h_fun_obj, g_fun_checked, h_fun_checked = _prepare_constraint_functions(
+        g_cons,
+        h_cons,
+        constraint_jit,
+    )
+
+    def penalized_obj(x_local, r_p_local):
+        g_vals, h_vals = _evaluate_constraints(g_fun_obj, h_fun_obj, x_local)
+        penalty_scale = 0.5 * r_p_local
+        return f_obj(x_local) + penalty_scale * _penalty_value_from_values(g_vals, h_vals)
+
+    penalized_core = jax.jit(penalized_obj) if constraint_jit else penalized_obj
 
     r_p = penalty_r0
     x = x0
@@ -164,26 +224,15 @@ def run_penalty_method(
     no_progress_count = 0
     last_f_val = None
 
-    if warn_constraint_size is not None:
-        g_vals, h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, x0)
-        if g_vals.size > warn_constraint_size or h_vals.size > warn_constraint_size:
-            warnings.append("constraint_size_warning")
+    _maybe_warn_constraint_size(g_fun_checked, h_fun_checked, x0, warn_constraint_size, warnings)
 
     reached_max = True
     for _ in range(max_outer_iter):
         iter_start = time.time()
-        penalty_scale = 0.5 * r_p
-
-        def penalized_obj(x_local):
-            g_vals, h_vals = _evaluate_constraints(g_fun_obj, h_fun_obj, x_local)
-            return f_obj(x_local) + penalty_scale * _penalty_value_from_values(g_vals, h_vals)
-
-        penalized_eval = jax.jit(penalized_obj) if constraint_jit else penalized_obj
+        penalized_eval = lambda x_local: penalized_core(x_local, r_p)
         result = inner_method(f_obj=penalized_eval, f_cons=None, x0=x, **inner_kwargs)
         iter_time = time.time() - iter_start
-        if warn_slow_iter_s is not None and iter_time > warn_slow_iter_s:
-            if "slow_iteration_warning" not in warnings:
-                warnings.append("slow_iteration_warning")
+        _maybe_warn_slow_iter(iter_time, warn_slow_iter_s, warnings)
         total_inner_iters += result.get("num_iter", 0)
         x_new = result["xopt"]
         if not jnp.all(jnp.isfinite(x_new)):
@@ -206,16 +255,13 @@ def run_penalty_method(
             reached_max = False
             break
 
-        if warn_no_progress_iters is not None and violation_history:
-            if len(violation_history) > 1:
-                prev = violation_history[-2]
-                if jnp.abs(prev - violation) <= warn_no_progress_tol:
-                    no_progress_count += 1
-                else:
-                    no_progress_count = 0
-                if no_progress_count >= warn_no_progress_iters:
-                    if "no_progress_warning" not in warnings:
-                        warnings.append("no_progress_warning")
+        no_progress_count = _update_no_progress(
+            no_progress_count,
+            violation_history,
+            warn_no_progress_iters,
+            warn_no_progress_tol,
+            warnings,
+        )
 
         r_p = r_p * penalty_factor
         r_p_history.append(r_p)
@@ -256,23 +302,35 @@ def run_barrier_method(
     constraint_tol: float,
     outer_tol: float,
     barrier_eps: float,
-    infeasible_penalty: float,
     warn_constraint_size: int | None,
     warn_slow_iter_s: float | None,
     warn_no_progress_iters: int | None,
     warn_no_progress_tol: float,
     inner_kwargs: dict,
 ) -> dict:
-    check_finite_obj = not constraint_jit
-    g_fun_obj = combine_constraints(g_cons, check_finite=check_finite_obj)
-    h_fun_obj = combine_constraints(h_cons, check_finite=check_finite_obj)
-    g_fun_checked = g_fun_obj if check_finite_obj else combine_constraints(g_cons, check_finite=True)
-    h_fun_checked = h_fun_obj if check_finite_obj else combine_constraints(h_cons, check_finite=True)
+    g_fun_obj, h_fun_obj, g_fun_checked, h_fun_checked = _prepare_constraint_functions(
+        g_cons,
+        h_cons,
+        constraint_jit,
+    )
 
     ineq_values, _ = _evaluate_constraints(g_fun_checked, h_fun_checked, x0)
     if ineq_values.size and bool(jnp.any(ineq_values >= 0.0)):
         msg = "Barrier method requires a strictly feasible starting point."
         raise InfeasibleStartError(msg)
+
+    def barrier_obj(x_local, r_p_local, rb_local):
+        g_vals, h_vals = _evaluate_constraints(g_fun_obj, h_fun_obj, x_local)
+        penalty_scale = 0.5 * r_p_local
+        penalty_term = _penalty_value_from_values(jnp.array([]), h_vals)
+        barrier_term = _barrier_value_from_values(
+            g_vals,
+            barrier_type=barrier_type,
+            barrier_eps=barrier_eps,
+        )
+        return f_obj(x_local) + penalty_scale * penalty_term + rb_local * barrier_term
+
+    barrier_core = jax.jit(barrier_obj) if constraint_jit else barrier_obj
 
     r_p = penalty_r0
     rb = barrier_r0
@@ -287,45 +345,40 @@ def run_barrier_method(
     no_progress_count = 0
     last_f_val = None
 
-    if warn_constraint_size is not None:
-        g_vals, h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, x0)
-        if g_vals.size > warn_constraint_size or h_vals.size > warn_constraint_size:
-            warnings.append("constraint_size_warning")
+    _maybe_warn_constraint_size(g_fun_checked, h_fun_checked, x0, warn_constraint_size, warnings)
 
     reached_max = True
     for _ in range(max_outer_iter):
         iter_start = time.time()
-        penalty_scale = 0.5 * r_p
-
-        def barrier_obj(x_local):
-            g_vals, h_vals = _evaluate_constraints(g_fun_obj, h_fun_obj, x_local)
-            penalty_term = _penalty_value_from_values(jnp.array([]), h_vals)
-            barrier_term = _barrier_value_from_values(
-                g_vals,
-                barrier_type=barrier_type,
-                barrier_eps=barrier_eps,
-                infeasible_penalty=infeasible_penalty,
-            )
-            return f_obj(x_local) + penalty_scale * penalty_term + rb * barrier_term
-
-        barrier_eval = jax.jit(barrier_obj) if constraint_jit else barrier_obj
+        barrier_eval = lambda x_local: barrier_core(x_local, r_p, rb)
         result = inner_method(f_obj=barrier_eval, f_cons=None, x0=x, **inner_kwargs)
         iter_time = time.time() - iter_start
-        if warn_slow_iter_s is not None and iter_time > warn_slow_iter_s:
-            if "slow_iteration_warning" not in warnings:
-                warnings.append("slow_iteration_warning")
+        _maybe_warn_slow_iter(iter_time, warn_slow_iter_s, warnings)
         total_inner_iters += result.get("num_iter", 0)
         x_new = result["xopt"]
         if not jnp.all(jnp.isfinite(x_new)):
             msg = "Objective evaluation produced non-finite values."
             raise ConstraintMethodError(msg)
+        g_vals, h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, x_new)
+        if g_vals.size and bool(jnp.any(g_vals >= 0.0)):
+            direction = x_new - x
+            alpha = 1.0
+            for _ in range(25):
+                alpha *= 0.5
+                candidate = x + alpha * direction
+                cand_g_vals, cand_h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, candidate)
+                if cand_g_vals.size == 0 or bool(jnp.all(cand_g_vals < 0.0)):
+                    x_new = candidate
+                    g_vals, h_vals = cand_g_vals, cand_h_vals
+                    break
+            else:
+                msg = "Barrier method produced an infeasible iterate."
+                raise ConstraintMethodError(msg)
         f_val = f_obj(x_new)
         if not jnp.all(jnp.isfinite(jnp.ravel(f_val))):
             msg = "Objective evaluation produced non-finite values."
             raise ConstraintMethodError(msg)
         last_f_val = f_val
-
-        g_vals, h_vals = _evaluate_constraints(g_fun_checked, h_fun_checked, x_new)
         violation = _constraint_violation_from_values(g_vals, h_vals)
         violation_history.append(violation)
         outer_path.append(x_new)
@@ -336,16 +389,13 @@ def run_barrier_method(
             reached_max = False
             break
 
-        if warn_no_progress_iters is not None and violation_history:
-            if len(violation_history) > 1:
-                prev = violation_history[-2]
-                if jnp.abs(prev - violation) <= warn_no_progress_tol:
-                    no_progress_count += 1
-                else:
-                    no_progress_count = 0
-                if no_progress_count >= warn_no_progress_iters:
-                    if "no_progress_warning" not in warnings:
-                        warnings.append("no_progress_warning")
+        no_progress_count = _update_no_progress(
+            no_progress_count,
+            violation_history,
+            warn_no_progress_iters,
+            warn_no_progress_tol,
+            warnings,
+        )
 
         rb = rb * barrier_factor
         r_p = r_p * penalty_factor
