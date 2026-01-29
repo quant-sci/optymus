@@ -49,6 +49,26 @@ def test_newton_raphson():
     assert jnp.linalg.norm(result['xopt']) < tol
     assert result['num_iter'] <= max_iter
 
+
+def test_newton_raphson_raises_on_line_search_failure(monkeypatch):
+    def failing_line_search(*_args, **_kwargs):
+        raise RuntimeError("line search failed")
+
+    monkeypatch.setattr(
+        "optymus.methods.second_order._newton_raphson.line_search",
+        failing_line_search,
+    )
+
+    with pytest.raises(RuntimeError, match="line search failed"):
+        newton_raphson(
+            f_obj=f_obj,
+            x0=x0,
+            tol=tol,
+            learning_rate=learning_rate,
+            max_iter=1,
+            verbose=False,
+        )
+
 def test_adam():
     result = adam(f_obj=f_obj, x0=x0, tol=tol,
                   learning_rate=learning_rate, max_iter=max_iter, verbose=False)
