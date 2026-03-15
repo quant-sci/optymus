@@ -1,5 +1,5 @@
-<h1 align="center">
-<img src="logo.svg" width="400">
+<h1 align="left">
+<img src="logo.png" width="100">
 </h1>
 
 [![PyPI](https://img.shields.io/pypi/v/optymus)](https://pypi.org/project/optymus/)
@@ -18,7 +18,6 @@
 - **Structural Analysis Support**: Boundary conditions, load definitions, and FEM-ready domains
 - **Multiple Optimization Methods**: Gradient-based (BFGS, Conjugate Gradient, Newton), adaptive (Adam, AdaGrad), and evolutionary (CMA-ES, Differential Evolution, Particle Swarm)
 - **Constraint Handling**: Support for equality and inequality constraints via penalty methods
-- **Visualization**: Built-in plotting for optimization paths, convergence, and domain visualization
 
 ## Getting Started
 
