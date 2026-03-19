@@ -1,15 +1,12 @@
 import time
 
-import matplotlib.pyplot as plt
 import numpy as np
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 from scipy.sparse import csgraph, csr_matrix
 from scipy.spatial import Voronoi
-from tqdm import tqdm
-
-plt.rcParams.update({"font.size": 12, "font.family": "serif"})
 
 
-def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, plot=True):
+def polymesher(domain, n_elements, max_iter, initial_points=None):
     """PolyMesher
 
     Generate a polygon mesh using the polymesher algorithm.
@@ -24,8 +21,6 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
         The maximum number of iterations.
     initial_points : numpy.ndarray, optional
         Initial points for the mesh generation.
-    anim : bool, optional
-        If True, display an animation of the mesh generation.
 
     Returns
     -------
@@ -64,10 +59,16 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
     area = (domain_bounding_box[1] - domain_bounding_box[0]) * (domain_bounding_box[3] - domain_bounding_box[2])
     initial_points_copy = initial_points.copy()
     time_acc = 0
-    if anim and plot is True:
-        fig, ax = plt.subplots(figsize=(8, 5))
 
-    pbar = tqdm(total=max_iter, desc="Iterations", unit="step")
+    progress = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TimeRemainingColumn(),
+        TextColumn("{task.fields[status]}"),
+    )
+    progress_task = progress.add_task("PolyMesher", total=max_iter, status="")
+    progress.start()
     while pointer < max_iter and error > tolerance:
         start_time = time.time()
         alpha = c * np.sqrt(area / n_elements)  # a distance value proportional to the width of an element
@@ -92,15 +93,9 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
         end_time = time.time()
         time_acc += end_time - start_time
 
-        pbar.update(1)
-        pbar.set_postfix({"Error": error, "Iteration": pointer, "Time": time_acc})
+        progress.update(progress_task, advance=1, status=f"err={error:.4f} iter={pointer} t={time_acc:.1f}s")
 
-        if anim and n_elements <= 2000 and plot is True:
-            ax.clear()  # Clear the axis for redrawing
-            plot_mesh(element, n_elements, node, pointer, error, anim=True, ax=ax)
-
-    if anim and plot is True:
-        plt.show()
+    progress.stop()
 
     node, element = poly_unique_nodes(node_coordinates=node, element_vertices=element[:n_elements])
     node, element = poly_collapse_small_edges(node_coordinates=node, element_vertices=element, eps=0.1)
@@ -110,10 +105,6 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
     boundary_supp = domain_boundary_conditions[0]
     boundary_load = domain_boundary_conditions[1]
 
-    if anim is False and plot is True:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        plot_mesh(element=element, n_elements=n_elements, node=node, pointer=pointer, error=error, ax=ax)
-
     return {
         "node": node,
         "element": element,
@@ -121,31 +112,6 @@ def polymesher(domain, n_elements, max_iter, initial_points=None, anim=False, pl
         "boundary_load": boundary_load,
         "initial_points": initial_points,
     }
-
-
-def plot_mesh(element, n_elements, node, pointer, error, anim=False, ax=None):
-    element = element[:n_elements]
-    Node_set = set()
-    for polygon in element:
-        if -1 in polygon:  # Handle infinite regions
-            continue
-        vx = [node[i, 0] for i in polygon]
-        vy = [node[i, 1] for i in polygon]
-        Node_set.update(polygon)
-        ax.fill(vx, vy, edgecolor="black", facecolor="white", alpha=0.8)
-        # add a point at the centroid of the polygon
-        ax.plot(np.mean(vx), np.mean(vy), color="black", marker="o", markersize=2)
-
-    # Plot Voronoi vertices
-    Node_set = node[list(Node_set)]
-    ax.plot(Node_set[:, 0], Node_set[:, 1], color="navy", linestyle="None")
-    ax.set_title(f"Iteration: {pointer}, Error: {error:.4f}")
-    ax.set_axis_off()
-
-    if anim:
-        plt.pause(0.0000001)
-    else:
-        plt.show()
 
 
 def poly_random_point_set(n_elements, domain):

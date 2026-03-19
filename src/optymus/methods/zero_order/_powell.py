@@ -2,7 +2,7 @@ import time
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 from optymus.search import line_search
@@ -75,9 +75,9 @@ class Powell(BaseOptimizer):
         num_iter = 0
 
         progress_bar = (
-            tqdm(
+            track(
                 range(self.max_iter),
-                desc=f"Powell {num_iter}",
+                description=f"Powell {num_iter}",
             )
             if self.verbose
             else range(self.max_iter)

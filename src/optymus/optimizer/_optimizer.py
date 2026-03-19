@@ -26,7 +26,6 @@ from optymus.optimizer.utils.constraints import (
     run_penalty_method,
 )
 from optymus.optimizer.utils.report import Report
-from optymus.plots import plot_optim
 
 jax.config.update("jax_enable_x64", True)
 
@@ -186,8 +185,4 @@ class Optimizer(Report):
 
     def report(self):
         """Generates a report of the optimization results."""
-        return self.repr_html()
-
-    def plot(self, **kwargs):
-        """Plots the optimization path and function surface."""
-        plot_optim(f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, method=self.opt, **kwargs)
+        self.show()

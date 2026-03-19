@@ -142,5 +142,4 @@ html_css_files = [
 
 html_js_files = [
     "require.min.js",
-    "custom.js",
 ]

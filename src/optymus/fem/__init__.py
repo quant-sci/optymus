@@ -22,10 +22,10 @@ Examples
 --------
 >>> from optymus.benchmark import MbbDomain
 >>> from optymus.methods import polymesher
->>> from optymus.fem import topology_optimization, plot_topology
+>>> from optymus.fem import topology_optimization
 >>>
 >>> # Generate mesh
->>> mesh = polymesher(domain=MbbDomain, n_elements=200, max_iter=100, plot=False)
+>>> mesh = polymesher(domain=MbbDomain, n_elements=200, max_iter=100)
 >>>
 >>> # Run topology optimization
 >>> results = topology_optimization(
@@ -34,17 +34,12 @@ Examples
 ...     volume_fraction=0.5,
 ...     max_iter=100
 ... )
->>>
->>> # Visualize result
->>> plot_topology(mesh, results["densities"])
 """
 
 from ._compliance import ComplianceObjective, create_compliance_objective
 from ._topology_opt import (
     topology_optimization,
     optimality_criteria,
-    plot_topology,
-    plot_convergence,
 )
 from ._polygonal_fem import (
     solve_fem,
@@ -63,9 +58,6 @@ __all__ = [
     "optimality_criteria",
     "ComplianceObjective",
     "create_compliance_objective",
-    # Visualization
-    "plot_topology",
-    "plot_convergence",
     # Low-level FEM (2D polygonal)
     "solve_fem",
     "plane_stress_D",

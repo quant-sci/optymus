@@ -16,14 +16,6 @@ optymus documentation
 
 `optymus` is a Python library for solving optimization problems in mechanical engineering and scientific computing. Built on `JAX <https://jax.readthedocs.io/en/latest/index.html>`_ for automatic differentiation, it provides efficient gradient computation and GPU acceleration.
 
-Key Features
-------------
-
-- **Topology Optimization**: PolyMesher-based mesh generation with signed distance functions
-- **Engineering Domains**: Pre-built domains (Cook, Michell, MBB beam, Wrench, Suspension) with boundary conditions
-- **Multiple Methods**: Gradient-based (BFGS, Newton), adaptive (Adam), and evolutionary (CMA-ES, PSO)
-- **Constraint Handling**: Penalty methods for equality and inequality constraints
-- **Visualization**: Built-in plotting for optimization paths and convergence
 
 Getting Started
 ---------------
@@ -59,12 +51,6 @@ Getting Started
 .. code-block:: python
 
    opt.report()
-
-5. **Plot the optimization path:**
-
-.. code-block:: python
-
-   opt.plot()
 
 Mechanical Engineering Applications
 -----------------------------------

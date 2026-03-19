@@ -2,7 +2,7 @@ import time
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -85,9 +85,9 @@ class RMSProp(BaseOptimizer):
         num_iter = 0
 
         progress_bar = (
-            tqdm(
+            track(
                 range(1, self.max_iter + 1),
-                desc=f"RMSProp {num_iter}",
+                description=f"RMSProp {num_iter}",
             )
             if self.verbose
             else range(1, self.max_iter + 1)

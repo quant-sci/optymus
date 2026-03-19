@@ -39,11 +39,5 @@ To begin using `optymus`, follow these steps:
 
    opt.report()
 
-5. **Visualize the optimization process:**
-
-.. code-block:: python
-
-   opt.plot()
-
 .. toctree::
    :maxdepth: 3

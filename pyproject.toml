@@ -1,20 +1,15 @@
 [project]
 name = "optymus"
-version = "0.1.10"
+version = "0.1.11"
 description = "Optimization methods in Python"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-  "plotly==5.24.1",
-  "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
-  "tqdm>=4.66.4",
-  "pandas>=2.2",
   "numpy==1.26.4",
-  "matplotlib>=3.9.0",
-  "seaborn>=0.13.2",
-  "scikit-learn>=1.5.0",
+  "rich>=13.0",
+  "scipy>=1.12",
   ]
 
 [project.urls]
@@ -29,17 +24,11 @@ dev = [
 ]
 
 testing = [
-  "plotly==5.24.1",
-  "nbformat>=4.2.0",
   "jax>=0.4.28",
   "jaxlib>=0.4.28",
-  "tqdm>=4.66.4",
-  "pandas>=2.2",
   "numpy==1.26.4",
-  "matplotlib>=3.9.0",
-  "seaborn>=0.13.2",
-  "scikit-learn>=1.5.0",
-  "ipykernel"
+  "rich>=13.0",
+  "scipy>=1.12",
   ]
 
 docs = [

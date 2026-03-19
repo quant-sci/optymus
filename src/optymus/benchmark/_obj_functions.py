@@ -1,10 +1,4 @@
-import warnings
-
 import jax.numpy as jnp
-
-from optymus.plots import plot_function
-
-warnings.filterwarnings("ignore")
 
 
 class WheelersRidge:
@@ -31,9 +25,6 @@ class WheelersRidge:
         x = jnp.array(x)
         a = 1.5
         return -jnp.exp(-((x[0] * x[1] - a) ** 2) - (x[1] - a) ** 2)
-
-    def plot(self):
-        plot_function(self, lb=-10, ub=10)
 
 
 class Levy:
@@ -67,9 +58,6 @@ class Levy:
             + (w[-1] - 1) ** 2 * (1 + jnp.sin(2 * jnp.pi * w[-1]) ** 2)
         )
 
-    def plot(self):
-        plot_function(self, lb=-10, ub=10)
-
 
 class Mccormick:
     r"""McCormick Function
@@ -98,9 +86,6 @@ class Mccormick:
         x = jnp.array(x)
         return jnp.sin(x[0] + x[1]) + (x[0] - x[1]) ** 2 - 1.5 * x[0] + 2.5 * x[1] + 1
 
-    def plot(self):
-        plot_function(self, lb=-5.12, ub=5.12)
-
 
 class Rastrigin:
     r"""Rastrigin Function
@@ -125,9 +110,6 @@ class Rastrigin:
     def __call__(self, x):
         x = jnp.array(x)
         return 20 + x[0] ** 2 + x[1] ** 2 - 10 * (jnp.cos(2 * jnp.pi * x[0]) + jnp.cos(2 * jnp.pi * x[1]))
-
-    def plot(self):
-        plot_function(self, lb=-5.12, ub=5.12)
 
 
 class Ackley:
@@ -159,9 +141,6 @@ class Ackley:
             + 20
         )
 
-    def plot(self):
-        plot_function(self, lb=-5.12, ub=5.12)
-
 
 class Eggholder:
     r"""Eggholder Function
@@ -189,9 +168,6 @@ class Eggholder:
         return -(x[1] + 47) * jnp.sin(jnp.sqrt(jnp.abs(x[0] / 2 + x[1] + 47))) - x[0] * jnp.sin(
             jnp.sqrt(jnp.abs(x[0] - x[1] - 47))
         )
-
-    def plot(self):
-        plot_function(self, lb=-512, ub=512)
 
 
 class Crossintray:
@@ -227,9 +203,6 @@ class Crossintray:
             ** 0.1
         )
 
-    def plot(self):
-        plot_function(self, lb=-10, ub=10)
-
 
 class Sphere:
     r"""Sphere Function
@@ -254,9 +227,6 @@ class Sphere:
     def __call__(self, x):
         x = jnp.array(x)
         return x[0] ** 2 + x[1] ** 2
-
-    def plot(self):
-        plot_function(self, lb=-5.12, ub=5.12)
 
 
 class Rosenbrock:
@@ -300,16 +270,6 @@ class Rosenbrock:
         x = jnp.array(x)
         return jnp.sum(100 * (x[1:] - x[:-1] ** 2) ** 2 + (1 - x[:-1]) ** 2)
 
-    def plot(self):
-        """
-        Plot a 2D slice of the Rosenbrock function.
-        For higher dimensions, the first two variables are varied, keeping others fixed at their true minimum.
-        """
-        if self.dimension > 2:
-            print("Plotting a 2D slice with other dimensions fixed at their true minimum.")  # noqa
-
-        plot_function(self, lb=-5.12, ub=5.12)
-
 
 class Beale:
     r"""Beale Function
@@ -339,9 +299,6 @@ class Beale:
             + (2.625 - x[0] + x[0] * x[1] ** 3) ** 2
         )
 
-    def plot(self):
-        plot_function(self, lb=-4.5, ub=4.5)
-
 
 class Semionescu:
     r"""Semionescu Function
@@ -366,9 +323,6 @@ class Semionescu:
     def __call__(self, x):
         x = jnp.array(x)
         return 0.1 * (x[0] ** 2 + x[1] ** 2) - 0.3 * jnp.cos(3 * jnp.pi * x[0]) * jnp.cos(4 * jnp.pi * x[1]) + 0.3
-
-    def plot(self):
-        plot_function(self, lb=-5, ub=5)
 
 
 class GoldsteinPrice:
@@ -402,9 +356,6 @@ class GoldsteinPrice:
             * (18 - 32 * x[0] + 12 * x[0] ** 2 + 48 * x[1] - 36 * x[0] * x[1] + 27 * x[1] ** 2)
         )
 
-    def plot(self):
-        plot_function(self, lb=-2, ub=2)
-
 
 class Booth:
     r"""Booth Function
@@ -429,9 +380,6 @@ class Booth:
     def __call__(self, x):
         x = jnp.array(x)
         return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
-
-    def plot(self):
-        plot_function(self, lb=-10, ub=10)
 
 
 class StyblinskiTang:
@@ -458,9 +406,6 @@ class StyblinskiTang:
         x = jnp.array(x)
         return 0.5 * ((x[0] ** 4 - 16 * x[0] ** 2 + 5 * x[0]) + (x[1] ** 4 - 16 * x[1] ** 2 + 5 * x[1]))
 
-    def plot(self):
-        plot_function(self, lb=-5, ub=5)
-
 
 class Himmeblau:
     r"""Himmeblau Function
@@ -483,9 +428,6 @@ class Himmeblau:
         x = jnp.array(x)
         return (x[0] ** 2 + x[1] - 11) ** 2 + (x[0] + x[1] ** 2 - 7) ** 2
 
-    def plot(self, **kwargs):
-        plot_function(self, lb=-6, ub=6)
-
 
 class CustomFunction:
     """Custom Function
@@ -504,6 +446,3 @@ class CustomFunction:
 
     def __call__(self, x):
         return self.f(x)
-
-    def plot(self):
-        plot_function(self, lb=-5.12, ub=5.12)

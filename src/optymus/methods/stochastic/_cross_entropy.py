@@ -3,7 +3,7 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -52,14 +52,18 @@ class CrossEntropy(BaseOptimizer):
         best_solution = mean.copy()
         best_fitness = self.penalized_obj(mean)
 
-        # Progress tracking
-        progress_bar = (
-            tqdm(range(self.max_iter), desc="Cross-Entropy")
-            if self.verbose
-            else range(self.max_iter)
-        )
+        if self.verbose:
+            progress = Progress(
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TaskProgressColumn(),
+                TimeRemainingColumn(),
+                TextColumn("{task.fields[status]}"),
+            )
+            task = progress.add_task("Cross-Entropy", total=self.max_iter, status="")
+            progress.start()
 
-        for k in progress_bar:
+        for k in range(self.max_iter):
             # Sample population from Gaussian distribution
             key, subkey = jax.random.split(key)
             samples = mean + std * jax.random.normal(subkey, shape=(pop_size, n))
@@ -96,13 +100,15 @@ class CrossEntropy(BaseOptimizer):
             # Store path
             path.append(best_solution.copy())
 
-            # Update progress bar
-            if self.verbose and hasattr(progress_bar, "set_postfix"):
-                progress_bar.set_postfix({"best": f"{best_fitness:.6f}", "std": f"{jnp.mean(std):.4f}"})
+            if self.verbose:
+                progress.update(task, advance=1, status=f"best={best_fitness:.6f} std={jnp.mean(std):.4f}")
 
             # Check for convergence (std too small)
             if jnp.all(std <= min_std):
                 break
+
+        if self.verbose:
+            progress.stop()
 
         end_time = time.time()
         elapsed_time = end_time - start_time

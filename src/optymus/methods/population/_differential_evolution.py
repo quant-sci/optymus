@@ -3,11 +3,8 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
-from matplotlib.animation import FuncAnimation
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -53,7 +50,7 @@ class DifferentialEvolution(BaseOptimizer):
 
         # Progress tracking
         progress_bar = (
-            tqdm(range(self.max_iter), desc="Differential Evolution") if self.verbose else range(self.max_iter)
+            track(range(self.max_iter), description="Differential Evolution") if self.verbose else range(self.max_iter)
         )
 
         for k in progress_bar:
@@ -112,61 +109,16 @@ class DifferentialEvolution(BaseOptimizer):
         }
 
 
-def visualize_diffevo(particle_paths, gbest_path, bounds, obj):
-    """Visualizes PSO in 2D."""
-
-    fig, ax = plt.subplots(figsize=(6, 5))
-    x_min, x_max = bounds[0]
-    y_min, y_max = bounds[1]
-    ax.set_xlim(x_min, x_max)
-    ax.set_ylim(y_min, y_max)
-
-    x = np.linspace(x_min, x_max, 100)
-    y = np.linspace(y_min, y_max, 100)
-    X, Y = np.meshgrid(x, y)
-    Z = obj([X, Y])  # Evaluate the objective function on the grid
-    contour = ax.contourf(X, Y, Z, levels=50, cmap=cm.PuBuGn_r, alpha=0.8)
-    fig.colorbar(contour)
-
-    points = ax.scatter([], [], s=40, c="midnightblue", label="Particles")
-    gbest_point = ax.scatter([], [], s=30, c="indianred", marker="*", label="Global Best")
-    ax.legend(loc="lower left")
-
-    iteration_text = plt.text(0.02, 0.95, "", transform=ax.transAxes)
-    best_value_text = plt.text(0.02, 0.90, "", transform=ax.transAxes)
-
-    def animate(frame):
-        points.set_offsets(particle_paths[frame][0])
-        gbest_point.set_offsets(gbest_path[frame].reshape(1, -1))
-        iteration_text.set_text(f"Iteration: {frame+1}")
-
-        best_value_text.set_text(f"Best Point: {gbest_path[frame]}")
-
-        return points, gbest_point
-
-    ani = FuncAnimation(fig, animate, frames=len(particle_paths), interval=50, blit=True, repeat=False)
-    ani.save("diffevo_animation.gif", writer="Pillow", fps=2, dpi=300)  # Use pillow, imagemagick can be problematic
-
-    plt.title("Differential Evolution Optimization")
-    plt.xlabel("x1")
-    plt.ylabel("x2")
-    plt.tight_layout()
-    plt.close()
-
 
 def differential_evolution(
     bounds=[(-5, 5), (-5, 5)],  # noqa
     mutation_factor=0.2,
     crossover_prob=0.5,
     pop_size=30,
-    visualize=False,
     **kwargs,
 ):
     """Particle Swarm Optimization algorithm."""
     optimizer = DifferentialEvolution(**kwargs)
     result = optimizer.optimize(bounds, mutation_factor, crossover_prob, pop_size)
-
-    if visualize and len(bounds[0]) == 2:  # Only visualize if 2D
-        visualize_diffevo(result["path_particles"], result["path"], bounds, optimizer.f_obj)
 
     return result

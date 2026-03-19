@@ -3,11 +3,8 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
-from matplotlib.animation import FuncAnimation
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -50,7 +47,7 @@ class ParticleSwarmOptimization(BaseOptimizer):
         gbest_val = jnp.min(pbest_val)
 
         progres_bar = (
-            tqdm(range(self.max_iter), desc="Particle Swarm Optimization") if self.verbose else range(self.max_iter)
+            track(range(self.max_iter), description="Particle Swarm Optimization") if self.verbose else range(self.max_iter)
         )
 
         for i in progres_bar:
@@ -126,85 +123,6 @@ class ParticleSwarmOptimization(BaseOptimizer):
         }
 
 
-def visualize_pso(particle_paths, gbest_path, bounds, obj):
-    """Visualizes PSO in 2D."""
-
-    fig, ax = plt.subplots(figsize=(6, 5))
-    x_min, x_max = bounds[0]
-    y_min, y_max = bounds[1]
-    ax.set_xlim(x_min, x_max)
-    ax.set_ylim(y_min, y_max)
-
-    x = np.linspace(x_min, x_max, 100)
-    y = np.linspace(y_min, y_max, 100)
-    X, Y = np.meshgrid(x, y)
-    Z = obj([X, Y])  # Evaluate the objective function on the grid
-    contour = ax.contourf(X, Y, Z, levels=50, cmap=cm.PuBuGn_r, alpha=0.8)
-    fig.colorbar(contour)
-
-    points = ax.scatter([], [], s=40, c="midnightblue", label="Particles")
-    gbest_point = ax.scatter([], [], s=30, c="indianred", marker="*", label="Global Best")
-    ax.legend(loc="lower left")
-
-    iteration_text = plt.text(0.02, 0.95, "", transform=ax.transAxes)
-    best_value_text = plt.text(0.02, 0.90, "", transform=ax.transAxes)
-
-    def animate(frame):
-        points.set_offsets(particle_paths[frame][0])
-        gbest_point.set_offsets(gbest_path[frame].reshape(1, -1))
-        iteration_text.set_text(f"Iteration: {frame+1}")
-
-        best_value_text.set_text(f"Best Point: {gbest_path[frame]}")
-
-        return points, gbest_point
-
-    ani = FuncAnimation(fig, animate, frames=len(particle_paths), interval=50, blit=True, repeat=False)
-    ani.save("pso_animation.gif", writer="pillow", fps=2, dpi=300)
-
-    plt.title("Particle Swarm Optimization Visualization")
-    plt.xlabel("x1")
-    plt.ylabel("x2")
-    plt.tight_layout()
-    plt.close()
-    print("Animation saved as pso_animation.gif")  # noqa
-
-
-def plot_diversity(particle_diversity, velocity_diversity, num_iter):
-    """Plots particle and velocity diversity over iterations."""
-    fig, axes = plt.subplots(1, 3, figsize=(18, 4))
-    # plot particle diversity and velocity diversity
-
-    axes[0].plot(particle_diversity, label="Particle Diversity")
-    axes[1].plot(velocity_diversity, label="Velocity Diversity")
-
-    axes[0].set_title("Particle Diversity (exploration)")
-    axes[0].set_xlabel("Iterations")
-    axes[0].set_ylabel("Diversity")
-    axes[0].set_xscale("log")
-    axes[0].set_yscale("log")
-
-    axes[1].set_title("Velocity Diversity (exploitation)")
-    axes[1].set_xlabel("Iterations")
-    axes[1].set_ylabel("Diversity")
-    axes[1].set_xscale("log")
-    axes[1].set_yscale("log")
-
-    # plot tradeoff
-    iter_range = jnp.linspace(1, num_iter, num_iter)
-    scatter = axes[2].scatter(particle_diversity, velocity_diversity, c=iter_range, cmap="RdBu", alpha=0.7)
-    axes[2].set_xlabel("Exploration (Particle Diversity)")
-    axes[2].set_ylabel("Exploitation (Velocity Diversity)")
-    axes[2].set_xscale("log")
-    axes[2].set_yscale("log")
-    axes[2].set_title("Tradeoff between Exploration and Exploitation")
-    axes[2].grid(True)
-
-    cbar = fig.colorbar(scatter)
-    cbar.set_label("Iteration")
-
-    plt.tight_layout()
-    plt.show()
-
 
 def particle_swarm(
     divergence="baseline",
@@ -214,15 +132,10 @@ def particle_swarm(
     c1=0.25,
     c2=2,
     n_particles=30,
-    visualize=False,
     **kwargs,
 ):
     """Particle Swarm Optimization algorithm."""
     optimizer = ParticleSwarmOptimization(**kwargs)
     result = optimizer.optimize(divergence, bounds, alpha, w, c1, c2, n_particles)
-
-    if visualize and len(bounds[0]) == 2:  # Only visualize if 2D
-        visualize_pso(result["path_particles"], result["path"], bounds, optimizer.f_obj)
-        plot_diversity(result["particle_diversity"], result["velocity_diversity"], result["num_iter"])
 
     return result

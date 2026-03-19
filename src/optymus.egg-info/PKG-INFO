@@ -1,38 +1,27 @@
 Metadata-Version: 2.4
 Name: optymus
-Version: 0.1.10
+Version: 0.1.11
 Summary: Optimization methods in Python
 Project-URL: Homepage, https://github.com/quant-sci/optymus
 Project-URL: Bug Tracker, https://github.com/quant-sci/optymus/issues
 Requires-Python: >=3.12
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: plotly==5.24.1
-Requires-Dist: nbformat>=4.2.0
 Requires-Dist: jax>=0.4.28
 Requires-Dist: jaxlib>=0.4.28
-Requires-Dist: tqdm>=4.66.4
-Requires-Dist: pandas>=2.2
 Requires-Dist: numpy==1.26.4
-Requires-Dist: matplotlib>=3.9.0
-Requires-Dist: seaborn>=0.13.2
-Requires-Dist: scikit-learn>=1.5.0
+Requires-Dist: rich>=13.0
+Requires-Dist: scipy>=1.12
 Provides-Extra: dev
 Requires-Dist: pytest~=8.2; extra == "dev"
 Requires-Dist: black~=24.4; extra == "dev"
 Requires-Dist: ruff~=0.4; extra == "dev"
 Provides-Extra: testing
-Requires-Dist: plotly==5.24.1; extra == "testing"
-Requires-Dist: nbformat>=4.2.0; extra == "testing"
 Requires-Dist: jax>=0.4.28; extra == "testing"
 Requires-Dist: jaxlib>=0.4.28; extra == "testing"
-Requires-Dist: tqdm>=4.66.4; extra == "testing"
-Requires-Dist: pandas>=2.2; extra == "testing"
 Requires-Dist: numpy==1.26.4; extra == "testing"
-Requires-Dist: matplotlib>=3.9.0; extra == "testing"
-Requires-Dist: seaborn>=0.13.2; extra == "testing"
-Requires-Dist: scikit-learn>=1.5.0; extra == "testing"
-Requires-Dist: ipykernel; extra == "testing"
+Requires-Dist: rich>=13.0; extra == "testing"
+Requires-Dist: scipy>=1.12; extra == "testing"
 Provides-Extra: docs
 Requires-Dist: pydata-sphinx-theme==0.15.2; extra == "docs"
 Requires-Dist: sphinx_design==0.5.0; extra == "docs"
@@ -44,8 +33,8 @@ Requires-Dist: nbsphinx==0.9.4; extra == "docs"
 Requires-Dist: ipython==8.25.0; extra == "docs"
 Dynamic: license-file
 
-<h1 align="center">
-<img src="logo.svg" width="400">
+<h1 align="left">
+<img src="logo.png" width="100">
 </h1>
 
 [![PyPI](https://img.shields.io/pypi/v/optymus)](https://pypi.org/project/optymus/)
@@ -64,7 +53,6 @@ Dynamic: license-file
 - **Structural Analysis Support**: Boundary conditions, load definitions, and FEM-ready domains
 - **Multiple Optimization Methods**: Gradient-based (BFGS, Conjugate Gradient, Newton), adaptive (Adam, AdaGrad), and evolutionary (CMA-ES, Differential Evolution, Particle Swarm)
 - **Constraint Handling**: Support for equality and inequality constraints via penalty methods
-- **Visualization**: Built-in plotting for optimization paths, convergence, and domain visualization
 
 ## Getting Started
 

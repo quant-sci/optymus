@@ -3,7 +3,7 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -51,15 +51,19 @@ class SimulatedAnnealing(BaseOptimizer):
         # Track optimization path
         path = [current.copy()]
 
-        # Progress tracking
-        progress_bar = (
-            tqdm(range(self.max_iter), desc="Simulated Annealing")
-            if self.verbose
-            else range(self.max_iter)
-        )
-
         iteration = 0
-        for k in progress_bar:
+        if self.verbose:
+            progress = Progress(
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TaskProgressColumn(),
+                TimeRemainingColumn(),
+                TextColumn("{task.fields[status]}"),
+            )
+            task = progress.add_task("Simulated Annealing", total=self.max_iter, status="")
+            progress.start()
+
+        for k in range(self.max_iter):
             iteration = k + 1
 
             # Check temperature stopping criterion
@@ -102,9 +106,11 @@ class SimulatedAnnealing(BaseOptimizer):
             # Store path
             path.append(best.copy())
 
-            # Update progress bar
-            if self.verbose and hasattr(progress_bar, "set_postfix"):
-                progress_bar.set_postfix({"T": f"{T:.2e}", "best": f"{best_energy:.6f}"})
+            if self.verbose:
+                progress.update(task, advance=1, status=f"T={T:.2e} best={best_energy:.6f}")
+
+        if self.verbose:
+            progress.stop()
 
         end_time = time.time()
         elapsed_time = end_time - start_time
