@@ -8,6 +8,7 @@ using the optymus optimization methods.
 import numpy as np
 import jax
 import jax.numpy as jnp
+from rich.console import Console
 
 from ._compliance import ComplianceObjective
 
@@ -223,9 +224,10 @@ def optimality_criteria(mesh, volume_fraction=0.5, max_iter=100,
     compliance_history = []
     volume_history = []
 
+    console = Console() if verbose else None
     if verbose:
-        print(f"{'Iter':>5} {'Compliance':>12} {'Volume':>10} {'Change':>10}")
-        print("-" * 40)
+        console.print(f"{'Iter':>5} {'Compliance':>12} {'Volume':>10} {'Change':>10}")
+        console.print("-" * 40)
 
     for iteration in range(max_iter):
         # Compute compliance and sensitivity
@@ -270,11 +272,11 @@ def optimality_criteria(mesh, volume_fraction=0.5, max_iter=100,
         x_old = x.copy()
 
         if verbose:
-            print(f"{iteration:5d} {c:12.4f} {volume_history[-1]:10.4f} {change:10.6f}")
+            console.print(f"{iteration:5d} {c:12.4f} {volume_history[-1]:10.4f} {change:10.6f}")
 
         if change < tol and iteration > 10:
             if verbose:
-                print(f"\nConverged after {iteration + 1} iterations")
+                console.print(f"\nConverged after {iteration + 1} iterations")
             break
 
     return {
@@ -286,120 +288,3 @@ def optimality_criteria(mesh, volume_fraction=0.5, max_iter=100,
         "volume_history": np.array(volume_history),
         "method_name": "Optimality Criteria (OC)"
     }
-
-
-def plot_topology(mesh, densities, ax=None, cmap="gray_r", title=None,
-                  show_colorbar=True, threshold=None):
-    """
-    Visualize topology optimization result.
-
-    Parameters
-    ----------
-    mesh : dict
-        Mesh from polymesher
-    densities : ndarray
-        Element densities
-    ax : matplotlib axis, optional
-        Axis to plot on
-    cmap : str
-        Colormap (default: gray_r for black=solid, white=void)
-    title : str, optional
-        Plot title
-    show_colorbar : bool
-        Whether to show colorbar
-    threshold : float, optional
-        If provided, threshold densities (0/1) for crisp visualization
-
-    Returns
-    -------
-    ax : matplotlib axis
-        The axis with the plot
-    """
-    import matplotlib.pyplot as plt
-    from matplotlib.patches import Polygon
-    from matplotlib.collections import PatchCollection
-
-    if ax is None:
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-    nodes = mesh["node"]
-    elements = mesh["element"]
-
-    # Apply threshold if specified
-    if threshold is not None:
-        plot_densities = np.where(densities >= threshold, 1.0, 0.0)
-    else:
-        plot_densities = densities
-
-    patches = []
-    for elem_nodes in elements:
-        polygon = Polygon(nodes[elem_nodes], closed=True)
-        patches.append(polygon)
-
-    collection = PatchCollection(patches, cmap=cmap, edgecolor="none")
-    collection.set_array(plot_densities)
-    collection.set_clim(0, 1)
-
-    ax.add_collection(collection)
-    ax.autoscale()
-    ax.set_aspect("equal")
-
-    if title:
-        ax.set_title(title)
-
-    if show_colorbar:
-        plt.colorbar(collection, ax=ax, label=r"Density $\rho$", shrink=0.8)
-
-    ax.axis("off")
-
-    return ax
-
-
-def plot_convergence(compliance_history, volume_history=None, ax=None):
-    """
-    Plot optimization convergence.
-
-    Parameters
-    ----------
-    compliance_history : ndarray
-        Compliance values per iteration
-    volume_history : ndarray, optional
-        Volume fraction per iteration
-    ax : matplotlib axis, optional
-        Axis to plot on
-
-    Returns
-    -------
-    ax : matplotlib axis
-    """
-    import matplotlib.pyplot as plt
-
-    if ax is None:
-        fig, ax = plt.subplots(figsize=(6, 4))
-
-    iterations = np.arange(len(compliance_history))
-
-    ax.semilogy(iterations, compliance_history, 'k-', linewidth=1.5,
-                label='Compliance')
-    ax.set_xlabel('Iteration')
-    ax.set_ylabel('Compliance')
-    ax.grid(True, alpha=0.3)
-
-    if volume_history is not None:
-        ax2 = ax.twinx()
-        ax2.plot(iterations, volume_history, 'b--', linewidth=1.0,
-                 label='Volume fraction')
-        ax2.set_ylabel('Volume fraction', color='b')
-        ax2.tick_params(axis='y', labelcolor='b')
-        ax2.set_ylim(0, 1)
-
-        # Combined legend
-        lines1, labels1 = ax.get_legend_handles_labels()
-        lines2, labels2 = ax2.get_legend_handles_labels()
-        ax.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
-    else:
-        ax.legend(loc='upper right')
-
-    ax.set_title('Optimization Convergence')
-
-    return ax

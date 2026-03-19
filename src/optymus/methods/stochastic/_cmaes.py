@@ -4,7 +4,7 @@ import tracemalloc
 import jax
 import jax.numpy as jnp
 import numpy as np
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -73,7 +73,7 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
 
         # Progress tracking
         progress_bar = (
-            tqdm(range(self.max_iter), desc="CMA-ES") if self.verbose else range(self.max_iter)
+            track(range(self.max_iter), description="CMA-ES") if self.verbose else range(self.max_iter)
         )
 
         for k in progress_bar:

@@ -2,7 +2,7 @@ import time
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 from optymus.search import line_search
@@ -87,9 +87,9 @@ class NewtonRaphson(BaseOptimizer):
         num_iter = 0
 
         progres_bar = (
-            tqdm(
+            track(
                 range(self.max_iter),
-                desc=f"Newton-Raphson {num_iter}",
+                description=f"Newton-Raphson {num_iter}",
             )
             if self.verbose
             else range(self.max_iter)

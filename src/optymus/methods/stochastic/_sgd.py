@@ -2,7 +2,7 @@ import time
 
 import jax
 import jax.numpy as jnp
-from tqdm import tqdm
+from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
 
@@ -15,7 +15,7 @@ class StochasticGradientDescent(BaseOptimizer):
         path = [x]
         num_iter = 0
 
-        progress_bar = tqdm(range(self.max_iter), desc=f"SGD {num_iter}") if self.verbose else range(self.max_iter)
+        progress_bar = track(range(self.max_iter), description=f"SGD {num_iter}") if self.verbose else range(self.max_iter)
 
         for _ in progress_bar:
             grad_sum = jnp.zeros_like(x)

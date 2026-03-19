@@ -1,9 +1,6 @@
-import matplotlib.pyplot as plt
 import numpy as np
 
 from optymus.benchmark.utils._domain_functions import dcircle, ddiff, dintersect, dline, drectangle, dunion
-
-plt.rcParams.update({"font.size": 12, "font.family": "serif"})
 
 
 class TopologicalDomain:
@@ -26,9 +23,6 @@ class TopologicalDomain:
 
         boundary_conditions(Node):
             Determines the boundary conditions for a given node within the domain.
-
-        Plot(n=1000):
-            Plots the domain based on the signed distance function.
 
         compute_area(n=1_000_000):
             Calculates the approximate area of the domain using the Monte Carlo method
@@ -83,47 +77,6 @@ class TopologicalDomain:
         if self.domain_boundary_conditions is None:
             return [None, None]
         return self.domain_boundary_conditions(Node, self.domain_bounding_box)
-
-    def plot(self, n=1000):
-        """
-        Plots the domain based on the signed distance function.
-
-        Args:
-            n (int, optional): The number of points for plotting. Default is 1000.
-
-        Displays:
-            A plot of the domain based on the signed distance function.
-        """
-        x, y = np.meshgrid(
-            np.linspace(self.domain_bounding_box[0], self.domain_bounding_box[1], n),
-            np.linspace(self.domain_bounding_box[2], self.domain_bounding_box[3], n),
-        )
-        points = np.hstack([x.reshape((-1, 1)), y.reshape((-1, 1))])
-        signed_distance_function = self.signed_distance_function(points)[:, -1]
-
-        inner = np.where(signed_distance_function <= 0, 1, 0)
-
-        _, ax = plt.subplots(figsize=(8, 6))
-        _ = ax.imshow(
-            inner.reshape((n, n)),
-            extent=(
-                self.domain_bounding_box[0],
-                self.domain_bounding_box[1],
-                self.domain_bounding_box[2],
-                self.domain_bounding_box[3],
-            ),
-            origin="lower",
-            cmap="Blues",
-            alpha=0.8,
-        )
-        ax.grid(linewidth=0.5, linestyle="--", color="gray", alpha=0.5)
-        ax.contour(x, y, signed_distance_function.reshape((n, n)), levels=[0], colors="gray", linewidths=1)
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_title("Domain Visualization", fontsize=14)
-        ax.set_aspect("equal")
-
-        plt.show()
 
     def compute_area(self, n=1_000_000):
         """

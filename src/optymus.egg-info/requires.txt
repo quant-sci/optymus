@@ -1,13 +1,8 @@
-plotly==5.24.1
-nbformat>=4.2.0
 jax>=0.4.28
 jaxlib>=0.4.28
-tqdm>=4.66.4
-pandas>=2.2
 numpy==1.26.4
-matplotlib>=3.9.0
-seaborn>=0.13.2
-scikit-learn>=1.5.0
+rich>=13.0
+scipy>=1.12
 
 [dev]
 pytest~=8.2
@@ -25,14 +20,8 @@ nbsphinx==0.9.4
 ipython==8.25.0
 
 [testing]
-plotly==5.24.1
-nbformat>=4.2.0
 jax>=0.4.28
 jaxlib>=0.4.28
-tqdm>=4.66.4
-pandas>=2.2
 numpy==1.26.4
-matplotlib>=3.9.0
-seaborn>=0.13.2
-scikit-learn>=1.5.0
-ipykernel
+rich>=13.0
+scipy>=1.12

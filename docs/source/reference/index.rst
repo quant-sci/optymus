@@ -10,4 +10,3 @@ This section contains the API reference for the `optymus` library. The library i
     docs_methods
     docs_search
     docs_benchmark
-    docs_plots
