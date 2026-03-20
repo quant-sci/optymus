@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class BFGS(BaseOptimizer):
+    _default_line_search = "wolfe"
     r"""BFGS
 
     BFGS is a first-order optimization algorithm that uses the gradient of the
@@ -95,8 +95,10 @@ class BFGS(BaseOptimizer):
 
         for _ in progres_bar:
             grad = jax.grad(self.penalized_obj)(x)
-            d = jnp.dot(q, grad)
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            if jnp.linalg.norm(grad) < self.tol:
+                break
+            d = -jnp.dot(q, grad)
+            r = self._do_line_search(x, d, grad)
             x_new = self.project(r["xopt"])
             delta = x_new - x
             gamma = jax.grad(self.penalized_obj)(x_new) - grad

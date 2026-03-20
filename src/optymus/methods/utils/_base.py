@@ -1,4 +1,7 @@
+import jax
 import jax.numpy as jnp
+
+from optymus.search import backtracking_armijo, line_search, wolfe_line_search
 
 
 def _normalize_bounds(bounds, n_dims):
@@ -40,6 +43,8 @@ def _normalize_bounds(bounds, n_dims):
 
 
 class BaseOptimizer:
+    _default_line_search = "golden"
+
     def __init__(
         self,
         f_obj=None,
@@ -56,6 +61,7 @@ class BaseOptimizer:
         beta1=0.9,
         beta2=0.999,
         eps=1e-8,
+        line_search_method=None,
     ):
         self.f_obj = f_obj
         self.f_cons = f_cons
@@ -71,6 +77,7 @@ class BaseOptimizer:
         self.beta1 = beta1
         self.beta2 = beta2
         self.eps = eps
+        self.line_search_method = line_search_method if line_search_method is not None else self._default_line_search
 
         if self.bounds is not None and self.x0 is not None:
             self._lower_bounds, self._upper_bounds = _normalize_bounds(self.bounds, len(self.x0))
@@ -81,6 +88,17 @@ class BaseOptimizer:
         if self._lower_bounds is None:
             return x
         return jnp.clip(x, self._lower_bounds, self._upper_bounds)
+
+    def _do_line_search(self, x, d, grad=None):
+        if self.line_search_method == "armijo":
+            return backtracking_armijo(f=self.penalized_obj, x=x, d=d, grad=grad)
+        elif self.line_search_method == "wolfe":
+            return wolfe_line_search(
+                f=self.penalized_obj, grad_f=jax.grad(self.penalized_obj),
+                x=x, d=d, grad=grad,
+            )
+        else:
+            return line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
 
     def penalized_obj(self, x):
         penalty = 0.0

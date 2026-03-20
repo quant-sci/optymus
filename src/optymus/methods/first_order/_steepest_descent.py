@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class SteepestDescent(BaseOptimizer):
+    _default_line_search = "armijo"
     r"""Steepest Descent
 
     Steepest Descent is a first-order optimization algorithm that uses the
@@ -66,7 +66,7 @@ class SteepestDescent(BaseOptimizer):
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
 
         grad = jax.grad(self.penalized_obj)(x)
-        d = grad
+        d = -grad
         path = [x]
         alphas = []
         num_iter = 0
@@ -83,10 +83,10 @@ class SteepestDescent(BaseOptimizer):
         for _ in progres_bar:
             if jnp.linalg.norm(grad) < self.tol:
                 break
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            r = self._do_line_search(x, d, grad)
             x = self.project(r["xopt"].astype(float))
             grad = jax.grad(self.penalized_obj)(x)
-            d = grad
+            d = -grad
             path.append(x)
             alphas.append(r["alpha"])
             num_iter += 1

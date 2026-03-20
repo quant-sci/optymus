@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class NewtonRaphson(BaseOptimizer):
+    _default_line_search = "armijo"
     r"""Newton-Raphson method with different matrix types
 
     The Newton-Raphson method is a second-order optimization algorithm that uses
@@ -116,7 +116,7 @@ class NewtonRaphson(BaseOptimizer):
                 msg = f"Unknown h_type: {h_type}"
                 raise ValueError(msg)
 
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            r = self._do_line_search(x, d, g)
             x_new = self.project(r["xopt"])
 
             # BFGS inverse Hessian update

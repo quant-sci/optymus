@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class ConjugateGradient(BaseOptimizer):
+    _default_line_search = "armijo"
     r"""Conjugate Gradient
 
     Conjugate Gradient is a first-order optimization algorithm that uses the
@@ -82,7 +82,7 @@ class ConjugateGradient(BaseOptimizer):
         x = self.x0.astype(float)  # Ensure x0 is of a floating-point type
 
         grad = jax.grad(self.penalized_obj)(x)
-        d = grad
+        d = -grad
         path = [x]
         alphas = []
         num_iter = 0
@@ -99,7 +99,7 @@ class ConjugateGradient(BaseOptimizer):
         for _ in progres_bar:
             if jnp.linalg.norm(grad) <= self.tol:
                 break
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            r = self._do_line_search(x, d, grad)
             x = self.project(r["xopt"])
             new_grad = jax.grad(self.penalized_obj)(x)
             if jnp.linalg.norm(new_grad) <= self.tol:
@@ -117,8 +117,8 @@ class ConjugateGradient(BaseOptimizer):
             elif gradient_type == "dai_yuan":
                 beta = jnp.dot(new_grad, new_grad) / jnp.dot(d, new_grad - grad)
 
-            d = new_grad + beta * d
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            d = -new_grad + beta * d
+            r = self._do_line_search(x, d, new_grad)
             x = self.project(r["xopt"])
             alphas.append(r["alpha"])
             path.append(x)

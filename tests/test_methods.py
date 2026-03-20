@@ -4,6 +4,7 @@ from optymus.methods import (
     steepest_descent,
     conjugate_gradient,
     bfgs,
+    lbfgs,
     newton_raphson,
     univariate,
     powell,
@@ -57,7 +58,7 @@ def test_newton_raphson_raises_on_line_search_failure(monkeypatch):
         raise RuntimeError("line search failed")
 
     monkeypatch.setattr(
-        "optymus.methods.second_order._newton_raphson.line_search",
+        "optymus.methods.utils._base.backtracking_armijo",
         failing_line_search,
     )
 
@@ -183,3 +184,32 @@ def test_bounds_backward_compat():
                                bounds=(jnp.array([0.5, 0.5]), jnp.array([5.0, 5.0])),
                                tol=1e-6, learning_rate=0.1, max_iter=30, verbose=False)
     assert jnp.allclose(result['xopt'], bounded_expected, atol=0.05)
+
+
+# --- Line search integration tests ---
+
+def test_steepest_descent_armijo():
+    result = steepest_descent(f_obj=f_obj, x0=x0, tol=tol,
+                              max_iter=max_iter, verbose=False,
+                              line_search_method="armijo")
+    assert jnp.linalg.norm(result['xopt']) < tol
+
+
+def test_bfgs_wolfe():
+    result = bfgs(f_obj=f_obj, x0=x0, tol=tol,
+                  max_iter=max_iter, verbose=False,
+                  line_search_method="wolfe")
+    assert jnp.linalg.norm(result['xopt']) < tol
+
+
+def test_bfgs_golden_override():
+    result = bfgs(f_obj=f_obj, x0=x0, tol=tol,
+                  learning_rate=learning_rate, max_iter=max_iter, verbose=False,
+                  line_search_method="golden")
+    assert jnp.linalg.norm(result['xopt']) < tol
+
+
+def test_lbfgs():
+    result = lbfgs(f_obj=f_obj, x0=x0, tol=tol,
+                   max_iter=max_iter, verbose=False)
+    assert jnp.linalg.norm(result['xopt']) < tol
