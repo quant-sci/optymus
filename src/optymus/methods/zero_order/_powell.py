@@ -5,7 +5,6 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class Powell(BaseOptimizer):
@@ -91,7 +90,7 @@ class Powell(BaseOptimizer):
             x_prime = x.copy()
             for i in range(n):
                 d = u[i]
-                r = line_search(f=self.penalized_obj, x=x_prime, d=d, learning_rate=self.learning_rate)
+                r = self._do_line_search(x_prime, d)
                 x_prime = self.project(r["xopt"])
                 alphas.append(r["alpha"])
                 path.append(x_prime)
@@ -103,7 +102,7 @@ class Powell(BaseOptimizer):
 
             # Perform line search along the new direction
             d = u[n - 1]
-            r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
+            r = self._do_line_search(x, d)
             x_prime = self.project(r["xopt"])
 
             x = x_prime

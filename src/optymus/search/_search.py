@@ -2,18 +2,25 @@ import jax.numpy as jnp
 import numpy as np
 
 
-def bracket_minimum(func, x0, dir, alpha=0.0, learning_rate=0.01, eps=1e-5):  # noqa
+def bracket_minimum(func, x0, dir, alpha=0.0, learning_rate=0.01, eps=1e-5, max_iter=1000):  # noqa
     alpha = jnp.array(alpha)
     learning_rate = jnp.array(learning_rate)
     eps = jnp.array(eps)
-    while True:
+    best_alpha = alpha
+    best_f = func(x0 + alpha * dir)
+    for _ in range(max_iter):
         alpha = alpha + learning_rate
         f = func(x0 + alpha * dir)
+        if f < best_f:
+            best_f = f
+            best_alpha = alpha
         f_prev = func(x0 + (alpha - eps) * dir)
         if f_prev < f:
             alpha_lower = alpha - learning_rate
             alpha_upper = alpha
             return alpha_lower, alpha_upper
+    # max_iter exceeded — return best bracket found so far
+    return best_alpha - learning_rate, best_alpha + learning_rate
 
 
 def bracket(func, xa=0.0, xb=1.0, grow_limit=110.0, maxiter=1000):
@@ -179,8 +186,140 @@ def golden(func, brack=None, tol=1e-5, maxiter=1000):
     return {"xmin": xmin, "fval": fval, "num_iter": nit, "function": func, "success": success, "message": message}
 
 
-def line_search(f, x, d, learning_rate=0.01):
+def line_search(f, x, d, learning_rate=0.01, tol=1e-5):
     a, b = bracket_minimum(func=f, x0=x, dir=d, learning_rate=learning_rate)
-    alpha = golden(lambda alpha: f(x + alpha * d), brack=(a, b), tol=1e-5)["xmin"]
+    result = golden(lambda alpha: f(x + alpha * d), brack=(a, b), tol=tol)
+    alpha = result["xmin"]
     x_opt = x + alpha * d
-    return {"method_name": "Line Search", "alpha": alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": 1, "function": f}
+    return {"method_name": "Line Search", "alpha": alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": result["num_iter"], "function": f}
+
+
+def backtracking_armijo(f, x, d, grad, alpha_init=1.0, c1=1e-4, rho=0.5, max_iter=50):
+    """Backtracking line search with Armijo sufficient decrease condition.
+
+    Finds alpha satisfying: f(x + alpha*d) <= f(x) + c1*alpha*(grad @ d)
+
+    Parameters
+    ----------
+    f : callable
+        Objective function
+    x : ndarray
+        Current point
+    d : ndarray
+        Search direction (must be a descent direction: grad @ d < 0)
+    grad : ndarray
+        Gradient at current point
+    alpha_init : float
+        Initial step size
+    c1 : float
+        Armijo condition parameter
+    rho : float
+        Backtracking factor
+    max_iter : int
+        Maximum number of backtracking steps
+
+    Returns
+    -------
+    dict with alpha, xopt, fmin, num_iter
+    """
+    alpha = alpha_init
+    f0 = f(x)
+    slope = jnp.dot(grad, d)
+    num_iter = 0
+
+    for _ in range(max_iter):
+        x_new = x + alpha * d
+        if f(x_new) <= f0 + c1 * alpha * slope:
+            break
+        alpha = rho * alpha
+        num_iter += 1
+
+    x_opt = x + alpha * d
+    return {"method_name": "Backtracking Armijo", "alpha": alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": num_iter}
+
+
+def wolfe_line_search(f, grad_f, x, d, grad, alpha_init=1.0, c1=1e-4, c2=0.9, max_iter=25):
+    """Line search satisfying strong Wolfe conditions (Nocedal & Wright Algorithm 3.5/3.6).
+
+    Parameters
+    ----------
+    f : callable
+        Objective function
+    grad_f : callable
+        Gradient function
+    x : ndarray
+        Current point
+    d : ndarray
+        Search direction (must be a descent direction: grad @ d < 0)
+    grad : ndarray
+        Gradient at current point
+    alpha_init : float
+        Initial step size
+    c1 : float
+        Sufficient decrease parameter
+    c2 : float
+        Curvature condition parameter
+    max_iter : int
+        Maximum number of iterations
+
+    Returns
+    -------
+    dict with alpha, xopt, fmin, num_iter
+    """
+    f0 = f(x)
+    slope0 = jnp.dot(grad, d)
+
+    def _zoom(alpha_lo, alpha_hi, f_lo):
+        """Zoom phase (Algorithm 3.6 from Nocedal & Wright)."""
+        for _ in range(max_iter):
+            # Bisection
+            alpha_j = 0.5 * (alpha_lo + alpha_hi)
+            f_j = f(x + alpha_j * d)
+            if f_j > f0 + c1 * alpha_j * slope0 or f_j >= f_lo:
+                alpha_hi = alpha_j
+            else:
+                slope_j = jnp.dot(grad_f(x + alpha_j * d), d)
+                if jnp.abs(slope_j) <= -c2 * slope0:
+                    return alpha_j
+                if slope_j * (alpha_hi - alpha_lo) >= 0:
+                    alpha_hi = alpha_lo
+                alpha_lo = alpha_j
+                f_lo = f_j
+        return 0.5 * (alpha_lo + alpha_hi)
+
+    alpha_prev = 0.0
+    alpha_curr = alpha_init
+    f_prev = f0
+
+    best_alpha = alpha_init
+    best_f = float('inf')
+
+    for i in range(1, max_iter + 1):
+        f_curr = f(x + alpha_curr * d)
+
+        if f_curr < best_f:
+            best_f = f_curr
+            best_alpha = alpha_curr
+
+        if f_curr > f0 + c1 * alpha_curr * slope0 or (f_curr >= f_prev and i > 1):
+            alpha = _zoom(alpha_prev, alpha_curr, f_prev)
+            x_opt = x + alpha * d
+            return {"method_name": "Wolfe Line Search", "alpha": alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": i}
+
+        slope_curr = jnp.dot(grad_f(x + alpha_curr * d), d)
+        if jnp.abs(slope_curr) <= -c2 * slope0:
+            x_opt = x + alpha_curr * d
+            return {"method_name": "Wolfe Line Search", "alpha": alpha_curr, "xopt": x_opt, "fmin": f_curr, "num_iter": i}
+
+        if slope_curr >= 0:
+            alpha = _zoom(alpha_curr, alpha_prev, f_curr)
+            x_opt = x + alpha * d
+            return {"method_name": "Wolfe Line Search", "alpha": alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": i}
+
+        alpha_prev = alpha_curr
+        f_prev = f_curr
+        alpha_curr = 2.0 * alpha_curr  # Expand
+
+    # Fallback to best alpha found
+    x_opt = x + best_alpha * d
+    return {"method_name": "Wolfe Line Search", "alpha": best_alpha, "xopt": x_opt, "fmin": f(x_opt), "num_iter": max_iter}

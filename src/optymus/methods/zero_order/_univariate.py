@@ -5,7 +5,6 @@ import jax.numpy as jnp
 from rich.progress import track
 
 from optymus.methods.utils import BaseOptimizer
-from optymus.search import line_search
 
 
 class Univariate(BaseOptimizer):
@@ -79,7 +78,7 @@ class Univariate(BaseOptimizer):
                 break
             for i in range(n):
                 v = u[i]
-                r = line_search(f=self.penalized_obj, x=x, d=v, learning_rate=self.learning_rate)
+                r = self._do_line_search(x, v)
                 x = self.project(r["xopt"])
                 alphas.append(r["alpha"])
                 path.append(x)
