@@ -102,6 +102,7 @@ class RMSProp(BaseOptimizer):
                 break
             Eg2 = self.beta1 * Eg2 + (1 - self.beta1) * g**2
             x = self.learning_rate * g / (jnp.sqrt(Eg2) + self.eps)
+            x = self.project(x)
 
             path.append(x)
             eg2_list.append(Eg2)

@@ -101,6 +101,7 @@ class AdaGrad(BaseOptimizer):
             g = grad(x)
             g_sq_sum += g**2
             x -= self.learning_rate * g / (jnp.sqrt(g_sq_sum) + self.eps)
+            x = self.project(x)
 
             path.append(x)
             g_sum_list.append(g_sq_sum)

@@ -107,6 +107,7 @@ class Adamax(BaseOptimizer):
             m = self.beta1 * m + (1 - self.beta1) * g
             u = jnp.maximum(self.beta2 * u, jnp.abs(g))
             x -= self.learning_rate * m / (u + self.eps)
+            x = self.project(x)
 
             path.append(x)
             u_list.append(u)

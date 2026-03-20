@@ -114,6 +114,7 @@ class Yogi(BaseOptimizer):
             v_hat = v / (1 - self.beta2**t)
 
             x = x - self.learning_rate * m_hat / (jnp.sqrt(v_hat) + self.eps)
+            x = self.project(x)
 
             path.append(x)
             v_list.append(v)

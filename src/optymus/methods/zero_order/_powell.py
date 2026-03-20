@@ -92,7 +92,7 @@ class Powell(BaseOptimizer):
             for i in range(n):
                 d = u[i]
                 r = line_search(f=self.penalized_obj, x=x_prime, d=d, learning_rate=self.learning_rate)
-                x_prime = r["xopt"]
+                x_prime = self.project(r["xopt"])
                 alphas.append(r["alpha"])
                 path.append(x_prime)
 
@@ -104,7 +104,7 @@ class Powell(BaseOptimizer):
             # Perform line search along the new direction
             d = u[n - 1]
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x_prime = r["xopt"]
+            x_prime = self.project(r["xopt"])
 
             x = x_prime
             alphas.append(r["alpha"])

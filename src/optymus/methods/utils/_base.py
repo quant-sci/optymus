@@ -1,12 +1,50 @@
 import jax.numpy as jnp
 
 
+def _normalize_bounds(bounds, n_dims):
+    """Normalize bounds to (lower_array, upper_array) jnp arrays.
+
+    Accepts:
+      - None / () / [] → (None, None)
+      - [(lo, hi), ...] per-variable (scipy-style)
+      - (lower_array, upper_array) legacy format
+    """
+    if bounds is None or (isinstance(bounds, (tuple, list)) and len(bounds) == 0):
+        return None, None
+
+    bounds_list = list(bounds)
+
+    # Detect per-variable [(lo, hi), ...] format
+    if len(bounds_list) == n_dims and all(
+        isinstance(b, (tuple, list)) and len(b) == 2 for b in bounds_list
+    ):
+        lower = jnp.array([b[0] if b[0] is not None else -jnp.inf for b in bounds_list])
+        upper = jnp.array([b[1] if b[1] is not None else jnp.inf for b in bounds_list])
+    elif len(bounds_list) == 2:
+        # (lower_array, upper_array) format
+        lower = jnp.asarray(bounds_list[0], dtype=float)
+        upper = jnp.asarray(bounds_list[1], dtype=float)
+    else:
+        msg = f"bounds must be [(lo, hi), ...] with len={n_dims} or (lower_array, upper_array), got len={len(bounds_list)}"
+        raise ValueError(msg)
+
+    if lower.shape != (n_dims,) or upper.shape != (n_dims,):
+        msg = f"bounds arrays must have shape ({n_dims},), got {lower.shape} and {upper.shape}"
+        raise ValueError(msg)
+
+    if jnp.any(lower > upper):
+        msg = "lower bounds must be <= upper bounds"
+        raise ValueError(msg)
+
+    return lower, upper
+
+
 class BaseOptimizer:
     def __init__(
         self,
         f_obj=None,
         f_cons=None,
-        bounds=(),
+        bounds=None,
         args=(),
         args_cons=(),
         x0=None,
@@ -34,12 +72,18 @@ class BaseOptimizer:
         self.beta2 = beta2
         self.eps = eps
 
+        if self.bounds is not None and self.x0 is not None:
+            self._lower_bounds, self._upper_bounds = _normalize_bounds(self.bounds, len(self.x0))
+        else:
+            self._lower_bounds, self._upper_bounds = None, None
+
+    def project(self, x):
+        if self._lower_bounds is None:
+            return x
+        return jnp.clip(x, self._lower_bounds, self._upper_bounds)
+
     def penalized_obj(self, x):
         penalty = 0.0
-
-        if self.bounds:
-            lower_bound, upper_bound = self.bounds
-            x = jnp.clip(x, lower_bound, upper_bound)
 
         if self.f_cons is not None:
             for f_con in self.f_cons:

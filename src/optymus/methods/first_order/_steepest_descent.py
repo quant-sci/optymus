@@ -84,7 +84,7 @@ class SteepestDescent(BaseOptimizer):
             if jnp.linalg.norm(grad) < self.tol:
                 break
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r["xopt"].astype(float)
+            x = self.project(r["xopt"].astype(float))
             grad = jax.grad(self.penalized_obj)(x)
             d = grad
             path.append(x)

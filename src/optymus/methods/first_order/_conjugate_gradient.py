@@ -100,7 +100,7 @@ class ConjugateGradient(BaseOptimizer):
             if jnp.linalg.norm(grad) <= self.tol:
                 break
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r["xopt"]
+            x = self.project(r["xopt"])
             new_grad = jax.grad(self.penalized_obj)(x)
             if jnp.linalg.norm(new_grad) <= self.tol:
                 break
@@ -119,7 +119,7 @@ class ConjugateGradient(BaseOptimizer):
 
             d = new_grad + beta * d
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x = r["xopt"]
+            x = self.project(r["xopt"])
             alphas.append(r["alpha"])
             path.append(x)
             num_iter += 1

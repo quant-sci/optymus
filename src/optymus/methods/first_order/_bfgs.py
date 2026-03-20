@@ -97,7 +97,7 @@ class BFGS(BaseOptimizer):
             grad = jax.grad(self.penalized_obj)(x)
             d = jnp.dot(q, grad)
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x_new = r["xopt"]
+            x_new = self.project(r["xopt"])
             delta = x_new - x
             gamma = jax.grad(self.penalized_obj)(x_new) - grad
 
