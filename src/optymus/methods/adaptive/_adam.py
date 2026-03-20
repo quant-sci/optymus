@@ -116,6 +116,7 @@ class Adam(BaseOptimizer):
             m_hat = m / (1 - self.beta1**t)
             v_hat = v / (1 - self.beta2**t)
             x = x - self.learning_rate * m_hat / (jnp.sqrt(v_hat) + self.eps)
+            x = self.project(x)
 
             path.append(x)
             lr.append(self.learning_rate)

@@ -117,7 +117,7 @@ class NewtonRaphson(BaseOptimizer):
                 raise ValueError(msg)
 
             r = line_search(f=self.penalized_obj, x=x, d=d, learning_rate=self.learning_rate)
-            x_new = r["xopt"]
+            x_new = self.project(r["xopt"])
 
             # BFGS inverse Hessian update
             if h_type == "bfgs":

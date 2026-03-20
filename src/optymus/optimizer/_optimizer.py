@@ -62,6 +62,7 @@ class Optimizer(Report):
         constraint_method=None,
         g_cons=None,
         h_cons=None,
+        bounds=None,
         **kwargs,
     ):
         """
@@ -71,6 +72,7 @@ class Optimizer(Report):
             f_obj (function): The objective function to be minimized.
             x0 (np.ndarray): The initial guess for the minimum.
             method (str, optional): The optimization method to use. Defaults to 'steepest_descent'.
+            bounds: Variable bounds as [(lo, hi), ...] or (lower_array, upper_array).
         """
         self.f_obj = f_obj
         self.f_cons = f_cons
@@ -79,6 +81,7 @@ class Optimizer(Report):
         self.constraint_method = constraint_method
         self.g_cons = g_cons
         self.h_cons = h_cons
+        self.bounds = bounds
 
         if self.method not in METHODS:
             msg = f"Method '{method}' not vailable. Available methods: {list(METHODS.keys())}"
@@ -101,6 +104,8 @@ class Optimizer(Report):
                 raise ConstraintMethodError(msg)
 
             inner_kwargs = kwargs.copy()
+            if self.bounds is not None:
+                inner_kwargs['bounds'] = self.bounds
             penalty_r0 = inner_kwargs.pop("penalty_r0", 1.0)
             penalty_factor = inner_kwargs.pop("penalty_factor", 10.0)
             barrier_r0 = inner_kwargs.pop("barrier_r0", 1.0)
@@ -161,6 +166,8 @@ class Optimizer(Report):
             self.f_cons = g_cons
         else:
             # Run the optimization and store results
+            if self.bounds is not None:
+                kwargs['bounds'] = self.bounds
             self.opt = METHODS[self.method](f_obj=self.f_obj, f_cons=self.f_cons, x0=self.x0, **kwargs)
 
     def check_dimension(self):
