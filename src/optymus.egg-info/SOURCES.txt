@@ -54,4 +54,6 @@ src/optymus/search/__init__.py
 src/optymus/search/_search.py
 tests/test_constraint_methods.py
 tests/test_constraints_utils.py
+tests/test_convergence_diagnostics.py
+tests/test_line_search.py
 tests/test_methods.py
