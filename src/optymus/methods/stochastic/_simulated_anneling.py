@@ -50,6 +50,8 @@ class SimulatedAnnealing(BaseOptimizer):
 
         # Track optimization path
         path = [current.copy()]
+        f_history = [float(best_energy)]
+        termination_reason = "max_iter_reached"
 
         iteration = 0
         if self.verbose:
@@ -68,6 +70,7 @@ class SimulatedAnnealing(BaseOptimizer):
 
             # Check temperature stopping criterion
             if T < T_min:
+                termination_reason = "temperature_below_min"
                 break
 
             # Generate neighbor solution
@@ -105,6 +108,7 @@ class SimulatedAnnealing(BaseOptimizer):
 
             # Store path
             path.append(best.copy())
+            f_history.append(float(best_energy))
 
             if self.verbose:
                 progress.update(task, advance=1, status=f"T={T:.2e} best={best_energy:.6f}")
@@ -124,6 +128,8 @@ class SimulatedAnnealing(BaseOptimizer):
             "fmin": best_energy,
             "num_iter": iteration,
             "path": jnp.array(path),
+            "f_history": jnp.array(f_history),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
         }

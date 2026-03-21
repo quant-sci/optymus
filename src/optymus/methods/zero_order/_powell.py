@@ -71,7 +71,10 @@ class Powell(BaseOptimizer):
 
         path = [x]
         alphas = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = (
             track(
@@ -84,7 +87,10 @@ class Powell(BaseOptimizer):
 
         for _ in progress_bar:
             # Perform line search along the basis vectors
-            if jnp.linalg.norm(grad(x)) < self.tol:
+            g_norm = float(jnp.linalg.norm(grad(x)))
+            grad_norms.append(g_norm)
+            if g_norm < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
 
             x_prime = x.copy()
@@ -108,6 +114,7 @@ class Powell(BaseOptimizer):
             x = x_prime
             alphas.append(r["alpha"])
             path.append(x)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -118,6 +125,9 @@ class Powell(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "alphas": jnp.array(alphas),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

@@ -84,7 +84,10 @@ class NewtonRaphson(BaseOptimizer):
 
         path = [x]
         alphas = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progres_bar = (
             track(
@@ -97,8 +100,10 @@ class NewtonRaphson(BaseOptimizer):
 
         for _ in progres_bar:
             g = grad(x)
+            grad_norms.append(float(jnp.linalg.norm(g)))
 
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
 
             # Compute search direction based on h_type
@@ -137,6 +142,7 @@ class NewtonRaphson(BaseOptimizer):
 
             alphas.append(r["alpha"])
             path.append(x)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
 
         end_time = time.time()
@@ -152,6 +158,9 @@ class NewtonRaphson(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "alphas": jnp.array(alphas),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

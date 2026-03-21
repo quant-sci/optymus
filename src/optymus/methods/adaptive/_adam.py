@@ -95,7 +95,10 @@ class Adam(BaseOptimizer):
         v = jnp.zeros_like(x)  # Second moment estimate
         path = [x]
         lr = [self.learning_rate]
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = (
             track(
@@ -108,7 +111,9 @@ class Adam(BaseOptimizer):
 
         for t in progress_bar:
             g = grad(x)
+            grad_norms.append(float(jnp.linalg.norm(g)))
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             g = grad(x)  # Compute gradients
             m = self.beta1 * m + (1 - self.beta1) * g
@@ -120,6 +125,7 @@ class Adam(BaseOptimizer):
 
             path.append(x)
             lr.append(self.learning_rate)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
 
         end_time = time.time()
@@ -132,6 +138,9 @@ class Adam(BaseOptimizer):
             "num_iter": t,
             "path": jnp.array(path),
             "lr": jnp.array(lr),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

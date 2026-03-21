@@ -69,7 +69,10 @@ class SteepestDescent(BaseOptimizer):
         d = -grad
         path = [x]
         alphas = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = [float(jnp.linalg.norm(grad))]
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progres_bar = (
             track(
@@ -82,6 +85,7 @@ class SteepestDescent(BaseOptimizer):
 
         for _ in progres_bar:
             if jnp.linalg.norm(grad) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             r = self._do_line_search(x, d, grad)
             x = self.project(r["xopt"].astype(float))
@@ -89,6 +93,8 @@ class SteepestDescent(BaseOptimizer):
             d = -grad
             path.append(x)
             alphas.append(r["alpha"])
+            f_history.append(float(self.penalized_obj(x)))
+            grad_norms.append(float(jnp.linalg.norm(grad)))
             num_iter += 1
 
         end_time = time.time()
@@ -102,6 +108,9 @@ class SteepestDescent(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "alphas": jnp.array(alphas),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

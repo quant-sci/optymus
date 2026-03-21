@@ -82,7 +82,10 @@ class RMSProp(BaseOptimizer):
         Eg2 = jnp.zeros_like(x)
         path = [x]
         eg2_list = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = (
             track(
@@ -95,10 +98,13 @@ class RMSProp(BaseOptimizer):
 
         for _ in progress_bar:
             g = grad(x)
+            grad_norms.append(float(jnp.linalg.norm(g)))
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             g = grad(x)
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             Eg2 = self.beta1 * Eg2 + (1 - self.beta1) * g**2
             x = self.learning_rate * g / (jnp.sqrt(Eg2) + self.eps)
@@ -106,6 +112,7 @@ class RMSProp(BaseOptimizer):
 
             path.append(x)
             eg2_list.append(Eg2)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
 
         end_time = time.time()
@@ -118,6 +125,9 @@ class RMSProp(BaseOptimizer):
             "num_iter": _,
             "path": jnp.array(path),
             "eg2": jnp.array(eg2_list),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

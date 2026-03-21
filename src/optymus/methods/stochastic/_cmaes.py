@@ -68,8 +68,10 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
 
         # Track optimization path
         path = []
+        f_history = []
         best_solution = mean.copy()
         best_fitness = self.penalized_obj(mean)
+        f_history.append(float(best_fitness))
 
         # Progress tracking
         progress_bar = (
@@ -144,6 +146,7 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
 
             # Store path
             path.append(best_solution.copy())
+            f_history.append(float(best_fitness))
 
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -157,6 +160,8 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
             "fmin": best_fitness,
             "num_iter": self.max_iter,
             "path": jnp.array(path),
+            "f_history": jnp.array(f_history),
+            "termination_reason": "max_iter_reached",
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
         }

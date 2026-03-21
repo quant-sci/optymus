@@ -83,7 +83,10 @@ class AdaGrad(BaseOptimizer):
         g_sq_sum = jnp.zeros_like(x)
         path = [x]
         g_sum_list = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = (
             track(
@@ -96,7 +99,9 @@ class AdaGrad(BaseOptimizer):
 
         for _ in progress_bar:
             g = grad(x)
+            grad_norms.append(float(jnp.linalg.norm(g)))
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             g = grad(x)
             g_sq_sum += g**2
@@ -105,6 +110,7 @@ class AdaGrad(BaseOptimizer):
 
             path.append(x)
             g_sum_list.append(g_sq_sum)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
 
         end_time = time.time()
@@ -117,6 +123,9 @@ class AdaGrad(BaseOptimizer):
             "num_iter": _,
             "path": jnp.array(path),
             "g_sum": jnp.array(g_sum_list),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 
