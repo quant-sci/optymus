@@ -8,6 +8,7 @@ from optymus.methods import (
     differential_evolution,
     lbfgs,
     newton_raphson,
+    oc,
     particle_swarm,
     powell,
     rmsprop,
@@ -32,6 +33,7 @@ jax.config.update("jax_enable_x64", True)
 METHODS = {
     "univariate": univariate,
     "powell": powell,
+    "oc": oc,
     "steepest_descent": steepest_descent,
     "conjugate_gradient": conjugate_gradient,
     "bfgs": bfgs,

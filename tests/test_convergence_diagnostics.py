@@ -8,6 +8,7 @@ from optymus.methods import (
     newton_raphson,
     univariate,
     powell,
+    oc,
     adam,
     adamax,
     adagrad,
@@ -120,6 +121,22 @@ def test_stochastic_method_diagnostics(method_fn, kwargs):
     f_hist = result["f_history"]
     for i in range(1, len(f_hist)):
         assert f_hist[i] <= f_hist[i - 1] + 1e-10
+
+
+def test_oc_diagnostics():
+    oc_f_obj = lambda x: jnp.sum(x**2)
+    oc_g_con = lambda x: 1.0 - jnp.sum(x)
+    result = oc(f_obj=oc_f_obj, f_cons=[oc_g_con],
+                x0=jnp.array([0.5, 0.5]),
+                bounds=[(0.01, 2.0), (0.01, 2.0)],
+                tol=1e-4, max_iter=50, verbose=False)
+
+    assert "f_history" in result
+    assert "grad_norms" in result
+    assert "termination_reason" in result
+    assert len(result["f_history"]) >= 1
+    assert len(result["grad_norms"]) >= 1
+    assert result["termination_reason"] in ("density_change_below_tol", "max_iter_reached")
 
 
 def test_simulated_annealing_temperature_termination():

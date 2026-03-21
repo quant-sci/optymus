@@ -8,6 +8,7 @@ from optymus.methods import (
     newton_raphson,
     univariate,
     powell,
+    oc,
     adam,
     adamax,
     adagrad,
@@ -213,3 +214,50 @@ def test_lbfgs():
     result = lbfgs(f_obj=f_obj, x0=x0, tol=tol,
                    max_iter=max_iter, verbose=False)
     assert jnp.linalg.norm(result['xopt']) < tol
+
+
+# --- Optimality Criteria (OC) tests ---
+
+oc_f_obj = lambda x: jnp.sum(x**2)
+oc_g_con = lambda x: 1.0 - jnp.sum(x)  # sum(x) >= 1
+oc_x0 = jnp.array([0.5, 0.5])
+oc_bounds = [(0.01, 2.0), (0.01, 2.0)]
+
+
+def test_oc():
+    result = oc(f_obj=oc_f_obj, f_cons=[oc_g_con], x0=oc_x0, bounds=oc_bounds,
+                tol=1e-4, max_iter=200, verbose=False)
+    # Optimal: x = [0.5, 0.5] with sum(x) = 1
+    assert jnp.allclose(result['xopt'], jnp.array([0.5, 0.5]), atol=0.01)
+    assert result['termination_reason'] in ('density_change_below_tol', 'max_iter_reached')
+
+
+def test_oc_requires_bounds():
+    with pytest.raises(ValueError, match="requires bounds"):
+        oc(f_obj=oc_f_obj, f_cons=[oc_g_con], x0=oc_x0,
+           tol=1e-4, max_iter=10, verbose=False)
+
+
+def test_oc_requires_f_cons():
+    with pytest.raises(ValueError, match="requires.*constraint"):
+        oc(f_obj=oc_f_obj, x0=oc_x0, bounds=oc_bounds,
+           tol=1e-4, max_iter=10, verbose=False)
+
+
+def test_oc_via_optimizer():
+    opt = Optimizer(f_obj=oc_f_obj, f_cons=[oc_g_con], x0=oc_x0,
+                    method="oc", bounds=oc_bounds, max_iter=100, tol=1e-4, verbose=False)
+    result = opt.get_results()
+    assert 'xopt' in result
+    assert result['termination_reason'] in ('density_change_below_tol', 'max_iter_reached')
+
+
+def test_oc_high_dimension():
+    n = 10
+    result = oc(f_obj=lambda x: jnp.sum(x**2),
+                f_cons=[lambda x: 1.0 - jnp.sum(x)],
+                x0=jnp.ones(n) * 0.5,
+                bounds=[(0.01, 2.0)] * n,
+                tol=1e-4, max_iter=300, verbose=False)
+    # Optimal: x_i = 1/n = 0.1
+    assert jnp.allclose(result['xopt'], jnp.ones(n) * 0.1, atol=0.02)
