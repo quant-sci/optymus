@@ -88,7 +88,10 @@ class Adamax(BaseOptimizer):
         u = jnp.zeros_like(x)
         path = [x]
         u_list = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = (
             track(
@@ -101,7 +104,9 @@ class Adamax(BaseOptimizer):
 
         for _ in progress_bar:
             g = grad(x)
+            grad_norms.append(float(jnp.linalg.norm(g)))
             if jnp.linalg.norm(g) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             g = grad(x)
             m = self.beta1 * m + (1 - self.beta1) * g
@@ -111,6 +116,7 @@ class Adamax(BaseOptimizer):
 
             path.append(x)
             u_list.append(u)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
 
         end_time = time.time()
@@ -123,6 +129,9 @@ class Adamax(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "u": jnp.array(u_list),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

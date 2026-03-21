@@ -62,7 +62,10 @@ class Univariate(BaseOptimizer):
         u = jnp.identity(n)
         path = [x]
         alphas = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progres_bar = (
             track(
@@ -74,7 +77,10 @@ class Univariate(BaseOptimizer):
         )
 
         for _ in progres_bar:
-            if jnp.linalg.norm(jax.grad(self.penalized_obj)(x)) < self.tol:
+            g_norm = float(jnp.linalg.norm(jax.grad(self.penalized_obj)(x)))
+            grad_norms.append(g_norm)
+            if g_norm < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             for i in range(n):
                 v = u[i]
@@ -82,6 +88,7 @@ class Univariate(BaseOptimizer):
                 x = self.project(r["xopt"])
                 alphas.append(r["alpha"])
                 path.append(x)
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -92,6 +99,9 @@ class Univariate(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "alphas": jnp.array(alphas),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

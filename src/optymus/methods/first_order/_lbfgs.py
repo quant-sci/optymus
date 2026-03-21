@@ -81,7 +81,10 @@ class LBFGS(BaseOptimizer):
 
         path = [x]
         alphas = []
+        f_history = [float(self.penalized_obj(x))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
         q = jnp.identity(len(x))  # Initial approximation of the inverse Hessian
 
         progres_bar = (
@@ -95,7 +98,9 @@ class LBFGS(BaseOptimizer):
 
         for _ in progres_bar:
             grad = jax.grad(self.penalized_obj)(x)
+            grad_norms.append(float(jnp.linalg.norm(grad)))
             if jnp.linalg.norm(grad) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
             d = -jnp.dot(q, grad)
             r = self._do_line_search(x, d, grad)
@@ -104,6 +109,7 @@ class LBFGS(BaseOptimizer):
             gamma = jax.grad(self.penalized_obj)(x_new) - grad
 
             if jnp.linalg.norm(delta) < self.tol:
+                termination_reason = "step_size_below_tol"
                 break
 
             rho = 1.0 / jnp.dot(delta, gamma)
@@ -114,6 +120,7 @@ class LBFGS(BaseOptimizer):
             x = x_new
             path.append(x)
             alphas.append(r["alpha"])
+            f_history.append(float(self.penalized_obj(x)))
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -125,6 +132,9 @@ class LBFGS(BaseOptimizer):
             "num_iter": num_iter,
             "path": jnp.array(path),
             "alphas": jnp.array(alphas),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

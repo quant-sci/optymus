@@ -45,6 +45,7 @@ class ParticleSwarmOptimization(BaseOptimizer):
         pbest_val = jnp.array([self.penalized_obj(x) for x in X])
         gbest = pbest[jnp.argmin(pbest_val)].copy()
         gbest_val = jnp.min(pbest_val)
+        f_history = [float(gbest_val)]
 
         progres_bar = (
             track(range(self.max_iter), description="Particle Swarm Optimization") if self.verbose else range(self.max_iter)
@@ -98,6 +99,7 @@ class ParticleSwarmOptimization(BaseOptimizer):
             v_diversity = jnp.linalg.norm(jnp.std(V, axis=0))
             particle_diversity.append(p_diversity)
             velocity_diversity.append(v_diversity)
+            f_history.append(float(gbest_val))
 
             num_iter += 1
 
@@ -116,6 +118,8 @@ class ParticleSwarmOptimization(BaseOptimizer):
             "num_iter": num_iter,
             "path_particles": path,
             "path": jnp.array(path_gbest),
+            "f_history": jnp.array(f_history),
+            "termination_reason": "max_iter_reached",
             "time": elapsed_time,
             "memory_peak": peak / 1e6,  # Peak memory in MB
             "particle_diversity": particle_diversity,

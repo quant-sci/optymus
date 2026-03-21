@@ -179,15 +179,17 @@ class Optimizer(Report):
         return self.opt
 
     def repr_info(self):
+        attributes = {
+            "Initial Guess": self.x0,
+            "Optimal Solution": self.opt.get("xopt", "N/A"),
+            "Objective Function Value": self.opt.get("fmin", "N/A"),
+            "Number of Iterations": self.opt.get("num_iter", "N/A"),
+            "Termination Reason": self.opt.get("termination_reason", "N/A"),
+            "Time Elapsed": round(self.opt.get("time", "N/A"), 4),
+        }
         return {
-            "method_name": self.method,  # Ensure this is a string or valid method name
-            "attributes": {
-                "Initial Guess": self.x0,
-                "Optimal Solution": self.opt.get("xopt", "N/A"),
-                "Objective Function Value": self.opt.get("fmin", "N/A"),
-                "Number of Iterations": self.opt.get("num_iter", "N/A"),
-                "Time Elapsed": round(self.opt.get("time", "N/A"), 4),
-            },
+            "method_name": self.method,
+            "attributes": attributes,
         }
 
     def report(self):

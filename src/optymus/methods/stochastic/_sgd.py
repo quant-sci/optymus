@@ -13,7 +13,10 @@ class StochasticGradientDescent(BaseOptimizer):
         x = x0.astype(float)
 
         path = [x]
+        f_history = [float(self.f_obj(x, data, *self.args))]
+        grad_norms = []
         num_iter = 0
+        termination_reason = "max_iter_reached"
 
         progress_bar = track(range(self.max_iter), description=f"SGD {num_iter}") if self.verbose else range(self.max_iter)
 
@@ -25,12 +28,15 @@ class StochasticGradientDescent(BaseOptimizer):
                 grad_sum += grad
 
             avg_grad = grad_sum / len(data)
+            grad_norms.append(float(jnp.linalg.norm(avg_grad)))
 
             if jnp.linalg.norm(avg_grad) < self.tol:
+                termination_reason = "gradient_norm_below_tol"
                 break
 
             x = x - self.learning_rate * avg_grad
             path.append(x)
+            f_history.append(float(self.f_obj(x, data, *self.args)))
             num_iter += 1
 
         end_time = time.time()
@@ -45,6 +51,9 @@ class StochasticGradientDescent(BaseOptimizer):
             "fmin": self.f_obj(x, data, *self.args),
             "num_iter": num_iter,
             "path": jnp.array(path),
+            "f_history": jnp.array(f_history),
+            "grad_norms": jnp.array(grad_norms),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
         }
 

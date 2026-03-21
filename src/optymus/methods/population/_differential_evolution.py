@@ -47,6 +47,7 @@ class DifferentialEvolution(BaseOptimizer):
         best_idx = jnp.argmin(fitness_values)
         gbest = X[best_idx].copy()
         gbest_val = fitness_values[best_idx]
+        f_history = [float(gbest_val)]
 
         # Progress tracking
         progress_bar = (
@@ -90,6 +91,7 @@ class DifferentialEvolution(BaseOptimizer):
             # Store X state and global best
             path[k].append(X.copy())
             path_gbest.append(gbest.copy())
+            f_history.append(float(gbest_val))
 
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -104,6 +106,8 @@ class DifferentialEvolution(BaseOptimizer):
             "num_iter": self.max_iter,
             "path_particles": path,
             "path": jnp.array(path_gbest),
+            "f_history": jnp.array(f_history),
+            "termination_reason": "max_iter_reached",
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
         }

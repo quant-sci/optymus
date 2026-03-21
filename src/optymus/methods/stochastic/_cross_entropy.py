@@ -49,8 +49,11 @@ class CrossEntropy(BaseOptimizer):
 
         # Track optimization path
         path = [mean.copy()]
+        f_history = []
         best_solution = mean.copy()
         best_fitness = self.penalized_obj(mean)
+        f_history.append(float(best_fitness))
+        termination_reason = "max_iter_reached"
 
         if self.verbose:
             progress = Progress(
@@ -99,12 +102,14 @@ class CrossEntropy(BaseOptimizer):
 
             # Store path
             path.append(best_solution.copy())
+            f_history.append(float(best_fitness))
 
             if self.verbose:
                 progress.update(task, advance=1, status=f"best={best_fitness:.6f} std={jnp.mean(std):.4f}")
 
             # Check for convergence (std too small)
             if jnp.all(std <= min_std):
+                termination_reason = "std_below_min"
                 break
 
         if self.verbose:
@@ -122,6 +127,8 @@ class CrossEntropy(BaseOptimizer):
             "fmin": best_fitness,
             "num_iter": k + 1,
             "path": jnp.array(path),
+            "f_history": jnp.array(f_history),
+            "termination_reason": termination_reason,
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
         }
