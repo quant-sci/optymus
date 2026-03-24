@@ -46,15 +46,7 @@
    # Generate polygonal mesh
    result = polymesher(domain=domain, num_elements=100)
    ```
-
-## Documentation
-
-Visit the [official documentation](https://optymus.readthedocs.io/en/latest/) for:
-- Complete API reference
-- Optimization method guides
-- Mechanical engineering examples
-- Topology optimization tutorials
-
+   
 ## Citation
 
 If you use `optymus` in your research, please cite:
