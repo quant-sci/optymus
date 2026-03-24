@@ -11,14 +11,6 @@
 
 `optymus` is a Python library for solving optimization problems in mechanical engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library is designed for structural optimization, topology optimization, and general-purpose numerical optimization.
 
-## Key Features
-
-- **Topology Optimization**: PolyMesher-based mesh generation with signed distance functions
-- **Pre-built Engineering Domains**: Cook membrane, Michell truss, MBB beam, Wrench, Suspension
-- **Structural Analysis Support**: Boundary conditions, load definitions, and FEM-ready domains
-- **Multiple Optimization Methods**: Gradient-based (BFGS, Conjugate Gradient, Newton), adaptive (Adam, AdaGrad), and evolutionary (CMA-ES, Differential Evolution, Particle Swarm)
-- **Constraint Handling**: Support for equality and inequality constraints via penalty methods
-
 ## Getting Started
 
 1. Install optymus:
