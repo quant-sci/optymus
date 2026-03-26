@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class BFGS(BaseOptimizer):
@@ -87,14 +88,7 @@ class BFGS(BaseOptimizer):
         termination_reason = "max_iter_reached"
         q = jnp.identity(len(x))  # Initial approximation of the inverse Hessian
 
-        progres_bar = (
-            track(
-                range(self.max_iter),
-                description=f"BFGS {num_iter}",
-            )
-            if self.verbose
-            else range(self.max_iter)
-        )
+        progres_bar = tqdm(range(self.max_iter), desc="BFGS", disable=not self.verbose)
 
         for _ in progres_bar:
             grad = jax.grad(self.penalized_obj)(x)
@@ -124,7 +118,7 @@ class BFGS(BaseOptimizer):
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "BFGS" if not self.f_cons else "BFGS with Penalty",
             "x0": self.x0,
             "xopt": x,
@@ -136,7 +130,7 @@ class BFGS(BaseOptimizer):
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def bfgs(**kwargs):

@@ -1,7 +1,7 @@
 jax>=0.4.28
 jaxlib>=0.4.28
 numpy==1.26.4
-rich>=13.0
+tqdm>=4.60
 scipy>=1.12
 
 [dev]
@@ -23,5 +23,5 @@ ipython==8.25.0
 jax>=0.4.28
 jaxlib>=0.4.28
 numpy==1.26.4
-rich>=13.0
+tqdm>=4.60
 scipy>=1.12

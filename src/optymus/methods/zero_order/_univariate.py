@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class Univariate(BaseOptimizer):
@@ -67,14 +68,7 @@ class Univariate(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progres_bar = (
-            track(
-                range(self.max_iter),
-                description=f"Univariant {num_iter}",
-            )
-            if self.verbose
-            else range(self.max_iter)
-        )
+        progres_bar = tqdm(range(self.max_iter), desc="Univariate", disable=not self.verbose)
 
         for _ in progres_bar:
             g_norm = float(jnp.linalg.norm(jax.grad(self.penalized_obj)(x)))
@@ -92,7 +86,7 @@ class Univariate(BaseOptimizer):
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "Univariant" if not self.f_cons else "Univariant with Penalty",
             "xopt": x,
             "fmin": self.f_obj(x),
@@ -103,7 +97,7 @@ class Univariate(BaseOptimizer):
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def univariate(**kwargs):

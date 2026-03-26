@@ -26,8 +26,6 @@ from optymus.optimizer.utils.constraints import (
     run_barrier_method,
     run_penalty_method,
 )
-from optymus.optimizer.utils.report import Report
-
 jax.config.update("jax_enable_x64", True)
 
 METHODS = {
@@ -54,7 +52,7 @@ METHODS = {
 
 
 
-class Optimizer(Report):
+class Optimizer:
     def __init__(
         self,
         f_obj=None,
@@ -177,23 +175,15 @@ class Optimizer(Report):
         return len(self.x0)
 
     def get_results(self):
-        """Returns the optimization results dictionary."""
+        """Returns the optimization results."""
         return self.opt
 
-    def repr_info(self):
-        attributes = {
-            "Initial Guess": self.x0,
-            "Optimal Solution": self.opt.get("xopt", "N/A"),
-            "Objective Function Value": self.opt.get("fmin", "N/A"),
-            "Number of Iterations": self.opt.get("num_iter", "N/A"),
-            "Termination Reason": self.opt.get("termination_reason", "N/A"),
-            "Time Elapsed": round(self.opt.get("time", "N/A"), 4),
-        }
-        return {
-            "method_name": self.method,
-            "attributes": attributes,
-        }
-
     def report(self):
-        """Generates a report of the optimization results."""
-        self.show()
+        """Prints the optimization results."""
+        print(self.opt)
+
+    def __repr__(self):
+        return repr(self.opt)
+
+    def _repr_mimebundle_(self, **_):
+        return {"text/plain": repr(self.opt)}

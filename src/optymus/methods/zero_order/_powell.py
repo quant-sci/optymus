@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class Powell(BaseOptimizer):
@@ -76,14 +77,7 @@ class Powell(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progress_bar = (
-            track(
-                range(self.max_iter),
-                description=f"Powell {num_iter}",
-            )
-            if self.verbose
-            else range(self.max_iter)
-        )
+        progress_bar = tqdm(range(self.max_iter), desc="Powell", disable=not self.verbose)
 
         for _ in progress_bar:
             # Perform line search along the basis vectors
@@ -118,7 +112,7 @@ class Powell(BaseOptimizer):
             num_iter += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "Powell" if not self.f_cons else "Powell with Penalty",
             "xopt": x,
             "fmin": self.f_obj(x, *self.args),
@@ -129,7 +123,7 @@ class Powell(BaseOptimizer):
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def powell(**kwargs):

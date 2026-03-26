@@ -4,9 +4,10 @@ import tracemalloc
 import jax
 import jax.numpy as jnp
 import numpy as np
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class ParticleSwarmOptimization(BaseOptimizer):
@@ -47,9 +48,7 @@ class ParticleSwarmOptimization(BaseOptimizer):
         gbest_val = jnp.min(pbest_val)
         f_history = [float(gbest_val)]
 
-        progres_bar = (
-            track(range(self.max_iter), description="Particle Swarm Optimization") if self.verbose else range(self.max_iter)
-        )
+        progres_bar = tqdm(range(self.max_iter), desc="Particle Swarm Optimization", disable=not self.verbose)
 
         for i in progres_bar:
             # Generate new keys for each iteration
@@ -108,7 +107,7 @@ class ParticleSwarmOptimization(BaseOptimizer):
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()  # Stop memory tracking
 
-        return {
+        return OptimizeResult({
             "method_name": "Particle Swarm Optimization"
             if not self.f_cons
             else "Particle Swarm Optimization with Penalty",
@@ -121,10 +120,10 @@ class ParticleSwarmOptimization(BaseOptimizer):
             "f_history": jnp.array(f_history),
             "termination_reason": "max_iter_reached",
             "time": elapsed_time,
-            "memory_peak": peak / 1e6,  # Peak memory in MB
+            "memory_peak": peak / 1e6,
             "particle_diversity": particle_diversity,
             "velocity_diversity": velocity_diversity,
-        }
+        })
 
 
 

@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 jax.config.update("jax_enable_x64", True)
 
@@ -87,14 +88,7 @@ class RMSProp(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progress_bar = (
-            track(
-                range(1, self.max_iter + 1),
-                description=f"RMSProp {num_iter}",
-            )
-            if self.verbose
-            else range(1, self.max_iter + 1)
-        )
+        progress_bar = tqdm(range(1, self.max_iter + 1), desc="RMSProp", disable=not self.verbose)
 
         for _ in progress_bar:
             g = grad(x)
@@ -117,19 +111,19 @@ class RMSProp(BaseOptimizer):
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "RMSprop" if not self.f_cons else "RMSprop with Penalty",
             "x0": self.x0,
             "xopt": x,
             "fmin": self.f_obj(x),
-            "num_iter": _,
+            "num_iter": num_iter,
             "path": jnp.array(path),
             "eg2": jnp.array(eg2_list),
             "f_history": jnp.array(f_history),
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def rmsprop(**kwargs):

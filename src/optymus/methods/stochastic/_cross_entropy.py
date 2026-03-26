@@ -3,9 +3,10 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class CrossEntropy(BaseOptimizer):
@@ -55,18 +56,9 @@ class CrossEntropy(BaseOptimizer):
         f_history.append(float(best_fitness))
         termination_reason = "max_iter_reached"
 
-        if self.verbose:
-            progress = Progress(
-                TextColumn("[progress.description]{task.description}"),
-                BarColumn(),
-                TaskProgressColumn(),
-                TimeRemainingColumn(),
-                TextColumn("{task.fields[status]}"),
-            )
-            task = progress.add_task("Cross-Entropy", total=self.max_iter, status="")
-            progress.start()
+        pbar = tqdm(range(self.max_iter), desc="Cross-Entropy", disable=not self.verbose)
 
-        for k in range(self.max_iter):
+        for k in pbar:
             # Sample population from Gaussian distribution
             key, subkey = jax.random.split(key)
             samples = mean + std * jax.random.normal(subkey, shape=(pop_size, n))
@@ -105,22 +97,19 @@ class CrossEntropy(BaseOptimizer):
             f_history.append(float(best_fitness))
 
             if self.verbose:
-                progress.update(task, advance=1, status=f"best={best_fitness:.6f} std={jnp.mean(std):.4f}")
+                pbar.set_postfix(best=f"{best_fitness:.6f}", std=f"{jnp.mean(std):.4f}")
 
             # Check for convergence (std too small)
             if jnp.all(std <= min_std):
                 termination_reason = "std_below_min"
                 break
 
-        if self.verbose:
-            progress.stop()
-
         end_time = time.time()
         elapsed_time = end_time - start_time
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        return {
+        return OptimizeResult({
             "method_name": "Cross-Entropy" if not self.f_cons else "Cross-Entropy with Penalty",
             "x0": (lb + ub) / 2.0,
             "xopt": best_solution,
@@ -131,7 +120,7 @@ class CrossEntropy(BaseOptimizer):
             "termination_reason": termination_reason,
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
-        }
+        })
 
 
 def cross_entropy(

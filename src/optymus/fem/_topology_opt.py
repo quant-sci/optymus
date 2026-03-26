@@ -8,7 +8,6 @@ using the optymus optimization methods.
 import numpy as np
 import jax
 import jax.numpy as jnp
-from rich.console import Console
 
 from ._compliance import ComplianceObjective
 
@@ -224,10 +223,9 @@ def optimality_criteria(mesh, volume_fraction=0.5, max_iter=100,
     compliance_history = []
     volume_history = []
 
-    console = Console() if verbose else None
     if verbose:
-        console.print(f"{'Iter':>5} {'Compliance':>12} {'Volume':>10} {'Change':>10}")
-        console.print("-" * 40)
+        print(f"{'Iter':>5} {'Compliance':>12} {'Volume':>10} {'Change':>10}")
+        print("-" * 40)
 
     for iteration in range(max_iter):
         # Compute compliance and sensitivity
@@ -272,11 +270,11 @@ def optimality_criteria(mesh, volume_fraction=0.5, max_iter=100,
         x_old = x.copy()
 
         if verbose:
-            console.print(f"{iteration:5d} {c:12.4f} {volume_history[-1]:10.4f} {change:10.6f}")
+            print(f"{iteration:5d} {c:12.4f} {volume_history[-1]:10.4f} {change:10.6f}")
 
         if change < tol and iteration > 10:
             if verbose:
-                console.print(f"\nConverged after {iteration + 1} iterations")
+                print(f"\nConverged after {iteration + 1} iterations")
             break
 
     return {

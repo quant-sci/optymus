@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class OptimalityCriteria(BaseOptimizer):
@@ -98,11 +99,7 @@ class OptimalityCriteria(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progress_bar = (
-            track(range(self.max_iter), description="Optimality Criteria")
-            if self.verbose
-            else range(self.max_iter)
-        )
+        progress_bar = tqdm(range(self.max_iter), desc="Optimality Criteria", disable=not self.verbose)
 
         for _ in progress_bar:
             df_dx = grad_f(x)
@@ -156,7 +153,7 @@ class OptimalityCriteria(BaseOptimizer):
         end_time = time.time()
         elapsed_time = end_time - start_time
 
-        return {
+        return OptimizeResult({
             "method_name": "Optimality Criteria (OC)",
             "x0": self.x0,
             "xopt": x,
@@ -167,7 +164,7 @@ class OptimalityCriteria(BaseOptimizer):
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def oc(move=0.2, eta=0.5, **kwargs):

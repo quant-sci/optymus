@@ -3,9 +3,10 @@ import tracemalloc
 
 import jax
 import jax.numpy as jnp
-from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class SimulatedAnnealing(BaseOptimizer):
@@ -54,18 +55,9 @@ class SimulatedAnnealing(BaseOptimizer):
         termination_reason = "max_iter_reached"
 
         iteration = 0
-        if self.verbose:
-            progress = Progress(
-                TextColumn("[progress.description]{task.description}"),
-                BarColumn(),
-                TaskProgressColumn(),
-                TimeRemainingColumn(),
-                TextColumn("{task.fields[status]}"),
-            )
-            task = progress.add_task("Simulated Annealing", total=self.max_iter, status="")
-            progress.start()
+        pbar = tqdm(range(self.max_iter), desc="Simulated Annealing", disable=not self.verbose)
 
-        for k in range(self.max_iter):
+        for k in pbar:
             iteration = k + 1
 
             # Check temperature stopping criterion
@@ -111,17 +103,14 @@ class SimulatedAnnealing(BaseOptimizer):
             f_history.append(float(best_energy))
 
             if self.verbose:
-                progress.update(task, advance=1, status=f"T={T:.2e} best={best_energy:.6f}")
-
-        if self.verbose:
-            progress.stop()
+                pbar.set_postfix(T=f"{T:.2e}", best=f"{best_energy:.6f}")
 
         end_time = time.time()
         elapsed_time = end_time - start_time
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        return {
+        return OptimizeResult({
             "method_name": "Simulated Annealing" if not self.f_cons else "Simulated Annealing with Penalty",
             "x0": (lb + ub) / 2.0 if self.x0 is None else jnp.array(self.x0),
             "xopt": best,
@@ -132,7 +121,7 @@ class SimulatedAnnealing(BaseOptimizer):
             "termination_reason": termination_reason,
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
-        }
+        })
 
 
 def simulated_annealing(

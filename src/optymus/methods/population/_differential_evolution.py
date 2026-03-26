@@ -4,9 +4,10 @@ import tracemalloc
 import jax
 import jax.numpy as jnp
 import numpy as np
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class DifferentialEvolution(BaseOptimizer):
@@ -50,9 +51,7 @@ class DifferentialEvolution(BaseOptimizer):
         f_history = [float(gbest_val)]
 
         # Progress tracking
-        progress_bar = (
-            track(range(self.max_iter), description="Differential Evolution") if self.verbose else range(self.max_iter)
-        )
+        progress_bar = tqdm(range(self.max_iter), desc="Differential Evolution", disable=not self.verbose)
 
         for k in progress_bar:
             # Iterate over the population
@@ -98,7 +97,7 @@ class DifferentialEvolution(BaseOptimizer):
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        return {
+        return OptimizeResult({
             "method_name": "Differential Evolution" if not self.f_cons else "Differential Evolution with Penalty",
             "x0": self.x0,
             "xopt": gbest,
@@ -110,7 +109,7 @@ class DifferentialEvolution(BaseOptimizer):
             "termination_reason": "max_iter_reached",
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
-        }
+        })
 
 
 

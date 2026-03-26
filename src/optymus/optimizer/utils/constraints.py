@@ -4,6 +4,8 @@ from collections.abc import Callable, Iterable
 import jax
 import jax.numpy as jnp
 
+from optymus.methods.utils._result import OptimizeResult
+
 
 class ConstraintMethodError(ValueError):
     pass
@@ -270,7 +272,8 @@ def run_penalty_method(
     if reached_max and violation_history:
         if violation_history[-1] > constraint_tol:
             warnings.append("max_outer_iter_reached")
-    return {
+    termination_reason = "max_outer_iter_reached" if reached_max else "constraint_converged"
+    return OptimizeResult({
         "method_name": f"{inner_method.__name__} with Penalty Method",
         "x0": x0,
         "xopt": x,
@@ -281,9 +284,10 @@ def run_penalty_method(
         "constraint_violation": violation_history[-1] if violation_history else jnp.array(0.0),
         "constraint_violation_history": jnp.array(violation_history),
         "r_p_history": jnp.array(r_p_history),
+        "termination_reason": termination_reason,
         "warnings": warnings,
         "time": elapsed_time,
-    }
+    })
 
 
 def run_barrier_method(
@@ -406,7 +410,8 @@ def run_barrier_method(
     if reached_max and violation_history:
         if violation_history[-1] > constraint_tol:
             warnings.append("max_outer_iter_reached")
-    return {
+    termination_reason = "max_outer_iter_reached" if reached_max else "constraint_converged"
+    return OptimizeResult({
         "method_name": f"{inner_method.__name__} with Barrier Method",
         "x0": x0,
         "xopt": x,
@@ -419,6 +424,7 @@ def run_barrier_method(
         "r_p_history": jnp.array(r_p_history),
         "rb_history": jnp.array(rb_history),
         "barrier_type": barrier_type,
+        "termination_reason": termination_reason,
         "warnings": warnings,
         "time": elapsed_time,
-    }
+    })

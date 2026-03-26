@@ -4,9 +4,10 @@ import tracemalloc
 import jax
 import jax.numpy as jnp
 import numpy as np
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 
 class CovarianceMatrixAdaptation(BaseOptimizer):
@@ -74,9 +75,7 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
         f_history.append(float(best_fitness))
 
         # Progress tracking
-        progress_bar = (
-            track(range(self.max_iter), description="CMA-ES") if self.verbose else range(self.max_iter)
-        )
+        progress_bar = tqdm(range(self.max_iter), desc="CMA-ES", disable=not self.verbose)
 
         for k in progress_bar:
             # Sample population
@@ -153,7 +152,7 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
         _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        return {
+        return OptimizeResult({
             "method_name": "CMA-ES" if not self.f_cons else "CMA-ES with Penalty",
             "x0": (lb + ub) / 2.0,
             "xopt": best_solution,
@@ -164,7 +163,7 @@ class CovarianceMatrixAdaptation(BaseOptimizer):
             "termination_reason": "max_iter_reached",
             "time": elapsed_time,
             "memory_peak": peak / 1e6,
-        }
+        })
 
 
 def cmaes(

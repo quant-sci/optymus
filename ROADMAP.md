@@ -12,8 +12,8 @@
 - [x] Improve line search integration across all gradient methods (steepest descent, BFGS, L-BFGS, conjugate gradient)
 - [x] Add convergence diagnostics: iteration history, termination reasons, gradient norms
 - [x] Implement Optimality Criteria (OC) method (stub exists at `src/optymus/methods/zero_order/_oc.py`)
-- [ ] Unified result object with convergence info across all method families
-- [ ] Replace rich for a more clean and minimalist logging
+- [x] Unified result object with convergence info across all method families
+- [x] Replace rich for a more clean and minimalist logging
 
 ## 2. FEM & Engineering v0.1.3
 

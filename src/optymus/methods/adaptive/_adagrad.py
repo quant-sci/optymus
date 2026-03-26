@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 jax.config.update("jax_enable_x64", True)
 
@@ -88,14 +89,7 @@ class AdaGrad(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progress_bar = (
-            track(
-                range(1, self.max_iter + 1),
-                description=f"Adagrad {num_iter}",
-            )
-            if self.verbose
-            else range(1, self.max_iter + 1)
-        )
+        progress_bar = tqdm(range(1, self.max_iter + 1), desc="Adagrad", disable=not self.verbose)
 
         for _ in progress_bar:
             g = grad(x)
@@ -115,19 +109,19 @@ class AdaGrad(BaseOptimizer):
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "Adagrad" if not self.f_cons else "Adagrad with Penalty",
             "x0": self.x0,
             "xopt": x,
             "fmin": self.f_obj(x),
-            "num_iter": _,
+            "num_iter": num_iter,
             "path": jnp.array(path),
             "g_sum": jnp.array(g_sum_list),
             "f_history": jnp.array(f_history),
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def adagrad(**kwargs):

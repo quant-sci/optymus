@@ -1,5 +1,5 @@
 import numpy as np
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus import Optimizer
 
@@ -26,7 +26,7 @@ def methods_comparison(f_obj=None, initial_point=None, **kwargs):
     results = []
     path_dict = {}
 
-    for method in track(METHODS, description="Comparing methods"):
+    for method in tqdm(METHODS, desc="Comparing methods"):
         time_mean = []
         for _ in range(10):
             opt = Optimizer(f_obj=f_obj, x0=initial_point, method=method, verbose=False, **kwargs)

@@ -1,7 +1,7 @@
 import time
 
 import numpy as np
-from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
+from tqdm.auto import tqdm
 from scipy.sparse import csgraph, csr_matrix
 from scipy.spatial import Voronoi
 
@@ -60,15 +60,7 @@ def polymesher(domain, n_elements, max_iter, initial_points=None):
     initial_points_copy = initial_points.copy()
     time_acc = 0
 
-    progress = Progress(
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TaskProgressColumn(),
-        TimeRemainingColumn(),
-        TextColumn("{task.fields[status]}"),
-    )
-    progress_task = progress.add_task("PolyMesher", total=max_iter, status="")
-    progress.start()
+    pbar = tqdm(total=max_iter, desc="PolyMesher")
     while pointer < max_iter and error > tolerance:
         start_time = time.time()
         alpha = c * np.sqrt(area / n_elements)  # a distance value proportional to the width of an element
@@ -93,9 +85,10 @@ def polymesher(domain, n_elements, max_iter, initial_points=None):
         end_time = time.time()
         time_acc += end_time - start_time
 
-        progress.update(progress_task, advance=1, status=f"err={error:.4f} iter={pointer} t={time_acc:.1f}s")
+        pbar.update(1)
+        pbar.set_postfix(err=f"{error:.4f}", iter=pointer, t=f"{time_acc:.1f}s")
 
-    progress.stop()
+    pbar.close()
 
     node, element = poly_unique_nodes(node_coordinates=node, element_vertices=element[:n_elements])
     node, element = poly_collapse_small_edges(node_coordinates=node, element_vertices=element, eps=0.1)

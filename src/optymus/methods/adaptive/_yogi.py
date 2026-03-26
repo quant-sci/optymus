@@ -2,9 +2,10 @@ import time
 
 import jax
 import jax.numpy as jnp
-from rich.progress import track
+from tqdm.auto import tqdm
 
 from optymus.methods.utils import BaseOptimizer
+from optymus.methods.utils._result import OptimizeResult
 
 jax.config.update("jax_enable_x64", True)
 
@@ -97,14 +98,7 @@ class Yogi(BaseOptimizer):
         num_iter = 0
         termination_reason = "max_iter_reached"
 
-        progress_bar = (
-            track(
-                range(1, self.max_iter + 1),
-                description=f"Yogi {num_iter}",
-            )
-            if self.verbose
-            else range(1, self.max_iter + 1)
-        )
+        progress_bar = tqdm(range(1, self.max_iter + 1), desc="Yogi", disable=not self.verbose)
 
         for t in progress_bar:
             g = grad(x)
@@ -128,7 +122,7 @@ class Yogi(BaseOptimizer):
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        return {
+        return OptimizeResult({
             "method_name": "Yogi" if not self.f_cons else "Yogi with Penalty",
             "x0": self.x0,
             "xopt": x,
@@ -140,7 +134,7 @@ class Yogi(BaseOptimizer):
             "grad_norms": jnp.array(grad_norms),
             "termination_reason": termination_reason,
             "time": elapsed_time,
-        }
+        })
 
 
 def yogi(**kwargs):
