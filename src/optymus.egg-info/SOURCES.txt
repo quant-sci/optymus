@@ -50,6 +50,11 @@ src/optymus/methods/zero_order/_powell.py
 src/optymus/methods/zero_order/_univariate.py
 src/optymus/optimizer/_optimizer.py
 src/optymus/optimizer/utils/constraints.py
+src/optymus/routing/__init__.py
+src/optymus/routing/_local_search.py
+src/optymus/routing/_savings.py
+src/optymus/routing/_utils.py
+src/optymus/routing/_vrp.py
 src/optymus/search/__init__.py
 src/optymus/search/_search.py
 tests/test_constraint_methods.py

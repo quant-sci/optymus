@@ -33,18 +33,12 @@ Requires-Dist: nbsphinx==0.9.4; extra == "docs"
 Requires-Dist: ipython==8.25.0; extra == "docs"
 Dynamic: license-file
 
-<h1 align="left">
-<img src="logo.png" width="100">
-</h1>
-
 [![PyPI](https://img.shields.io/pypi/v/optymus)](https://pypi.org/project/optymus/)
 [![GitHub](https://img.shields.io/github/license/kleyt0n/optymus)](https://github.com/kleyt0n/optymus/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 ![jax_badge][jax_badge_link]
 
-**Structural Optimization and Scientific Computing**
-
-`optymus` is a Python library for solving optimization problems in mechanical engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library is designed for structural optimization, topology optimization, and general-purpose numerical optimization.
+`optymus` is a Python library for solving optimization problems in engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library is designed for structural optimization, topology optimization, and general-purpose numerical optimization.
 
 ## Getting Started
 
