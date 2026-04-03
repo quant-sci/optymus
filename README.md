@@ -3,7 +3,7 @@
 [![Documentation Status](https://readthedocs.org/projects/optymus/badge/?version=latest)](https://optymus.readthedocs.io/en/latest/?badge=latest)
 ![jax_badge][jax_badge_link]
 
-`optymus` is a Python library for solving optimization problems in engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library is designed for structural optimization, topology optimization, and general-purpose numerical optimization.
+`optymus` is a Python library for solving optimization problems in engineering and scientific computing. Built on [JAX](https://jax.readthedocs.io/en/latest/index.html) for automatic differentiation, it provides efficient gradient computation and GPU acceleration. The library supports continuous optimization, topology optimization, and combinatorial optimization (vehicle routing).
 
 ## Getting Started
 
@@ -29,7 +29,24 @@
    opt.report()
    ```
 
-3. Topology optimization with engineering domains:
+3. Vehicle Routing Problem:
+   ```python
+   import numpy as np
+   from optymus.routing import solve_vrp
+
+   coordinates = np.array([[0,0], [1,2], [3,1], [4,3], [2,4]], dtype=float)
+   demands = np.array([0, 3, 5, 4, 6], dtype=float)
+
+   result = solve_vrp(
+       coordinates=coordinates,
+       demands=demands,
+       vehicle_capacity=10,
+   )
+   print(result.routes)           # e.g. [[1, 4], [2, 3]]
+   print(result.total_distance)
+   ```
+
+4. Topology optimization with engineering domains:
    ```python
    from optymus.benchmark import MbbDomain
    from optymus.methods import polymesher
@@ -40,7 +57,7 @@
    # Generate polygonal mesh
    result = polymesher(domain=domain, num_elements=100)
    ```
-   
+
 ## Citation
 
 If you use `optymus` in your research, please cite:

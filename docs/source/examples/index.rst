@@ -21,6 +21,19 @@ Basic Examples
         :link: get_started/3.constraint_optimization.ipynb
 
 
+Vehicle Routing
+---------------
+
+.. grid:: 3
+   :gutter: 1
+
+   .. grid-item-card:: VRP Formulation & Solver
+        :link: vrp_example.ipynb
+
+   .. grid-item-card:: London Delivery Routes
+        :link: vrp_london.ipynb
+
+
 Mechanical Engineering
 -----------------------
 
