@@ -16,6 +16,7 @@ class OptimizeResult(dict):
         "temperature_below_min",
         "std_below_min",
         "constraint_converged",
+        "local_search_converged",
     })
 
     def __getattr__(self, name):
@@ -66,9 +67,12 @@ class OptimizeResult(dict):
                 elif key == "fmin":
                     val = f"{float(val):.6e}"
                 elif key == "xopt":
-                    val = np.array2string(
-                        np.asarray(val), precision=4, separator=", ",
-                    )
+                    if isinstance(val, (list, tuple)) and val and isinstance(val[0], list):
+                        val = f"{len(val)} routes"
+                    else:
+                        val = np.array2string(
+                            np.asarray(val), precision=4, separator=", ",
+                        )
                 lines.append(f"  {label:<{max_label}}   {val}")
 
         lines.append(f"  {'Converged':<{max_label}}   {self.converged}")

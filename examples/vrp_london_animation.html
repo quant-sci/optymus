@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/>
+<title>London VRP Vehicle Animation</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif}
+#map{width:100vw;height:100vh}
+#controls{position:absolute;top:14px;right:14px;z-index:1000;background:rgba(255,255,255,.95);border-radius:10px;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:10px;min-width:220px}
+.btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
+.btn-play{background:#3cb44b;color:#fff}.btn-pause{background:#e6194b;color:#fff}.btn-reset{background:#4363d8;color:#fff}
+.btn-row{display:flex;gap:6px}
+#progress-bar{position:absolute;bottom:0;left:0;z-index:1000;width:100%;height:5px;background:rgba(0,0,0,.1)}
+#progress-fill{height:100%;width:0%;background:#3cb44b;transition:width .1s}
+#legend{position:absolute;bottom:20px;left:14px;z-index:1000;background:rgba(255,255,255,.95);border-radius:10px;padding:12px 16px;box-shadow:0 2px 12px rgba(0,0,0,.18);font-size:12px}
+.legend-item{display:flex;align-items:center;gap:8px;margin:4px 0}
+.legend-dot{width:12px;height:12px;border-radius:50%}
+#status{position:absolute;bottom:20px;right:14px;z-index:1000;background:rgba(255,255,255,.95);border-radius:10px;padding:12px 16px;box-shadow:0 2px 12px rgba(0,0,0,.18);font-size:12px;min-width:200px}
+.status-vehicle{margin:3px 0;display:flex;justify-content:space-between}
+</style></head><body>
+<div id="map"></div>
+<div id="controls">
+<h3>&#x1F69A; Vehicle Simulation</h3>
+<div class="btn-row"><button class="btn btn-play" id="playBtn" onclick="togglePlay()">&#9654; Play</button>
+<button class="btn btn-reset" onclick="resetAnimation()">&#8634; Reset</button></div>
+<label style="font-size:12px;color:#555">Speed</label>
+<input type="range" id="speed" min="1" max="20" value="8" style="width:100%" oninput="updateSpeed(this.value)"/>
+</div><div id="legend"></div><div id="status"></div>
+<div id="progress-bar"><div id="progress-fill"></div></div>
+<script>
+const ROUTES=[{"color": "#e6194b", "stops": [[51.5317, -0.124], [51.5392, -0.1426], [51.5565, -0.1781], [51.5225, -0.1563], [51.5317, -0.124]], "names": ["Depot (King's Cross)", "Camden Town", "Hampstead", "Marylebone", "Depot (King's Cross)"], "demands": [0, 8, 3, 4, 0], "load": 15}, {"color": "#3cb44b", "stops": [[51.5317, -0.124], [51.5117, -0.124], [51.5036, -0.1143], [51.4975, -0.1357], [51.5137, -0.1337], [51.5317, -0.124]], "names": ["Depot (King's Cross)", "Covent Garden", "Waterloo", "Westminster", "Soho", "Depot (King's Cross)"], "demands": [0, 9, 8, 10, 13, 0], "load": 40}, {"color": "#4363d8", "stops": [[51.5317, -0.124], [51.5322, -0.1058], [51.5155, -0.0922], [51.5055, -0.0754], [51.5265, -0.0799], [51.551, -0.0988], [51.5317, -0.124]], "names": ["Depot (King's Cross)", "Islington (Angel)", "City of London", "Tower Bridge", "Shoreditch", "Highbury", "Depot (King's Cross)"], "demands": [0, 5, 14, 6, 12, 7, 0], "load": 44}, {"color": "#f58231", "stops": [[51.5317, -0.124], [51.5467, -0.0555], [51.5415, -0.0035], [51.5054, -0.0235], [51.4769, -0.0005], [51.4613, -0.0139], [51.4977, -0.0636], [51.5317, -0.124]], "names": ["Depot (King's Cross)", "Hackney Central", "Stratford", "Canary Wharf", "Greenwich", "Lewisham", "Bermondsey", "Depot (King's Cross)"], "demands": [0, 6, 9, 15, 7, 4, 5, 0], "load": 46}, {"color": "#911eb4", "stops": [[51.5317, -0.124], [51.4613, -0.1145], [51.4625, -0.138], [51.4751, -0.1517], [51.4875, -0.1687], [51.499, -0.194], [51.5117, -0.1955], [51.5154, -0.1755], [51.5317, -0.124]], "names": ["Depot (King's Cross)", "Brixton", "Clapham", "Battersea", "Chelsea", "Kensington", "Notting Hill", "Paddington", "Depot (King's Cross)"], "demands": [0, 10, 6, 3, 8, 11, 5, 7, 0], "load": 50}],DEPOT=[51.5317, -0.124],INTERP=80;
+const map=L.map('map').setView([51.509580769230766,-0.10996923076923076],12);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'OpenStreetMap CARTO',maxZoom:19}).addTo(map);
+map.fitBounds([[51.4513, -0.20550000000000002],[51.5665, 0.0095]]);
+L.marker(DEPOT,{icon:L.divIcon({html:'<div style="font-size:24px">&#x1F3ED;</div>',iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map).bindTooltip("Depot");
+const cm=[],trails=[];
+ROUTES.forEach((r,ri)=>{L.polyline(r.stops,{color:r.color,weight:3,opacity:0.25,dashArray:'8,8'}).addTo(map);r.stops.forEach((p,si)=>{if(si===0||si===r.stops.length-1)return;const c=L.circleMarker(p,{radius:5+r.demands[si]*0.4,color:r.color,fillColor:r.color,fillOpacity:0.15,weight:1.5,opacity:0.4}).addTo(map);c.bindTooltip(r.names[si]+' ('+r.demands[si]+')');c._ri=ri;c._si=si;cm.push(c);});trails.push(L.polyline([],{color:r.color,weight:4,opacity:0.8}).addTo(map));});
+const vans=ROUTES.map((r,ri)=>{const m=L.marker(DEPOT,{icon:L.divIcon({html:'<div style="font-size:22px">&#x1F690;</div>',iconSize:[26,26],iconAnchor:[13,13],className:''}),zIndexOffset:1000}).addTo(map);m.bindTooltip('Van '+(ri+1),{permanent:true,direction:'top',offset:[0,-14]});return m;});
+function interp(s){const f=[];for(let i=0;i<s.length-1;i++){const[a,b]=s[i],[c,d]=s[i+1];for(let j=0;j<INTERP;j++){const t=j/INTERP;f.push({lat:a+(c-a)*t,lon:b+(d-b)*t,seg:i,t});}}const l=s[s.length-1];f.push({lat:l[0],lon:l[1],seg:s.length-2,t:1});return f;}
+const paths=ROUTES.map(r=>interp(r.stops)),maxF=Math.max(...paths.map(p=>p.length));
+let frame=0,playing=false,speed=8,animId=null,lt=0;
+function updateSpeed(v){speed=parseInt(v);}function togglePlay(){playing?pause():play();}
+function play(){playing=true;document.getElementById('playBtn').innerHTML='&#9646;&#9646; Pause';document.getElementById('playBtn').className='btn btn-pause';tick();}
+function pause(){playing=false;document.getElementById('playBtn').innerHTML='&#9654; Play';document.getElementById('playBtn').className='btn btn-play';if(animId)cancelAnimationFrame(animId);}
+function resetAnimation(){pause();frame=0;vans.forEach(m=>m.setLatLng(DEPOT));trails.forEach(t=>t.setLatLngs([]));cm.forEach(c=>c.setStyle({fillOpacity:0.15,opacity:0.4}));updateUI();}
+function tick(ts){if(!playing)return;if(!ts)ts=0;if(ts-lt<(28-speed*1.2)){animId=requestAnimationFrame(tick);return;}lt=ts;ROUTES.forEach((r,ri)=>{const p=paths[ri],f=Math.min(frame,p.length-1),pos=p[f];vans[ri].setLatLng([pos.lat,pos.lon]);const tc=[];for(let i=0;i<=f;i++)tc.push([p[i].lat,p[i].lon]);trails[ri].setLatLngs(tc);const vs=pos.seg+(pos.t>0.5?1:0);cm.forEach(c=>{if(c._ri===ri&&c._si<=vs)c.setStyle({fillOpacity:0.85,opacity:1});});});updateUI();frame++;if(frame>=maxF){pause();frame=maxF;return;}animId=requestAnimationFrame(tick);}
+function updateUI(){const pct=maxF>0?(frame/maxF*100):0;document.getElementById('progress-fill').style.width=pct+'%';let h='';ROUTES.forEach((r,ri)=>{const p=paths[ri],f=Math.min(frame,p.length-1),s=p[f].seg,nm=r.names[Math.min(s+1,r.names.length-1)],done=f>=p.length-1;h+='<div class="status-vehicle"><span style="color:'+r.color+';font-weight:600">Van '+(ri+1)+'</span><span>'+(done?'&#x2705; Done':'&#x1F4E6; '+nm)+'</span></div>';});document.getElementById('status').innerHTML='<b>Live Status</b>'+h;}
+let lh='';ROUTES.forEach((r,ri)=>{lh+='<div class="legend-item"><div class="legend-dot" style="background:'+r.color+'"></div><span>Van '+(ri+1)+' - '+r.load+' parcels, '+(r.stops.length-2)+' stops</span></div>';});document.getElementById('legend').innerHTML='<b>Routes</b>'+lh;updateUI();
+</script></body></html>
